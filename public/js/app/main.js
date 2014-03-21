@@ -45,6 +45,16 @@ define(['jquery','app/utils/Global'], function($, _g){
 		// }	
 	})
 
+	/*
+	 	-- models
+	 	scoring model: 		multiplier, items, value
+	 	user model: 		nick, name, surname, picture
+	 	gametype model: 	type, name, multiplier, maxItems, icon
+	 	round model: 		gametype, players
+	 	game model: 		players, winner, rounds, nr
+
+	*/
+
 
 
 })
