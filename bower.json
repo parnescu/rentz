@@ -1,0 +1,31 @@
+{
+  "name": "Rentz",
+  "version": "0.5",
+  "authors": [
+    "Parnescu <parnescu@yahoo.com>"
+  ],
+  "description": "Companion app for Rentz card game",
+  "keywords": [
+    "game",
+    "rentz",
+    "fun"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0",
+    "underscore": "~1.6.0",
+    "backbone": "~1.1.2",
+    "jquery-mobile": "~1.4.2",
+    "requirejs": "~2.1.11",
+    "r.js": "~2.1.11",
+    "jasmine": "~2.0.0"
+  }
+}

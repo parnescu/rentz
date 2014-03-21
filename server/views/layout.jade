@@ -1,0 +1,30 @@
+doctype html
+html
+	head
+		title Shigy
+		script(src="requirejs/require.js" data-main="js/bootstrap.js")
+	body
+		#page
+			header(data-role="header")
+				h1 main
+			section(data-role="content")
+				.test(data-role="page")
+					p.item
+						label the name
+						input.slider(type='range', value="0")
+						input.items(type="number", value="0")
+						input.points(type="text", value="0 points", disabled)
+
+					p.item
+						label the name
+						input.slider(type='range', value="0")
+						input.items(type="number", value="0")
+						input.points(type="text", value="0 points", disabled)
+					
+					
+					.total
+						input#remaining(disabled, value="0")
+						label(for="remaining") items left
+
+			footer(data-role="footer")
+
