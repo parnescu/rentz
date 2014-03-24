@@ -4,11 +4,11 @@ require.config({
 		'jquery': '/jquery/dist/jquery.min',
 		'underscore': '/underscore/underscore',
 		'backbone': '/backbone/backbone',
-		'jasmine': 'jasmine/lib/jasmine-core/jasmine'
+		'text': '/requirejs-text/text'
 	}
 	,shim:{
 		backbone:{
-			deps: ['jquery','underscore'],
+			deps: ['jquery','underscore','text'],
 			exports: 'Backbone'
 		},
 		jquery: {

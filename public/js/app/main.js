@@ -1,5 +1,7 @@
-define(['jquery','app/utils/Global'], function($, _g){
-	trace(_g)
+define([
+	'jquery'
+	,'app/utils/Global'
+], function($, _g){
 	$(function(){
 		var trace = function(r){console.log(r);}
 
@@ -46,13 +48,40 @@ define(['jquery','app/utils/Global'], function($, _g){
 	})
 
 	/*
-	 	-- models
-	 	scoring model: 		multiplier, items, value
-	 	user model: 		nick, name, surname, picture
-	 	gametype model: 	type, name, multiplier, maxItems, icon
-	 	round model: 		gametype, players
-	 	game model: 		players, winner, rounds, nr
+	 	-- app models 
+		player model {
+			id: 		uint,
+			name: 		string,
+			surname: 	string,
+			nick: 		string,
+			picture: 	string [ base64encoded img data ]
+		}
 
+		game type model {
+			type: 		string, [ one of the seven playable types ]
+			icon: 		string, [ base64encoded img data ]
+			scoring: 	<scoring model>
+		}
+
+		scoring model {
+			multiplier: 	int,
+			value: 			int,
+			maxItems: 		int
+		}
+
+		round model {
+			playerId: 	uint,
+			available: 	boolean, [ when round is finished it's not available to be chosen ]
+			gametype: 	string, 
+			scores: 	object [ calculated scores for each player]
+		}
+		
+		game model:{
+			id: 		uint
+			players: 	array[uint], [ player ids arranged by score, first one is the winner ]
+			rounts: 	array[<round model>]
+			count: 		uint [number of players to prevent players.length ]
+		}
 	*/
 
 

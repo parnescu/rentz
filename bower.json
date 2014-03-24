@@ -26,6 +26,7 @@
     "jquery-mobile": "~1.4.2",
     "requirejs": "~2.1.11",
     "r.js": "~2.1.11",
-    "jasmine": "~2.0.0"
+    "jasmine": "~2.0.0",
+    "requirejs-text": "~2.0.10"
   }
 }

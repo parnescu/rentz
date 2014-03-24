@@ -1,0 +1,17 @@
+<% if (typeof(deletable) != "undefined" && deletable) {%>
+	<a href="#removeItem" title="Delete" class="delete">&nbsp;</a>
+<% } %>
+
+<a href="#showItem" title="<%= values.name %>"><%= values.name %></a>
+<div class="itemDetails">
+	<!-- generate based on data type -->
+</div>
+
+<% if (typeof(sortable) != "undefined" && sortable) {%>
+
+	<a href="#sortItem" title="Drag to sort" class="sort">&nbsp;</a>
+<% } %>
+
+<% if (typeof(selectable) != "undefined" && selectable) {%>
+	<a href="#selectItem" title="Click to select" class="select">&nbsp;</a>
+<% } %>
