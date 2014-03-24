@@ -36,12 +36,18 @@
 	var specs = ['/js/tests/specfile.js'],
 		dependencies = [
 			'/js/app/views/ListItem.js'
+			,'/js/app/models/Player.js'
+			,'/js/app/models/Game.js'
+			,'/js/app/views/List.js'
 		];
 
 	specs = specs.concat(dependencies);
-	requirejs(['boot'], function(){
-		requirejs(specs, function(specs, ListItem){
+	requirejs(['boot','jquery'], function(){
+		requirejs(specs, function(specs, ListItem, Player, Game, List){
 			window.ListItem = ListItem;
+			window.List = List;
+			window.Player = Player;
+			window.Game = Game;
 			window.onload();
 		});
 	});

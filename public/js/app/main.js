@@ -43,6 +43,7 @@ define([
 		// 	ctx.drawImage(img,0,0,128,128);
 		// 	var d = document.createElement('img');
 		// 	d.src = canvas.toDataURL()
+		// 	trace(canvas.toDataURL());
 		// 	$('section').append(d);
 		// }	
 	})
@@ -77,9 +78,10 @@ define([
 		}
 		
 		game model:{
-			id: 		uint
+			id: 		uint,
+			name: 		string, [  ]
 			players: 	array[uint], [ player ids arranged by score, first one is the winner ]
-			rounts: 	array[<round model>]
+			rounts: 	array[<round model>],
 			count: 		uint [number of players to prevent players.length ]
 		}
 	*/

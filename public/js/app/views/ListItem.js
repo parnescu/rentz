@@ -1,26 +1,30 @@
 define([
-	'backbone',
-	'text!../../../templates/ListElement.html'
-], function(B, template){
+	'backbone'
+	,'text!../../../templates/PlayerListElement.html'
+	,'text!../../../templates/GameListElement.html'
+], function(B, playerTemplate, gameTemplate){
 	return Backbone.View.extend({
 		tagName: 'li',
-		template: _.template(template),
 		data: {
 			selectable: false,
 			sortable: false,
 			deletable: false,
-			values: {
-				name: 'default element'
-			}
+			type: 'player'
 		},
 		initialize: function(data){
-			for (var ii in data){
-				this.data[ii] = data[ii]
+			if (data){
+				Object.keys(data).forEach(function(key){ this.data[key] = data[key];}, this)
+				this.model = data.model || null;
+				if (this.model){
+					this.model.on('change', this.render, this);
+				}
 			}
-
 		},
 		render: function(){
-			this.$el.html(this.template(this.data))
+			if (this.model){
+				this.data.values = this.model.toJSON();				
+			}
+			this.$el.html(_.template(this.data.type != 'player' ? gameTemplate : playerTemplate)(this.data));
 			return this;
 		}
 	});

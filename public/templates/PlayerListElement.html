@@ -1,0 +1,14 @@
+<% if (typeof(deletable) != "undefined" && deletable) {%><a href="#removeItem" title="Delete" class="delete">&nbsp;</a><% } %>
+
+<% if(typeof(values) != 'undefined') {%>
+	<a href="#showItem" class="clicker" title="<%= values.name %> <%= values.surname %>">&nbsp;</a>
+	<img src="<%= values.picture %>" alt="<%= values.name %>"/>
+	<span class="itemDetails">
+		<h2 class="playerName"><%= values.name %> <%= values.surname %></h2>
+		<p class="playerNick">nickname: <%= values.nick %></p>
+		<p class="gamesWon">games won: <%= values.won %></p>
+	</span>
+<% }%>
+
+<% if (typeof(sortable) != "undefined" && sortable) {%><a href="#sortItem" title="Drag to sort" class="sort">&nbsp;</a><% } %>
+<% if (typeof(selectable) != "undefined" && selectable) {%><a href="#selectItem" title="Click to select" class="select">&nbsp;</a><% } %>

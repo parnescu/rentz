@@ -1,0 +1,6 @@
+<% if (typeof(deletable) != "undefined" && deletable) {%><a href="#removeItem" title="Delete" class="delete">&nbsp;</a><% } %>
+
+<% if(typeof(values) != 'undefined') {%>
+	<h2><a href="#showItem" class="clicker"><%= values.name %></a></h2>
+	<p class="playersNr"><%= Number(values.count) %> players</p>
+<% }%>
