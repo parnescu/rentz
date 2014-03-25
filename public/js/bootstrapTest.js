@@ -37,20 +37,27 @@
 	var specs = ['/js/tests/specfile.js'],
 		dependencies = [
 			'/js/app/utils/Global.js'
-			,'/js/app/views/ListItem.js'
 			,'/js/app/models/Player.js'
 			,'/js/app/models/Game.js'
+			,'/js/app/models/Scoring.js'
+			,'/js/app/views/ListItem.js'
 			,'/js/app/views/List.js'
+			,'/js/app/views/ScoringElement.js'
 		];
 
 	specs = specs.concat(dependencies);
 	requirejs(['boot','jquery'], function(){
-		requirejs(specs, function(specs, _g, ListItem, Player, Game, List){
+		requirejs(specs, function(specs, _g, Player, Game, Score, ListItem, List, ScoreElement){
 			window._g = _g;
-			window.ListItem = ListItem;
-			window.List = List;
+
 			window.Player = Player;
 			window.Game = Game;
+			window.Score = Score;
+			
+			window.ListItem = ListItem;
+			window.List = List;
+			window.ScoreElement = ScoreElement;
+
 			window.onload();
 		});
 	});

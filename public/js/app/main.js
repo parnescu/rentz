@@ -50,6 +50,7 @@ define([
 
 	/*
 	 	-- app models 
+		
 		player model {
 			id: 		uint,
 			name: 		string,

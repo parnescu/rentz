@@ -1,8 +1,5 @@
 
-describe("Project Specs", function(){
-	xit("Bogus Test", function(){
-		expect(true).toBeTruthy();
-	});
+describe("Rentz TDD specs", function(){
 	var model, view, collection, stage = $('#stage'),
 		bogusPlayers = [
 			{ name:"Gigi", surname:"Kent", surname:'Shigy'}
@@ -166,7 +163,6 @@ describe("Project Specs", function(){
 
 			afterEach(function(){
 				c = null;
-				return;
 				if(collection){
 					collection.reset();
 					collection = null;
@@ -181,11 +177,43 @@ describe("Project Specs", function(){
 				}
 			});
 		});
-
-		describe('Score points view', function(){
-			it('', function(){
-				
+	
+		describe('Score points element', function(){
+			beforeEach(function(){
+				var gameType = _g.gameType.DAMES
+				model = new Score({
+					maxItems: gameType.get('maxItems'),
+					multiplier: gameType.get('multiplier')
+				});
 			});
-		})
+			it('must be correctly defined and have model data', function(){
+				view = new ScoreElement({ 
+					model: model
+				}).render();
+
+				expect(view.model).toBeDefined();
+				expect(view.$el.find('input').length).toBeGreaterThan(2);
+				
+				view.model.set('value', 3)
+				expect(view.$el.find('input.points')[0].value).toBe('-150 points');
+				
+				view.model.set('value', 234)
+				expect(view.model.isValid()).toBeFalsy();
+				
+				view.model.set('value', 2)
+				expect(view.model.get('value')).toEqual(2);
+			});
+
+			afterEach(function(){
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			})
+		});
 	})
 })
