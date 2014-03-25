@@ -1,3 +1,14 @@
 body, html, h1, h2,h3,h4,h5,h6,p,div,ul,li { margin:0; padding:0;}
-body, html { width:100%; height:100%;}
+/*body, html { width:100%; height:100%;}*/
 
+a { display: block; text-decoration:none;}
+
+.list { clear:both; float:none; display: block; overflow: hidden;}
+.list li { float:left; margin:.4em;}
+.list li.selected { background: red;}
+.list li .wrapper { position:relative;}
+.list li a.clicker { text-indent:-100em; position:absolute; width:100%; height:100%; background: rgba(0,0,0,0);}
+.list li a.action { background:teal;}
+.list li a[data-type=select] { background:navy;}
+.list li a[data-type=delete] { background:red;}
+.list li a[data-type=sort] { background:black;}

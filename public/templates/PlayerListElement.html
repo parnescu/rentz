@@ -1,6 +1,7 @@
-<% if (typeof(deletable) != "undefined" && deletable) {%><a href="#removeItem" title="Delete" class="delete">&nbsp;</a><% } %>
+<% if (typeof(deletable) != "undefined" && deletable) {%><a href="#removeItem" title="Delete" data-type="delete" class="action">&nbsp;</a><% } %>
 
 <% if(typeof(values) != 'undefined') {%>
+<div class='wrapper'>
 	<a href="#showItem" class="clicker" title="<%= values.name %> <%= values.surname %>">&nbsp;</a>
 	<img src="<%= values.picture %>" alt="<%= values.name %>"/>
 	<span class="itemDetails">
@@ -8,7 +9,8 @@
 		<p class="playerNick">nickname: <%= values.nick %></p>
 		<p class="gamesWon">games won: <%= values.won %></p>
 	</span>
+</div>
 <% }%>
 
-<% if (typeof(sortable) != "undefined" && sortable) {%><a href="#sortItem" title="Drag to sort" class="sort">&nbsp;</a><% } %>
-<% if (typeof(selectable) != "undefined" && selectable) {%><a href="#selectItem" title="Click to select" class="select">&nbsp;</a><% } %>
+<% if (typeof(sortable) != "undefined" && sortable) {%><a href="#sortItem" title="Drag to sort" data-type="sort" class="action">&nbsp;</a><% } %>
+<% if (typeof(selectable) != "undefined" && selectable) {%><a href="#selectItem" title="Click to select" data-type="select" class="action">&nbsp;</a><% } %>

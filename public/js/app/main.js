@@ -59,9 +59,10 @@ define([
 		}
 
 		game type model {
-			type: 		string, [ one of the seven playable types ]
-			icon: 		string, [ base64encoded img data ]
-			scoring: 	<scoring model>
+			type: 			string, [ one of the seven playable types ]
+			icon: 			string, [ base64encoded img data ]
+			multiplier: 	int [ number of points per item ]
+			maxItems: 		int [ number of items possible]
 		}
 
 		scoring model {
@@ -85,7 +86,4 @@ define([
 			count: 		uint [number of players to prevent players.length ]
 		}
 	*/
-
-
-
 })

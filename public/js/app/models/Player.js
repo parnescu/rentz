@@ -1,6 +1,8 @@
 define(['backbone'], function(){
 	return Backbone.Model.extend({
 		defaults:{
+			_select: false,
+			_delete: false,
 			name: '',
 			surname: '',
 			nick: '',
