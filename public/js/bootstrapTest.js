@@ -43,20 +43,22 @@
 			,'/js/app/views/ListItem.js'
 			,'/js/app/views/List.js'
 			,'/js/app/views/ScoringElement.js'
+			,'/js/app/views/ScoringList.js'
 		];
 
 	specs = specs.concat(dependencies);
 	requirejs(['boot','jquery'], function(){
-		requirejs(specs, function(specs, _g, Player, Game, Score, ListItem, List, ScoreElement){
+		requirejs(specs, function(specs, _g, Player, Game, Score, ListItem, List, ScoreElement, ScoreList){
 			window._g = _g;
 
 			window.Player = Player;
 			window.Game = Game;
 			window.Score = Score;
-			
+
 			window.ListItem = ListItem;
 			window.List = List;
 			window.ScoreElement = ScoreElement;
+			window.ScoreList = ScoreList;
 
 			window.onload();
 		});

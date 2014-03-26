@@ -52,6 +52,8 @@ define([
 	 	-- app models 
 		
 		player model {
+			_select:  	boolean, [ used in list points counter ]
+			_delete:  	boolean,
 			id: 		uint,
 			name: 		string,
 			surname: 	string,

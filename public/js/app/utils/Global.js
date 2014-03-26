@@ -6,7 +6,7 @@ define([
 
 	_utils = {}
 	_utils.plural = function(nr, str){
-		return str + (nr === 1 ? "" : "s")
+		return str + (Number(nr) === 1 ? "" : "s")
 	}
 	_utils.merge = function(data, obj){
 		for (var ii in obj){
@@ -57,6 +57,8 @@ define([
 
 	_events = {
 		LIST_CLICK: "listItemClicked"
+		,LIST_CHANGE_VALUE: "valueChanged"
+		,LIST_MODIFY_VALUE: "valueChangedByUser"
 	}
 	return {
 		MIN_PLAYERS: min

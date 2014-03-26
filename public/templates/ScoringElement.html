@@ -1,7 +1,10 @@
+<% if ( typeof(name)!='undefined'){%><h3><%= name %></h3><% } %>
 <% if (type != 'normal') { %>
-	<p>just icon</p>
+	<a href="#switchToPlayer" title="<%= typeof(name)!='undefined' ? name : '' %>">
+		<img src="<%= typeof(icon)!='undefined' ? icon : '' %>" alt="<%= typeof(name)!='undefined' ? name : '' %>">
+	</a>
 <% } else { %>
-	<input type="range" value="0" class="slider" max="<%= maxItems%>">
-	<input type="number" value="0" class="items">
-	<input type="text" value="0 points" disabled="" class="points">
+	<input type="range" value="0" class="slider" max="<%= maxItems %>" min="0">
+	<input type="number" value="0" class="items" max="<%= maxItems %>" min="0">
 <% } %>
+<input type="text" value="0 points" disabled="" class="points">
