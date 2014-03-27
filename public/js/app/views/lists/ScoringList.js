@@ -1,7 +1,7 @@
 define([
 	'backbone'
 	,'app/utils/Global'
-	,'app/views/ScoringElement'
+	,'app/views/lists/ScoringElement'
 ],function(B, _g, ScoringElement){
 	return Backbone.View.extend({
 		tagName: 'ul',

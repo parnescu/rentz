@@ -1,6 +1,6 @@
 
 describe("Rentz TDD specs", function(){
-	var model, view, collection, stage = $('#stage'),
+	var model, collection, stage = $('#stage'),
 		bogusPlayers = [
 			{ name:"Gigi", surname:"Kent", nick:'Shigy'}
 			,{ name:"Lebby", surname:"Coarse", nick:'mutaflex'}
@@ -12,6 +12,7 @@ describe("Rentz TDD specs", function(){
 			,{ name:"Lancaster", surname:"Void", nick:'rikudanton'}
 		],
 		bogusGames = [];
+		window.view = null;
 	
 	describe('List element view', function(){
 		it ('element must be correctly defined and have default value', function(){
@@ -452,4 +453,57 @@ describe("Rentz TDD specs", function(){
 			}
 		});
 	});
+
+	describe('Players form view', function(){
+		it('correctly defined with elements for name, surname, nick, photo and games won', function(){
+			view = new EditPlayers().render();
+
+			expect(view.el.tagName.toLowerCase()).toBe('form')
+			expect(view.el.children.length).toBeGreaterThan(0);
+			expect(view.$el.find('input').length).toBe(4);
+			expect(view.model).toBeNull();
+			expect(view.submit).toBeDefined();
+			expect(view.cancel).toBeDefined();
+
+			view.submit.click();
+			expect(view.model).not.toBeNull();
+		});
+
+		it('adding a model can save/modify a player and his data', function(){
+			model = new Player();
+			view = new EditPlayers({model: model }).render();
+
+			stage.append(view.el)
+			var add = view.$el.find('.actions .submit'),
+				res = view.$el.find('.actions .cancel');
+
+			view.$el.find('input[name=nick]').val('gigel');
+			add.click();
+
+			expect(view.model.get('nick')).toBe('gigel');
+			expect(view.model.isValid()).toBeFalsy()
+
+			view.$el.find('input[name=name]').val('Horezu');
+			view.$el.find('input[name=surname]').val('Alexandrovici');
+			add.click();
+			expect(view.model.isValid()).toBeTruthy();
+
+			res.click();
+			add.click();
+			expect(view.model.isValid()).toBeFalsy();
+
+		})
+		afterEach(function(){
+			return;
+			if(view){
+				view.remove();
+				view = null;
+			}
+			if(model){
+				model.destroy();
+				model = null;
+			}
+		})
+
+	})
 })

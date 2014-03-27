@@ -1,0 +1,32 @@
+<fieldset>
+	<div class="element">
+		<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>">
+			<img src="<%= typeof(picture) != 'undefined' ? picture : ""  %>" alt="avatar">
+		</a>
+	</div>
+	<div class="element">
+		<label for="nick">nickname: </label>
+		<input type="text" required name="nick" id="nick" value="<%= typeof(nick) != 'undefined' ? nick : "" %>"/>
+	</div>
+	<hr>
+	<div class="element">
+		<label for="name">name: </label>
+		<input type="text" required name="name" id="name" value="<%= typeof(name) != 'undefined' ? name : ""  %>"/>
+	</div>
+	<div class="element">
+		<label for="surname">surname: </label>
+		<input type="text" required name="surname" id="surname" value="<%= typeof(surname) != 'undefined' ? surname : ""  %>"/>
+	</div>
+	<div class="element">
+		<label for="_won">games won: </label>
+		<input type="text" name="_won" id="_won" value="<%= typeof(won) != 'undefined' ? won : "0"  %>" disabled/>
+	</div>
+	<div class="actions">
+		<!-- <a href="#submit" class="submit" title="Submit">submit data</a>
+		<a href="#cancel" class="cancel" title="Cancel">reset form</a>
+		-->
+
+		<button class="submit">submit data</button>
+		<button class="cancel">reset form</button>
+	</div>
+</fieldset>

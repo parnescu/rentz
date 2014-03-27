@@ -1,8 +1,8 @@
 define([
 	'backbone'
 	,'app/utils/Global'
-	,'text!../../../templates/PlayerListElement.html'
-	,'text!../../../templates/GameListElement.html'
+	,'text!/templates/PlayerListElement.html'
+	,'text!/templates/GameListElement.html'
 ], function(B, _g, playerTemplate, gameTemplate){
 	return Backbone.View.extend({
 		tagName: 'li',

@@ -1,7 +1,7 @@
 define([
 	'backbone',
 	'app/utils/Global',
-	'app/views/ListItem',
+	'app/views/lists/ListItem',
 	'app/models/Player'
 ], function(B, _g, ListItem, Player){
 	var view = Backbone.View.extend({

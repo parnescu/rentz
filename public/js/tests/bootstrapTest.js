@@ -42,15 +42,16 @@
 			,'/js/app/models/Player.js'
 			,'/js/app/models/Game.js'
 			,'/js/app/models/Scoring.js'
-			,'/js/app/views/ListItem.js'
-			,'/js/app/views/List.js'
-			,'/js/app/views/ScoringElement.js'
-			,'/js/app/views/ScoringList.js'
+			,'/js/app/views/lists/ListItem.js'
+			,'/js/app/views/lists/List.js'
+			,'/js/app/views/lists/ScoringElement.js'
+			,'/js/app/views/lists/ScoringList.js'
+			,'/js/app/views/forms/EditPlayers.js'
 		];
 
 	specs = specs.concat(dependencies);
 	requirejs(['boot','jquery'], function(){
-		requirejs(specs, function(specs, _g, Player, Game, Score, ListItem, List, ScoreElement, ScoreList){
+		requirejs(specs, function(specs, _g, Player, Game, Score, ListItem, List, ScoreElement, ScoreList, EditPlayers){
 			window._g = _g;
 
 			window.Player = Player;
@@ -61,6 +62,8 @@
 			window.List = List;
 			window.ScoreElement = ScoreElement;
 			window.ScoreList = ScoreList;
+
+			window.EditPlayers = EditPlayers;
 
 			window.onload();
 		});
