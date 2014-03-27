@@ -28,6 +28,10 @@ define([
 			this.buttons.delete = this.$el.find('a[data-type=delete]');
 			this.buttons.sort = this.$el.find('a[data-type=sort]');
 
+			if (this.data.index){
+				this.el.dataset.pos = this.data.index
+			}
+
 			return this;
 		},
 		handleChange: function(model){

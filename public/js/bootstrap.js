@@ -2,6 +2,7 @@ trace = function(g){console.log(g);}
 require.config({
 	paths: {
 		'jquery': '/jquery/dist/jquery.min',
+		'jqueryui': '/jqueryui/ui/jquery-ui',
 		'underscore': '/underscore/underscore',
 		'backbone': '/backbone/backbone',
 		'text': '/requirejs-text/text'
@@ -17,6 +18,9 @@ require.config({
 
 	}
 });
-require(['backbone','js/app/main.js'],function(B){
-	
+require([
+	'backbone',
+	'js/app/main.js',
+	'jqueryui'
+],function(B){
 });

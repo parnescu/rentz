@@ -8,7 +8,7 @@
 			'jasmine-html': '/jasmine/lib/jasmine-core/jasmine-html',
 			'boot': '/jasmine/lib/jasmine-core/boot',
 			'jquery': '/jquery/dist/jquery.min',
-			'jqueryui': '/jquery-ui/jquery-1.10.2',
+			'jqueryui': '/jqueryui/ui/jquery-ui',
 			'underscore': '/underscore/underscore',
 			'backbone': '/backbone/backbone',
 			'text': '/requirejs-text/text'

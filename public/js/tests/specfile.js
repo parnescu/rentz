@@ -295,7 +295,7 @@ describe("Rentz TDD specs", function(){
 		});
 	});
 
-	describe('Score points list - dames game type', function(){
+	describe('Score points list - dames (or normal) game type', function(){
 		var c,gameType, playerCollection;
 		beforeEach(function(){
 			gameType = _g.gameType.DAMES
@@ -322,6 +322,43 @@ describe("Rentz TDD specs", function(){
 			}).render();
 
 			expect(Number(view.total.firstChild.value)).toBe(gameType.get('maxItems'));
+			/*
+				can't really test value changes automagically... 
+				input value change from code does not trigger modification
+				so we manually modify the model 
+			*/
+
+			// change slider
+			var _target = view.$el.find('input[type=range]:eq(0)');
+			
+			_target.val(2);
+			view.elements[2].model.set('value', Number(_target.val()))
+			expect(view.total.firstChild.value).toBe('2');
+			expect(_target.parent()[0].lastChild.value).toBe('-100 points');
+			
+			_target.val(312);
+			view.elements[2].model.set('value', Number(_target.val()))
+			expect(view.total.firstChild.value).toBe('0');
+			expect(_target.parent()[0].lastChild.value).toBe('-200 points');
+			
+
+			// change number input
+			_target = view.$el.find('input[type=number]:eq(0)');
+			
+			_target.val(2)
+			view.elements[2].model.set('value', Number(_target.val()))
+			expect(view.total.firstChild.value).toBe('2');
+			expect(_target.parent()[0].lastChild.value).toBe('-100 points');
+			
+			_target.val(0)
+			view.elements[2].model.set('value', Number(_target.val()))
+			expect(view.total.firstChild.value).toBe('4');
+			expect(_target.parent()[0].lastChild.value).toBe('0 points');
+			
+			_target.val(3)
+			view.elements[2].model.set('value', Number(_target.val()))
+			expect(view.total.firstChild.value).toBe('1');
+			expect(_target.parent()[0].lastChild.value).toBe('-150 points');
 		});
 
 		afterEach(function(){
@@ -340,4 +377,5 @@ describe("Rentz TDD specs", function(){
 			}
 		});
 	});
+
 })

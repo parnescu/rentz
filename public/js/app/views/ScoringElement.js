@@ -12,6 +12,9 @@ define([
 			delete this.data.model;
 			this.data.type = this.data.type || "normal";
 
+			if (this.data.player){
+				this.model.set('_user', this.data.player.cid)
+			}
 		},
 		render: function(){
 			if (this.model){
@@ -30,6 +33,10 @@ define([
 				
 				if (this.data.type === 'normal'){
 					this.$el.find('input').change(this.handleInputChange)
+				}
+
+				if(this.model.get('_user')){
+					this.$el.addClass(this.model.get('_user'))
 				}
 
 				this.model.on('change:value', this.handleModelChange, this);

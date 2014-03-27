@@ -6,6 +6,7 @@ define([
 	return Backbone.View.extend({
 		tagName: 'ul',
 		className: 'scoreList list',
+		elements: null,
 		initialize: function(data){		
 			_g.currentPlayers = data.players.length;
 
@@ -14,8 +15,10 @@ define([
 			
 			this._maxItems = this.data.gameType.get('maxItems');
 			this._maxItems = typeof(this._maxItems) != 'number' ? this._maxItems() : this._maxItems
+		
 		},
 		render: function(){
+			this.elements = [];
 			this.collection.each(this.renderOne,this);
 			this.$el.append('<li class="description"><input disabled id="remaining"><label></label></li>');
 			this.total = this.$el.find('li.description')[0];
@@ -37,6 +40,8 @@ define([
 			}).render();
 
 			this.$el.prepend(_view.el);
+			this.elements.push(_view);
+
 			_view = null;
 		},
 		countRemaining: function(){

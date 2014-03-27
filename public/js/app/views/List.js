@@ -17,6 +17,7 @@ define([
 				_g.util.merge(this.data, data)
 				if (this.collection){ this.collection.on('add', this.renderItem, this);}
 			}
+			_.bindAll(this,"handleSorting");
 		},
 		render: function(){
 			if (this.data.minItems){
@@ -44,16 +45,23 @@ define([
 			}
 			if(this.data.hasOwnProperty('sortable') && this.data.sortable === true){ 
 				this.$el.addClass('withSort');
+				var sortConfig = {
+					cursor: 'move',
+					update: this.handleSorting
+				}
+				this.$el.sortable(sortConfig)
 			}
 			return this;
 		},
-		renderItem: function(item){
+		renderItem: function(item, index){
+			index = typeof(index) === 'number' ? index : this.collection.models.length-1
 			var _view = new ListItem({
 				model: item,
 				type: item.get('surname') ? 'player' : 'game',
 				selectable: this.data.selectable || false,
 				deletable: this.data.deletable || false,
-				sortable: this.data.sortable || false
+				sortable: this.data.sortable || false,
+				index: index.toString()
 			}).render();
 
 			_view.counter = this.data.counter;
@@ -66,6 +74,9 @@ define([
 				var _itemsLeft = this.data.counter.max-this.data.counter.value;
 				this.$el.find('li.description label').text(_itemsLeft+" "+_g.util.plural(_itemsLeft, this.data.counter.suffix))
 			}
+		},
+		handleSorting: function(e){
+			trace('update sorting');
 		},
 		handleItemSelection: function(data){		
 			var sum = 0;
