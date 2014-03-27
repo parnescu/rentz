@@ -1,15 +1,5 @@
 trace = function(r){console.log(r);}
 
-$(function(){
-	$('ul').sortable({
-		cursor: "move",
-		update: function(e){
-			trace(e.target)
-		}
-	});
-})
-
-
 
 // var globalMaxItems = 4,
 // 	multiplier = -50,

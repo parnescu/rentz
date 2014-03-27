@@ -12,3 +12,5 @@ a { display: block; text-decoration:none;}
 .list li a[data-type=select] { background:navy;}
 .list li a[data-type=delete] { background:red;}
 .list li a[data-type=sort] { background:black;}
+
+.ui-sortable-placeholder { display:block; overflow: hidden; background:rgba(0,0,0,.5); visibility: visible !important;}

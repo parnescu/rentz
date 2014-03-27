@@ -3,12 +3,14 @@
 	'use strict';
 	window.trace = function(g){console.log(g);}
 	require.config({
+		baseUrl: '../js',
 		paths: {
 			'jasmine': '/jasmine/lib/jasmine-core/jasmine',
 			'jasmine-html': '/jasmine/lib/jasmine-core/jasmine-html',
 			'boot': '/jasmine/lib/jasmine-core/boot',
 			'jquery': '/jquery/dist/jquery.min',
 			'jqueryui': '/jqueryui/ui/jquery-ui',
+			'jqueryuifix': '/jqueryui-touch-punch/jquery.ui.touch-punch',
 			'underscore': '/underscore/underscore',
 			'backbone': '/backbone/backbone',
 			'text': '/requirejs-text/text'
@@ -26,7 +28,7 @@
 				exports: 'jasmine'
 			},
 			backbone:{
-				deps: ['jquery','underscore','text','jqueryui'],
+				deps: ['jquery','underscore','text','jqueryui','jqueryuifix'],
 				exports: 'Backbone'
 			},
 			jquery: {

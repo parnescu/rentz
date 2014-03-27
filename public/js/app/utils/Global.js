@@ -2,8 +2,8 @@ define([
 	'app/models/GameType',
 	'app/models/Scoring',
 ],function(GameType, Scoring){
-	var max = 6, min = 3, current = 3;
-
+	var max = 6, min = 3;
+	
 	_utils = {}
 	_utils.plural = function(nr, str){
 		return str + (Number(nr) === 1 ? "" : "s")
@@ -12,6 +12,11 @@ define([
 		for (var ii in obj){
 			data[ii] = obj[ii];
 		}
+	}
+	_utils.progressive = function(nr){
+		var sum = 1;
+		for (var i=2;i<=nr;i++) { sum += i; }
+		return sum;
 	}
 
 	_types = {
@@ -38,7 +43,7 @@ define([
 		,RENTZ: new GameType({
 			type: 'rentz',
 			multiplier: 50,
-			maxItems: function(){ return current}
+			maxItems: function(){ return _utils.progressive(current)}
 			// this should be number of players 
 		})
 		,DIAMONDS: new GameType({
@@ -60,13 +65,23 @@ define([
 		,LIST_CHANGE_VALUE: "valueChanged"
 		,LIST_MODIFY_VALUE: "valueChangedByUser"
 	}
-	return {
+
+	
+	var obj = {
 		MIN_PLAYERS: min
 		,MAX_PLAYERS: max
-		,currentPlayers: current
-
 		,events: _events
 		,util: _utils
 		,gameType: _types
 	}
+	obj.__defineSetter__('currentPlayers', function(val){
+		current = val;
+	})
+	obj.__defineGetter__('currentPlayers', function(){
+		return current;
+	})
+
+
+
+	return obj
 })

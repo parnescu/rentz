@@ -9,13 +9,14 @@ define([
 		elements: null,
 		initialize: function(data){		
 			_g.currentPlayers = data.players.length;
+			_.bindAll(this, 'handleSorting','handleChangePlayer','countRemaining')
 
 			this.data = data;
 			delete this.data.collection;
 			
 			this._maxItems = this.data.gameType.get('maxItems');
-			this._maxItems = typeof(this._maxItems) != 'number' ? this._maxItems() : this._maxItems
-		
+			this._maxItems = typeof(this._maxItems) != 'number' ? this._maxItems() : this._maxItems;
+			this._gameType = this.data.gameType;
 		},
 		render: function(){
 			this.elements = [];
@@ -24,11 +25,25 @@ define([
 			this.total = this.$el.find('li.description')[0];
 					
 			if (this.data.type && this.data.type != 'normal'){
-				this.data.players.on('change', this.handleChangePlayer, this);	
+				this.data.players.on('change', this.handleChangePlayer);
 			}else{
-				this.collection.on('change', this.countRemaining, this);
+				this.collection.on('change', this.countRemaining);
 			}
 			this.countRemaining();
+
+			if(this.data.sortable){ 
+				this.$el.addClass('withSort');
+				var sortConfig = {
+					cursor: "move",
+					items: "li:not(.description)",
+					update: this.handleSorting
+				}
+				this.$el.sortable(sortConfig).disableSelection();
+			}
+
+			if(this._gameType.get('type') === "rentz"){
+				this.handleSorting()
+			}
 			return this;
 		},
 		renderOne: function(model, index){		
@@ -57,6 +72,16 @@ define([
 				});
 			}
 			this.countRemaining();
+		},
+		handleSorting: function(){
+			var that = this
+			this.$el.find('li').each(function(i,el,arr){
+				if (!$(el).hasClass('description')){
+					$(el).removeAttr('style');
+					that.collection.get(el.dataset.id).set('value', that.el.children.length-i-1)
+				}
+			})
+			that = null;
 		}
 	});
 })

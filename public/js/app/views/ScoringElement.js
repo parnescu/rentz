@@ -11,9 +11,8 @@ define([
 			this.data = data;
 			delete this.data.model;
 			this.data.type = this.data.type || "normal";
-
-			if (this.data.player){
-				this.model.set('_user', this.data.player.cid)
+			if (this.data.list){
+				this.data._isRentz = this.data.list._gameType.get('type') === _g.gameType.RENTZ.get('type')
 			}
 		},
 		render: function(){
@@ -30,13 +29,11 @@ define([
 				}
 
 				this.$el.html(this.template(obj));
+				this.el.dataset.id = this.model.cid
+				//this.el.dataset.pid = this.data.player.cid; 
 				
 				if (this.data.type === 'normal'){
 					this.$el.find('input').change(this.handleInputChange)
-				}
-
-				if(this.model.get('_user')){
-					this.$el.addClass(this.model.get('_user'))
 				}
 
 				this.model.on('change:value', this.handleModelChange, this);
@@ -78,11 +75,11 @@ define([
 		},
 		handlePlayerSelection: function(e){
 			e.preventDefault();
+			if (this.data._isRentz) return;
 
 			_v = this.data.player.get('_select');
 			_v = !_v;
 			this.data.player.set('_select',_v)
 		}
-
 	})
 })
