@@ -13,14 +13,14 @@ define(['backbone'], function(){
 			return this.get('name') + " " + this.get('surname');
 		},
 		validate: function(attr){
+			if (attr.nick.length < 2){
+				return 'A nickname should be given'
+			}
 			if (attr.name.length < 2){
 				return 'Player must have a valid name'
 			}
 			if (attr.surname.length < 2){
 				return 'Player must have a valid surname'
-			}
-			if (attr.nick.length < 2){
-				return 'A nickname should be given'
 			}
 		}
 	})

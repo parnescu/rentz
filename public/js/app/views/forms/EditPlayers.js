@@ -8,7 +8,8 @@ define([
 		model: null,
 		events: {
 			"click .submit": 'handleSubmit',
-			"click .cancel": 'handleReset'
+			"click .cancel": 'handleReset',
+			'click .avatar': 'handleAvatar'
 		},
 		attributes:{
 			name: "editForm",
@@ -22,42 +23,38 @@ define([
 		},
 		render: function(){
 			var data = this.model ? this.model.toJSON() : {};
-			this.$el.html(this.template(data));
-			this.$el.find('input').on('change', this.handleDataInput);
-			if (this.model){
-				this.model.on('change', this.handleModelChange, this);
-			}
+			this.$el.html(this.template(data));		
+
 			this.submit = this.$el.find('.actions .submit');
 			this.cancel = this.$el.find('.actions .cancel');
 			return this;
 		},
+		_mergeData: function(){
+			var that = this;
+			this.$el.find('input').each(function(i,item){
+				item.value = item.value.replace(/\s/ig,"")
+				that.model.set(item.name, item.value)
+				item.className = item.checkValidity() ? 'valid' : 'invalid'
+			});
+		},
 		handleSubmit:function(e){
 			e.preventDefault();
 			if (this.model === null){
-					this.model = new Player();
-					this.model.on('change', this.handleModelChange, this);
-				};
+				this.model = new Player();
+			};
 
-				
-			if (this.el.checkValidity()){
-				var that = this;
-				
-				this.$el.find('input').each(function(i,item){
-					if (!item.disabled){
-						that.model.set(item.name, item.value)
-					}
-				});	
-			}
+			this._mergeData();
 		},
+
 		handleReset:function(e){
 			e.preventDefault();
+			this.$el.find('input').removeClass('invalid')
 			this.el.reset()
+			this._mergeData();
 		},
-		handleModelChange: function(model){
-			//trace('model changed ' + JSON.stringify(model.changed));
-		},
-		handleDataInput: function(){
-			trace('data changed');
+		handleAvatar: function(e){
+			e.preventDefault()
+			trace('-- avatar replace')
 		}
 	})
 })

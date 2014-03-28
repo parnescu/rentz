@@ -460,7 +460,7 @@ describe("Rentz TDD specs", function(){
 
 			expect(view.el.tagName.toLowerCase()).toBe('form')
 			expect(view.el.children.length).toBeGreaterThan(0);
-			expect(view.$el.find('input').length).toBe(4);
+			expect(view.$el.find('input').length).toBe(3);
 			expect(view.model).toBeNull();
 			expect(view.submit).toBeDefined();
 			expect(view.cancel).toBeDefined();
@@ -473,28 +473,40 @@ describe("Rentz TDD specs", function(){
 			model = new Player();
 			view = new EditPlayers({model: model }).render();
 
-			stage.append(view.el)
-			var add = view.$el.find('.actions .submit'),
-				res = view.$el.find('.actions .cancel');
-
 			view.$el.find('input[name=nick]').val('gigel');
-			add.click();
-
-			expect(view.model.get('nick')).toBe('gigel');
-			expect(view.model.isValid()).toBeFalsy()
-
 			view.$el.find('input[name=name]').val('Horezu');
 			view.$el.find('input[name=surname]').val('Alexandrovici');
-			add.click();
-			expect(view.model.isValid()).toBeTruthy();
 
-			res.click();
-			add.click();
+			view.submit.click();
+			expect(view.model.get('nick')).toBe('gigel');
+			expect(view.model.isValid()).toBeTruthy();
+			view.cancel.click();
+			view.submit.click();
 			expect(view.model.isValid()).toBeFalsy();
 
-		})
+			view.$el.find('input[name=nick]').val(' ');
+			view.$el.find('input[name=name]').val('       ');
+			view.$el.find('input[name=surname]').val('      ');
+			view.submit.click();
+			
+			expect(view.model.isValid()).toBeFalsy();
+		});
+
+		it('existing data can be changed or reverted back', function(){
+			model = new Player(bogusPlayersAdd[1]);
+			view = new EditPlayers({model: model }).render();
+			
+			expect(view.$el.find('input[name=nick]').val()).toBe('mrcanton')
+			
+			view.$el.find('input[name=nick]').val('shugarTits')
+			view.submit.click();
+			expect(view.model.get('nick')).toBe(view.$el.find('input[name=nick]').val())
+
+			view.cancel.click();
+			expect(view.model.get('nick')).toBe('mrcanton')
+		});
+
 		afterEach(function(){
-			return;
 			if(view){
 				view.remove();
 				view = null;
@@ -503,7 +515,6 @@ describe("Rentz TDD specs", function(){
 				model.destroy();
 				model = null;
 			}
-		})
-
-	})
+		});
+	});
 })

@@ -1,31 +1,25 @@
 <fieldset>
 	<div class="element">
-		<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>">
+		<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>" class="avatar">
 			<img src="<%= typeof(picture) != 'undefined' ? picture : ""  %>" alt="avatar">
 		</a>
+		<span class="itemNotify">won: <%= typeof(won) != 'undefined' ? won : "0"  %></span>
 	</div>
 	<div class="element">
-		<label for="nick">nickname: </label>
-		<input type="text" required name="nick" id="nick" value="<%= typeof(nick) != 'undefined' ? nick : "" %>"/>
+		<label for="nick">Nickname</label>
+		<input type="text" required name="nick" id="nick" value="<%= typeof(nick) != 'undefined' ? nick : "" %>" placeholder="What friends call you"/>
 	</div>
 	<hr>
 	<div class="element">
-		<label for="name">name: </label>
-		<input type="text" required name="name" id="name" value="<%= typeof(name) != 'undefined' ? name : ""  %>"/>
+		<label for="name">Name</label>
+		<input type="text" required name="name" id="name" value="<%= typeof(name) != 'undefined' ? name : ""  %>" placeholder="Name"/>
 	</div>
 	<div class="element">
-		<label for="surname">surname: </label>
-		<input type="text" required name="surname" id="surname" value="<%= typeof(surname) != 'undefined' ? surname : ""  %>"/>
+		<label for="surname">Surname</label>
+		<input type="text" required name="surname" id="surname" value="<%= typeof(surname) != 'undefined' ? surname : ""  %>" placeholder="Surname"/>
 	</div>
-	<div class="element">
-		<label for="_won">games won: </label>
-		<input type="text" name="_won" id="_won" value="<%= typeof(won) != 'undefined' ? won : "0"  %>" disabled/>
-	</div>
+	<hr>
 	<div class="actions">
-		<!-- <a href="#submit" class="submit" title="Submit">submit data</a>
-		<a href="#cancel" class="cancel" title="Cancel">reset form</a>
-		-->
-
 		<button class="submit">submit data</button>
 		<button class="cancel">reset form</button>
 	</div>

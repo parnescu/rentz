@@ -3,6 +3,9 @@ body, html, h1, h2,h3,h4,h5,h6,p,div,ul,li { margin:0; padding:0;}
 
 a { display: block; text-decoration:none;}
 
+.itemNotify { position:absolute; top:0; right:0;}
+.ui-sortable-placeholder { display:block; overflow: hidden; background:rgba(0,0,0,.5); visibility: visible !important;}
+
 .list { clear:both; float:none; display: block; overflow: hidden;}
 .list li { float:left; margin:.4em;}
 .list li.selected { background: red;}
@@ -13,4 +16,10 @@ a { display: block; text-decoration:none;}
 .list li a[data-type=delete] { background:red;}
 .list li a[data-type=sort] { background:black;}
 
-.ui-sortable-placeholder { display:block; overflow: hidden; background:rgba(0,0,0,.5); visibility: visible !important;}
+
+form input.invalid { background:rgba(255,0,0,.5); font-weight: bold; color:#fff; }
+form input.invalid:focus { background:white; color:#000; font-weight:normal;}
+form input.invalid::-webkit-input-placeholder { color:#fff;}
+form .element { position:relative;}
+
+
