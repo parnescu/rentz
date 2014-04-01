@@ -598,19 +598,22 @@ describe("Rentz TDD specs", function(){
 			}).render();
 
 			view.$el.find('.nav a:eq(0)').click();
+			expect(view.$el.find('.nav a:eq(0)').hasClass('selected')).toBeTruthy();
 			expect(val).toBe("gamesScreen");
 
 			view.$el.find('.nav a:eq(1)').click();
 			expect(val).toBe("playersScreen");
-			
-			
-
+			expect(view.$el.find('.nav a:eq(0)').hasClass('selected')).not.toBeTruthy();
 			
 			done();
 		});
 		afterEach(function(){
 			Backbone.off(_g.events.NAV_CLICKED, clsr);
 			clsr = null;
+			if (view){
+				view.remove();
+				view = null;
+			}
 		})
 	});
 

@@ -25,12 +25,17 @@ define([
 				this.$el.append('<footer><ul class="nav"></ul></footer>');
 				_.each(this.data.menu,function(item, index){
 					$(this.el.lastChild.firstChild).append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>")
+					if (this.data.type === item.type){
+						$(this.el.lastChild.firstChild.lastChild.firstChild).addClass('selected');
+					}
 				}, this);
 			}
 			return this;
 		},
 		handleNavClick: function(e){
 			e.preventDefault();
+			this.$el.find('footer ul a').removeClass('selected');
+			$(e.target).addClass('selected');
 			Backbone.trigger(_g.events.NAV_CLICKED, e.target.dataset.id);
 		}
 	})
