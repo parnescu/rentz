@@ -18,7 +18,6 @@ define([
 		for (var i=2;i<=nr;i++) { sum += i; }
 		return sum;
 	}
-
 	_types = {
 		RED_PRIEST: new GameType({
 			type: 'redPriest',
@@ -58,12 +57,14 @@ define([
 			// 4*queens, 1*red priest, 8*hands, 2*nrplayers * diamonds
 		})
 	}
-		
 
 	_events = {
 		LIST_CLICK: "listItemClicked"
 		,LIST_CHANGE_VALUE: "valueChanged"
 		,LIST_MODIFY_VALUE: "valueChangedByUser"
+		,HEAD_CLICK_BACK: "headerClickBack"
+		,HEAD_CLICK_CONTINUE: "headerClickNext"
+		,NAV_CLICKED: "footerClick"
 	}
 
 	
@@ -79,9 +80,7 @@ define([
 	})
 	obj.__defineGetter__('currentPlayers', function(){
 		return current;
-	})
-
-
+	});
 
 	return obj
 })

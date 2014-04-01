@@ -329,6 +329,7 @@ describe("Rentz TDD specs", function(){
 			}).render();
 
 			expect(Number(view.total.firstChild.value)).toBe(gameType.get('maxItems'));
+			
 			/*
 				can't really test value changes automagically... 
 				input value change from code does not trigger modification
@@ -517,4 +518,100 @@ describe("Rentz TDD specs", function(){
 			}
 		});
 	});
-})
+	
+	describe('Header view', function(){
+		var val, backC, fwC;
+		beforeEach(function(done){
+			setTimeout(function(){
+				backC = function(){ val = "back was clicked";}
+				fwC = function(){ val = "continue was clicked";}
+				Backbone.on(_g.events.HEAD_CLICK_BACK, backC);
+				Backbone.on(_g.events.HEAD_CLICK_CONTINUE, fwC);
+				done();
+			},1);
+		});
+
+		it("must be correctly defined and service all types", function(done){
+			view = new Header({
+				back: {
+					title: "Back",
+					type: "sharedView"
+				},
+				title: "new header title",
+				next: {
+					title: "New action",
+					type: "newAction"
+				}
+			}).render();
+
+			expect(view.el.tagName).toBe('HEADER');
+			expect(view.el.children.length).toEqual(3);
+			expect(view.$el.find('a.back').attr('href')).toBe('#sharedView');
+			
+			view.$el.find('a.next').click();
+			expect(val).toBe("continue was clicked");
+			
+			view.$el.find('a.back').click();
+			expect(val).toBe("back was clicked");
+			done();			
+		});
+
+		afterEach(function(){
+			Backbone.off(_g.events.HEAD_CLICK_BACK, backC);
+			Backbone.off(_g.events.HEAD_CLICK_CONTINUE, fwC);
+			backC = fwC = val = null;
+			if (view){
+				view.remove()
+				view = null;
+			}
+		})
+	});
+
+	describe('Page view', function(){
+		var val, clsr;
+		beforeEach(function(done){
+			setTimeout(function(){
+				clsr = function(e){ val = e;}
+				Backbone.on(_g.events.NAV_CLICKED, clsr);
+				done();
+			},1);
+		});
+
+		it("must be correctly defined and sercvice all types", function(done){
+			view = new Page({
+				type: "gamesScreen",
+				header: {
+					back: {
+						title: "Edit",
+						type: ""
+					},
+					title: "Games",
+					next: {
+						title: "New Game",
+						type: "newGame"
+					}
+				},
+				menu: [
+					{ title: "Games", type:"gamesScreen"}
+					,{ title: "Players", type:"playersScreen"}
+				]
+			}).render();
+
+			view.$el.find('.nav a:eq(0)').click();
+			expect(val).toBe("gamesScreen");
+
+			view.$el.find('.nav a:eq(1)').click();
+			expect(val).toBe("playersScreen");
+			
+			
+
+			
+			done();
+		});
+		afterEach(function(){
+			Backbone.off(_g.events.NAV_CLICKED, clsr);
+			clsr = null;
+		})
+	});
+
+}) 

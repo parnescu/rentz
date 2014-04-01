@@ -9,6 +9,7 @@
 			surname: 	string,
 			nick: 		string,
 			picture: 	string [ base64encoded img data ]
+			rounds:		array[round]
 		}
 
 		game type model {
@@ -33,9 +34,8 @@
 		
 		game model:{
 			id: 		uint,
-			name: 		string, [  ]
+			name: 		string, [ date it was started on pretty printed ]
 			players: 	array[uint], [ player ids arranged by score, first one is the winner ]
-			rounts: 	array[<round model>],
-			count: 		uint [number of players to prevent players.length ]
+			rounds: 	array[<round model>]
 		}
 	*/

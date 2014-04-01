@@ -1,0 +1,7 @@
+<% if (typeof(back) != 'undefined'){%>
+<a href="#<%= back.type || "" %>" class="back" title="<%= back.title %>"><%= back.title %></a>
+<% } %>
+<h1><%= title %></h1>
+<% if (typeof(next) != 'undefined'){%>
+<a href="#<%= next.type || "" %>" class="next" title="<%= next.title %>"><%= next.title %></a>
+<% } %>
