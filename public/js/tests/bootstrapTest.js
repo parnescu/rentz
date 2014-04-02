@@ -49,6 +49,7 @@
 			,'/js/app/views/pages/Header.js'
 			,'/js/app/views/pages/Page.js'
 			,'/js/app/views/forms/EditPlayers.js'
+			,'/js/app/controllers/MainController.js'
 		];
 
 	specs = specs.concat(dependencies);
@@ -64,7 +65,8 @@
 			ScoreList,
 			Header,
 			Page,
-			EditPlayers
+			EditPlayers,
+			MainController
 		){
 			// models
 			window.Player = Player;
@@ -78,6 +80,8 @@
 			window.Header = Header;
 			window.Page = Page;
 			window.EditPlayers = EditPlayers;
+			//controllers
+			window.MainController = MainController;
 			// boot
 			window._g = _g;
 			window.onload();

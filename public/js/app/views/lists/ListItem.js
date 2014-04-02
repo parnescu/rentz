@@ -35,7 +35,7 @@ define([
 			return this;
 		},
 		handleChange: function(model){
-			if (model.changed.name || model.changed.surname){
+			if (model.changed.name || model.changed.surname || model.changed.nick){
 				this.render();
 			}
 			
@@ -46,16 +46,13 @@ define([
 				this.$el.removeClass('selected');
 				this.buttons.select.removeClass('selected')
 			}
-
-
-
 		},
 		handleClick: function(e){
 			var val, type = e.target.dataset.type, allowChange = true;
 
 			switch(type){
 				case "delete":
-					this.model.collection.remove();
+					this.model.collection.remove(this.model);
 					this.remove();
 					break;
 				case "select":
@@ -79,6 +76,7 @@ define([
 					}	
 					break;
 				default:
+					Backbone.trigger(_g.events.LIST_CLICK, this.model);
 					break;
 			}		
 			val = type = allowChange = null;

@@ -2,31 +2,50 @@ define([
 	'backbone',
 	'app/views/pages/Header'
 ], function(B, Header){
+	"use strict";
 	return Backbone.View.extend({
 		className: 'page',
+		viewType: null,
 		events:{
 			"click a.navlist": "handleNavClick"
 		},
 		initialize: function(data){
 			this.data = data
+			this.viewType = data.type || null;
+			/*
+				page has:
+					- head 		[ header view ]
+					- subview 	[ list view ]
+					- content 	[ section jquery object]
+					- menu  	[ footer jquery object ]
+				objects defined
+			*/
 		},
 		render: function(){
-			if (this.data.type){
-				this.$el.addClass(this.data.type);
+			if (this.viewType){
+				this.$el.addClass(this.viewType);
 			}
 			if (this.data.header){
-				this.$el.append(new Header(this.data.header).render().el);
+				this.head = new Header(this.data.header).render()
+				this.$el.append(this.head.el);
 			}
+
 			this.$el.append('<section class="content"></section>');
+			this.content = $(this.el.lastChild);
+
 			if (this.data.view){
-				this.$el.append(this.data.view.render().el);
+				if (this.subview){ this.subview.remove(); }
+				this.subview = this.data.view.render()
+				this.content.append(this.subview.el);
 			}
+
 			if (this.data.menu){
 				this.$el.append('<footer><ul class="nav"></ul></footer>');
+				this.menu = $(this.el.lastChild.firstChild);
 				_.each(this.data.menu,function(item, index){
-					$(this.el.lastChild.firstChild).append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>")
+					this.menu.append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>")
 					if (this.data.type === item.type){
-						$(this.el.lastChild.firstChild.lastChild.firstChild).addClass('selected');
+						$(this.menu[0].lastChild.firstChild).addClass('selected');
 					}
 				}, this);
 			}
@@ -34,6 +53,7 @@ define([
 		},
 		handleNavClick: function(e){
 			e.preventDefault();
+			
 			this.$el.find('footer ul a').removeClass('selected');
 			$(e.target).addClass('selected');
 			Backbone.trigger(_g.events.NAV_CLICKED, e.target.dataset.id);

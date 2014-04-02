@@ -13,608 +13,765 @@ describe("Rentz TDD specs", function(){
 		],
 		bogusGames = [];
 		window.view = null;
-	
-	describe('List element view', function(){
-		it ('element must be correctly defined and have default value', function(){
-			view = new ListItem();
-			expect(view).toBeDefined();
-			expect(view.el.tagName).toBe('LI');
-			expect(view instanceof Backbone.View).toBeTruthy();
-		})
-		it ('default element must NOT selectable, deletable and sortable', function(){
-			view = new ListItem().render()
-			expect(view.$el.find('.delete').length).toBeFalsy()
-			expect(view.$el.find('.sort').length).toBeFalsy()
-			expect(view.$el.find('.select').length).toBeFalsy()
-		})
-		it ('must be selectable, deletable and sortable and have a type defined', function(){
-			view = new ListItem({
-				selectable: true,
-				deletable: true,
-				sortable: true
-			}).render();
-						
-			expect(view.$el.find('a[data-type=delete]').length).toBe(1);
-			expect(view.$el.find('a[data-type=sort]').length).toBe(1);
-			expect(view.$el.find('a[data-type=select]').length).toBe(1);
+	describe('Views', function(){
+		describe('List element view', function(){
+			it ('element must be correctly defined and have default value', function(){
+				view = new ListItem();
+				expect(view).toBeDefined();
+				expect(view.el.tagName).toBe('LI');
+				expect(view instanceof Backbone.View).toBeTruthy();
+			})
+			it ('default element must NOT selectable, deletable and sortable', function(){
+				view = new ListItem().render()
+				expect(view.$el.find('.delete').length).toBeFalsy()
+				expect(view.$el.find('.sort').length).toBeFalsy()
+				expect(view.$el.find('.select').length).toBeFalsy()
+			})
+			it ('must be selectable, deletable and sortable and have a type defined', function(){
+				view = new ListItem({
+					selectable: true,
+					deletable: true,
+					sortable: true
+				}).render();
+							
+				expect(view.$el.find('a[data-type=delete]').length).toBe(1);
+				expect(view.$el.find('a[data-type=sort]').length).toBe(1);
+				expect(view.$el.find('a[data-type=select]').length).toBe(1);
 
-			expect(view.data.type).toBeDefined();
-			expect(view.data.type).toBe('player')
-		});
-
-		it('adding a player model generates details and listens to changes',function(){
-			model = new Player(bogusPlayers[0]);
-			view = new ListItem({
-				selectable: false,
-				deletable: true,
-				sortable: false,
-				model: model
-			}).render();
-
-			expect(view.$el.find('.playerName').text()).toBe(model.get('name') + " " +model.get('surname'))
-			expect(view.$el.find('.playerNick').text()).toBe('nickname: '+model.get('nick'))
-			expect(view.$el.find('.gamesWon').text()).toBe("games won: 0");
-
-			model.set('name', 'Feriga');
-			expect(view.$el.find('.playerName').text()).toBe("Feriga " +model.get('surname'))
-		});
-
-		it('adding a game model generates details differently',function(){
-			model = new Game({
-				name: new Date().toString()
+				expect(view.data.type).toBeDefined();
+				expect(view.data.type).toBe('player')
 			});
-			view = new ListItem({
-				selectable: false,
-				deletable: true,
-				sortable: false,
-				type: 'game',
-				model: model
-			}).render();
-			
-			expect(view.$el.find('h2 a').text()).toBe(model.get('name'))
-			expect(view.$el.find('.playerNick').length).toBe(0)
-		});
 
-		afterEach(function(){
-			if(view){
-				view.remove();
-				view = null;	
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		});
-	});
-	
-	describe('List view', function(){
-		var c;
-		beforeEach(function(){
-			c = Backbone.Collection.extend({ model: Player });
-			collection = new c()
-			collection.add(bogusPlayers);
-		});
+			it('adding a player model generates details and listens to changes',function(){
+				model = new Player(bogusPlayers[0]);
+				view = new ListItem({
+					selectable: false,
+					deletable: true,
+					sortable: false,
+					model: model
+				}).render();
 
-		it('element must be corectly defined and have a collection available', function(){
-			view = new List()
-			
-			expect(view).toBeDefined();
-			expect(view.tagName).toBe('ul');
-			expect(view.render().el.children.length).toBe(0);
-			expect(view.className.indexOf('list')).toBeGreaterThan(-1);
-			expect(view.collection).toBeNull();
-		});
+				expect(view.$el.find('.playerName').text()).toBe(model.get('name') + " " +model.get('surname'))
+				expect(view.$el.find('.playerNick').text()).toBe('nickname: '+model.get('nick'))
+				expect(view.$el.find('.gamesWon').text()).toBe("games won: 0");
 
-		it('adding a collection generates list based on model type', function(){
-			view = new List({collection: collection}).render();
-			expect(view.el.children.length).toBeGreaterThan(0);
-		});
-
-		it('generate sortable, deletable and selectable list', function(){
-			view = new List({ 
-				sortable: true,
-				selectable: true,
-				deletable: false,
-				collection: collection
-			}).render();
-
-			expect(view.$el.hasClass('withSelect')).toBeTruthy();
-			expect(view.$el.hasClass('withDelete')).not.toBeTruthy();
-			expect(view.$el.hasClass('withSort')).toBeTruthy();
-		});
-
-		it('generate sortable, deletable and selectable list', function(){
-			view = new List({ 
-				sortable: true,
-				selectable: true,
-				deletable: false,
-				collection: collection
-			}).render();
-
-			expect(view.$el.hasClass('withSelect')).toBeTruthy();
-			expect(view.$el.hasClass('withDelete')).not.toBeTruthy();
-			expect(view.$el.hasClass('withSort')).toBeTruthy();
-		});
-
-		it('generate selectable list with max items', function(){
-			view = new List({ 
-				collection: collection,
-				selectable: true,
-				minItems: 2,
-				minItemsLabel: "% player"
-			}).render();
-			expect(view.$el.hasClass('withSelect')).toBeTruthy();
-			
-			expect(view.$el.find('li.description').length).toBeGreaterThan(0);
-			expect(view.$el.find('li.description label').length).toBeGreaterThan(0);
-			expect(view.$el.find('li.description label').text()).toBe("2 players");
-			
-			view.$el.find('li a[data-type=select]:eq(1)').click();
-			expect(view.$el.find('li.description label').text()).toBe("1 player");
-			expect(view.$el.find('li a[data-type=select]:eq(1)').parent().hasClass('selected')).toBeTruthy();
-
-			view.$el.find('li a[data-type=select]:eq(0)').click();				
-			expect(view.$el.find('li.description label').text()).toBe("0 players");
-
-			view.$el.find('li a[data-type=select]:eq(1)').click();
-			expect(view.$el.find('li.description label').text()).toBe("1 player");
-
-			view.$el.find('li a[data-type=select]:eq(1)').click();
-			expect(view.$el.find('li.description label').text()).toBe("0 players");
-			
-			view.collection.add({ name: 'fenix', surname:'wells'});
-			expect(view.el.lastChild.className).toEqual('description')
-		});
-
-		afterEach(function(){
-			c = null;
-			if(collection){
-				collection.reset();
-				collection = null;
-			}
-			if(view){
-				view.remove();
-				view = null;	
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		});
-	});
-
-	describe('Score points element', function(){
-		beforeEach(function(){
-			var gameType = _g.gameType.DAMES
-			model = new Score({
-				maxItems: gameType.get('maxItems'),
-				multiplier: gameType.get('multiplier')
+				model.set('name', 'Feriga');
+				expect(view.$el.find('.playerName').text()).toBe("Feriga " +model.get('surname'))
 			});
-		});
-		it('must be correctly defined and have model data', function(){
-			view = new ScoreElement({ 
-				model: model
-			}).render();
 
-			expect(view.model).toBeDefined();
-			expect(view.$el.find('input').length).toBeGreaterThan(2);
-			
-			view.model.set('value', 3)
-			expect(view.$el.find('input.points')[0].value).toBe('-150 points');
-			
-			view.model.set('value', 234)
-			expect(view.model.isValid()).toBeFalsy();
+			it('adding a game model generates details differently',function(){
+				model = new Game({
+					name: new Date().toString()
+				});
+				view = new ListItem({
+					selectable: false,
+					deletable: true,
+					sortable: false,
+					type: 'game',
+					model: model
+				}).render();
+				
+				expect(view.$el.find('h2 a').text()).toBe(model.get('name'))
+				expect(view.$el.find('.playerNick').length).toBe(0)
+			});
 
-			view.model.set('value', 2)
-			expect(view.model.get('value')).toEqual(2);
-
-		});
-
-		it('icon type must be have a different setup', function(){
-			view = new ScoreElement({ 
-				model: model
-				,player: new Player(bogusPlayers[1])
-				,type: 'icon'
-			}).render();
-
-			expect(view.$el.find('a').length).toBeGreaterThan(0);
-			expect(view.$el.find('img').length).toBeGreaterThan(0);
-			expect(view.$el.find('input').length).toEqual(1);
-			expect(view.$el.find('a').attr('title')).toBe('Lebby Coarse')
-
-			view.$el.find('a').click()
-			expect(view.model.get('value')).toBeGreaterThan(0)
-			expect(view.$el.find('input.points')[0].value).toBe('-50 points');
-
-			view.$el.find('a').click()
-			expect(view.model.get('value')).toBe(0)
-			expect(view.$el.find('input.points')[0].value).toBe('0 points');
-		});
-
-		afterEach(function(){
-			if(view){
-				view.remove();
-				view = null;	
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		})
-	});
-
-	describe('Score points list - red priest game type', function(){
-		var c,gameType, playerCollection;
-		beforeEach(function(){
-			gameType = _g.gameType.RED_PRIEST
-			c = Backbone.Collection.extend({ model: Score });
-			p = Backbone.Collection.extend({ model: Player });
-
-			playerCollection = new p();
-			playerCollection.add(bogusPlayers);
-
-			collection = new c();
-			for (var i=0;i<bogusPlayers.length;i++){
-				collection.add(new Score({ 
-					maxItems: gameType.get('maxItems'), 
-					multiplier: gameType.get('multiplier')
-				}));
-			}
-		});
-
-		it('must be corectly defined and fuction', function(){
-			view = new ScoreList({
-				players: playerCollection
-				,collection: collection
-				,gameType: gameType
-				,type: 'icon'
-			}).render();
-			
-			expect(view.$el.find('a').length).toBe(_g.currentPlayers);
-			expect(Number(view.total.firstChild.value)).toEqual(1);
-
-			view.$el.find('a:eq(2)').click();
-			expect(Number(view.total.firstChild.value)).toEqual(0);
-
-			view.$el.find('a:eq(0)').click();
-			expect(Number(view.total.firstChild.value)).toEqual(0);
-
-			view.$el.find('a:eq(0)').click();
-			expect(Number(view.total.firstChild.value)).toEqual(1);
-
-		});
-
-		afterEach(function(){
-			c = gameType = null;
-
-			if (collection){
-				collection.reset();
-				collection = null;
-			}
-			if(view){
-				view.remove();
-				view = null;	
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		});
-	});
-
-	describe('Score points list - dames (or normal) game type', function(){
-		var c,gameType, playerCollection;
-		beforeEach(function(){
-			gameType = _g.gameType.DAMES
-			c = Backbone.Collection.extend({ model: Score });
-			p = Backbone.Collection.extend({ model: Player });
-
-			playerCollection = new p();
-			playerCollection.add(bogusPlayers);
-
-			collection = new c();
-			for (var i=0;i<bogusPlayers.length;i++){
-				collection.add(new Score({ 
-					maxItems: gameType.get('maxItems'), 
-					multiplier: gameType.get('multiplier')
-				}));
-			}
+			afterEach(function(){
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			});
 		});
 		
-		it('must be corectly defined and fuction', function(){
-			view = new ScoreList({
-				players: playerCollection
-				,collection: collection
-				,gameType: gameType
-			}).render();
+		describe('List view', function(){
+			var c;
+			beforeEach(function(){
+				c = Backbone.Collection.extend({ model: Player });
+				collection = new c()
+				collection.add(bogusPlayers);
+			});
 
-			expect(Number(view.total.firstChild.value)).toBe(gameType.get('maxItems'));
-			
-			/*
-				can't really test value changes automagically... 
-				input value change from code does not trigger modification
-				so we manually modify the model 
-			*/
+			it('element must be corectly defined and have a collection available', function(){
+				view = new List()
+				
+				expect(view).toBeDefined();
+				expect(view.tagName).toBe('ul');
+				expect(view.render().el.children.length).toBe(0);
+				expect(view.className.indexOf('list')).toBeGreaterThan(-1);
+				expect(view.collection).toBeNull();
+			});
 
-			stage.append(view.el)
-			
-			// change slider
-			var _target = view.$el.find('input[type=range]:eq(0)');
-			
-			_target.val(2);
-			view.elements[2].model.set('value', Number(_target.val()))
-			expect(view.total.firstChild.value).toBe('2');
-			expect(_target.parent()[0].lastChild.value).toBe('-100 points');
-			
-			_target.val(312);
-			view.elements[2].model.set('value', Number(_target.val()))
-			expect(view.total.firstChild.value).toBe('0');
-			expect(_target.parent()[0].lastChild.value).toBe('-200 points');
+			it('adding a collection generates list based on model type', function(){
+				view = new List({collection: collection}).render();
+				expect(view.el.children.length).toBeGreaterThan(0);
+			});
 
-			// change number input
-			_target = view.$el.find('input[type=number]:eq(0)');
-			
-			_target.val(2)
-			view.elements[2].model.set('value', Number(_target.val()))
-			expect(view.total.firstChild.value).toBe('2');
-			expect(_target.parent()[0].lastChild.value).toBe('-100 points');
-			
-			_target.val(0)
-			view.elements[2].model.set('value', Number(_target.val()))
-			expect(view.total.firstChild.value).toBe('4');
-			expect(_target.parent()[0].lastChild.value).toBe('0 points');
-			
-			_target.val(3)
-			view.elements[2].model.set('value', Number(_target.val()))
-			expect(view.total.firstChild.value).toBe('1');
-			expect(_target.parent()[0].lastChild.value).toBe('-150 points');			
-		});
+			it('generate sortable, deletable and selectable list', function(){
+				view = new List({ 
+					sortable: true,
+					selectable: true,
+					deletable: false,
+					collection: collection
+				}).render();
 
-		afterEach(function(){
-			c = gameType = null;
-			if (collection){
-				collection.reset();
-				collection = null;
-			}
-			if(view){
-				view.remove();
-				view = null;	
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		});
-	});
+				expect(view.$el.hasClass('withSelect')).toBeTruthy();
+				expect(view.$el.hasClass('withDelete')).not.toBeTruthy();
+				expect(view.$el.hasClass('withSort')).toBeTruthy();
+			});
 
-	describe('Score points list - rentz game type (6 players)', function(){
-		var c,gameType, playerCollection;
-		beforeEach(function(){
-			gameType = _g.gameType.RENTZ
-			c = Backbone.Collection.extend({ model: Score });
-			p = Backbone.Collection.extend({ model: Player });
+			it('generate sortable, deletable and selectable list', function(){
+				view = new List({ 
+					sortable: true,
+					selectable: true,
+					deletable: false,
+					collection: collection
+				}).render();
 
-			playerCollection = new p();
-			playerCollection.add(bogusPlayers);
-			playerCollection.add(bogusPlayersAdd);
+				expect(view.$el.hasClass('withSelect')).toBeTruthy();
+				expect(view.$el.hasClass('withDelete')).not.toBeTruthy();
+				expect(view.$el.hasClass('withSort')).toBeTruthy();
+			});
 
+			it('generate selectable list with max items', function(){
+				view = new List({ 
+					collection: collection,
+					selectable: true,
+					minItems: 2,
+					minItemsLabel: "% player"
+				}).render();
+				expect(view.$el.hasClass('withSelect')).toBeTruthy();
+				
+				expect(view.$el.find('li.description').length).toBeGreaterThan(0);
+				expect(view.$el.find('li.description label').length).toBeGreaterThan(0);
+				expect(view.$el.find('li.description label').text()).toBe("2 players");
+				
+				view.$el.find('li a[data-type=select]:eq(1)').click();
+				expect(view.$el.find('li.description label').text()).toBe("1 player");
+				expect(view.$el.find('li a[data-type=select]:eq(1)').parent().hasClass('selected')).toBeTruthy();
 
-			collection = new c();
-			for (var i=0;i<playerCollection.models.length;i++){
-				collection.add(new Score({ 
-					maxItems: gameType.get('maxItems'), 
-					multiplier: gameType.get('multiplier')
-				}));
-			}
-		});
+				view.$el.find('li a[data-type=select]:eq(0)').click();				
+				expect(view.$el.find('li.description label').text()).toBe("0 players");
 
-		it('must be corectly defined and fuction', function(){
-			view = new ScoreList({
-				players: playerCollection
-				,collection: collection
-				,gameType: gameType
-				,sortable: true
-				,type: 'icon'
-			}).render();		
-			var _target = view.elements[2];
+				view.$el.find('li a[data-type=select]:eq(1)').click();
+				expect(view.$el.find('li.description label').text()).toBe("1 player");
 
-			expect(Number(view.total.firstChild.value)).toBe(21);
-			expect(view.elements[0].model.get('value')).toBe(1);
-			expect(view.elements[1].model.get('value')).toBe(2);
-			expect(view.elements[2].model.get('value')).toBe(3);
-			expect(view.elements[5].model.get('value')).toBe(6);
-			expect(view.collection.get(_target.model.cid).get('value')).toBe(3)
-			
-			// emulate sorting - move third player to first
-			view.$el.prepend(_target.el);
-			view.handleSorting();
-			expect(view.collection.get(_target.model.cid).get('value')).toBe(6)
-			expect(_target.el.lastChild.value).toBe('300 points')
+				view.$el.find('li a[data-type=select]:eq(1)').click();
+				expect(view.$el.find('li.description label').text()).toBe("0 players");
+				
+				view.collection.add({ name: 'fenix', surname:'wells'});
+				expect(view.el.lastChild.className).toEqual('description')
+			});
 
-			// emulate sorting - move first player to last
-			view.$el.find('li.description').before(_target.el)
-			view.handleSorting();
-			expect(view.collection.get(_target.model.cid).get('value')).toBe(1)
-			expect(_target.el.lastChild.value).toBe('50 points')
-		});
-
-		afterEach(function(){
-			c = gameType = null;
-			if (collection){
-				collection.reset();
-				collection = null;
-			}
-			if(view){
-				view.remove();
-				view = null;	
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		});
-	});
-
-	describe('Players form view', function(){
-		it('correctly defined with elements for name, surname, nick, photo and games won', function(){
-			view = new EditPlayers().render();
-
-			expect(view.el.tagName.toLowerCase()).toBe('form')
-			expect(view.el.children.length).toBeGreaterThan(0);
-			expect(view.$el.find('input').length).toBe(3);
-			expect(view.model).toBeNull();
-			expect(view.submit).toBeDefined();
-			expect(view.cancel).toBeDefined();
-
-			view.submit.click();
-			expect(view.model).not.toBeNull();
-		});
-
-		it('adding a model can save/modify a player and his data', function(){
-			model = new Player();
-			view = new EditPlayers({model: model }).render();
-
-			view.$el.find('input[name=nick]').val('gigel');
-			view.$el.find('input[name=name]').val('Horezu');
-			view.$el.find('input[name=surname]').val('Alexandrovici');
-
-			view.submit.click();
-			expect(view.model.get('nick')).toBe('gigel');
-			expect(view.model.isValid()).toBeTruthy();
-			view.cancel.click();
-			view.submit.click();
-			expect(view.model.isValid()).toBeFalsy();
-
-			view.$el.find('input[name=nick]').val(' ');
-			view.$el.find('input[name=name]').val('       ');
-			view.$el.find('input[name=surname]').val('      ');
-			view.submit.click();
-			
-			expect(view.model.isValid()).toBeFalsy();
-		});
-
-		it('existing data can be changed or reverted back', function(){
-			model = new Player(bogusPlayersAdd[1]);
-			view = new EditPlayers({model: model }).render();
-			
-			expect(view.$el.find('input[name=nick]').val()).toBe('mrcanton')
-			
-			view.$el.find('input[name=nick]').val('shugarTits')
-			view.submit.click();
-			expect(view.model.get('nick')).toBe(view.$el.find('input[name=nick]').val())
-
-			view.cancel.click();
-			expect(view.model.get('nick')).toBe('mrcanton')
-		});
-
-		afterEach(function(){
-			if(view){
-				view.remove();
-				view = null;
-			}
-			if(model){
-				model.destroy();
-				model = null;
-			}
-		});
-	});
-	
-	describe('Header view', function(){
-		var val, backC, fwC;
-		beforeEach(function(done){
-			setTimeout(function(){
-				backC = function(){ val = "back was clicked";}
-				fwC = function(){ val = "continue was clicked";}
-				Backbone.on(_g.events.HEAD_CLICK_BACK, backC);
-				Backbone.on(_g.events.HEAD_CLICK_CONTINUE, fwC);
-				done();
-			},1);
-		});
-
-		it("must be correctly defined and service all types", function(done){
-			view = new Header({
-				back: {
-					title: "Back",
-					type: "sharedView"
-				},
-				title: "new header title",
-				next: {
-					title: "New action",
-					type: "newAction"
+			afterEach(function(){
+				c = null;
+				if(collection){
+					collection.reset();
+					collection = null;
 				}
-			}).render();
-
-			expect(view.el.tagName).toBe('HEADER');
-			expect(view.el.children.length).toEqual(3);
-			expect(view.$el.find('a.back').attr('href')).toBe('#sharedView');
-			
-			view.$el.find('a.next').click();
-			expect(val).toBe("continue was clicked");
-			
-			view.$el.find('a.back').click();
-			expect(val).toBe("back was clicked");
-			done();			
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			});
 		});
 
-		afterEach(function(){
-			Backbone.off(_g.events.HEAD_CLICK_BACK, backC);
-			Backbone.off(_g.events.HEAD_CLICK_CONTINUE, fwC);
-			backC = fwC = val = null;
-			if (view){
-				view.remove()
-				view = null;
-			}
-		})
-	});
+		describe('Score points element', function(){
+			beforeEach(function(){
+				var gameType = _g.gameType.DAMES
+				model = new Score({
+					maxItems: gameType.get('maxItems'),
+					multiplier: gameType.get('multiplier')
+				});
+			});
+			it('must be correctly defined and have model data', function(){
+				view = new ScoreElement({ 
+					model: model
+				}).render();
 
-	describe('Page view', function(){
-		var val, clsr;
-		beforeEach(function(done){
-			setTimeout(function(){
-				clsr = function(e){ val = e;}
-				Backbone.on(_g.events.NAV_CLICKED, clsr);
-				done();
-			},1);
+				expect(view.model).toBeDefined();
+				expect(view.$el.find('input').length).toBeGreaterThan(2);
+				
+				view.model.set('value', 3)
+				expect(view.$el.find('input.points')[0].value).toBe('-150 points');
+				
+				view.model.set('value', 234)
+				expect(view.model.isValid()).toBeFalsy();
+
+				view.model.set('value', 2)
+				expect(view.model.get('value')).toEqual(2);
+
+			});
+
+			it('icon type must be have a different setup', function(){
+				view = new ScoreElement({ 
+					model: model
+					,player: new Player(bogusPlayers[1])
+					,type: 'icon'
+				}).render();
+
+				expect(view.$el.find('a').length).toBeGreaterThan(0);
+				expect(view.$el.find('img').length).toBeGreaterThan(0);
+				expect(view.$el.find('input').length).toEqual(1);
+				expect(view.$el.find('a').attr('title')).toBe('Lebby Coarse')
+
+				view.$el.find('a').click()
+				expect(view.model.get('value')).toBeGreaterThan(0)
+				expect(view.$el.find('input.points')[0].value).toBe('-50 points');
+
+				view.$el.find('a').click()
+				expect(view.model.get('value')).toBe(0)
+				expect(view.$el.find('input.points')[0].value).toBe('0 points');
+			});
+
+			afterEach(function(){
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			})
 		});
 
-		it("must be correctly defined and sercvice all types", function(done){
-			view = new Page({
-				type: "gamesScreen",
-				header: {
+		describe('Score points list - red priest game type', function(){
+			var c,gameType, playerCollection;
+			beforeEach(function(){
+				gameType = _g.gameType.RED_PRIEST
+				c = Backbone.Collection.extend({ model: Score });
+				p = Backbone.Collection.extend({ model: Player });
+
+				playerCollection = new p();
+				playerCollection.add(bogusPlayers);
+
+				collection = new c();
+				for (var i=0;i<bogusPlayers.length;i++){
+					collection.add(new Score({ 
+						maxItems: gameType.get('maxItems'), 
+						multiplier: gameType.get('multiplier')
+					}));
+				}
+			});
+
+			it('must be corectly defined and fuction', function(){
+				view = new ScoreList({
+					players: playerCollection
+					,collection: collection
+					,gameType: gameType
+					,type: 'icon'
+				}).render();
+				
+				expect(view.$el.find('a').length).toBe(_g.currentPlayers);
+				expect(Number(view.total.firstChild.value)).toEqual(1);
+
+				view.$el.find('a:eq(2)').click();
+				expect(Number(view.total.firstChild.value)).toEqual(0);
+
+				view.$el.find('a:eq(0)').click();
+				expect(Number(view.total.firstChild.value)).toEqual(0);
+
+				view.$el.find('a:eq(0)').click();
+				expect(Number(view.total.firstChild.value)).toEqual(1);
+
+			});
+
+			afterEach(function(){
+				c = gameType = null;
+
+				if (collection){
+					collection.reset();
+					collection = null;
+				}
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			});
+		});
+
+		describe('Score points list - dames (or normal) game type', function(){
+			var c,gameType, playerCollection;
+			beforeEach(function(){
+				gameType = _g.gameType.DAMES
+				c = Backbone.Collection.extend({ model: Score });
+				p = Backbone.Collection.extend({ model: Player });
+
+				playerCollection = new p();
+				playerCollection.add(bogusPlayers);
+
+				collection = new c();
+				for (var i=0;i<bogusPlayers.length;i++){
+					collection.add(new Score({ 
+						maxItems: gameType.get('maxItems'), 
+						multiplier: gameType.get('multiplier')
+					}));
+				}
+			});
+			
+			it('must be corectly defined and fuction', function(){
+				view = new ScoreList({
+					players: playerCollection
+					,collection: collection
+					,gameType: gameType
+				}).render();
+
+				expect(Number(view.total.firstChild.value)).toBe(gameType.get('maxItems'));
+				
+				/*
+					can't really test value changes automagically... 
+					input value change from code does not trigger modification
+					so we manually modify the model 
+				*/
+
+				stage.append(view.el)
+				
+				// change slider
+				var _target = view.$el.find('input[type=range]:eq(0)');
+				
+				_target.val(2);
+				view.elements[2].model.set('value', Number(_target.val()))
+				expect(view.total.firstChild.value).toBe('2');
+				expect(_target.parent()[0].lastChild.value).toBe('-100 points');
+				
+				_target.val(312);
+				view.elements[2].model.set('value', Number(_target.val()))
+				expect(view.total.firstChild.value).toBe('0');
+				expect(_target.parent()[0].lastChild.value).toBe('-200 points');
+
+				// change number input
+				_target = view.$el.find('input[type=number]:eq(0)');
+				
+				_target.val(2)
+				view.elements[2].model.set('value', Number(_target.val()))
+				expect(view.total.firstChild.value).toBe('2');
+				expect(_target.parent()[0].lastChild.value).toBe('-100 points');
+				
+				_target.val(0)
+				view.elements[2].model.set('value', Number(_target.val()))
+				expect(view.total.firstChild.value).toBe('4');
+				expect(_target.parent()[0].lastChild.value).toBe('0 points');
+				
+				_target.val(3)
+				view.elements[2].model.set('value', Number(_target.val()))
+				expect(view.total.firstChild.value).toBe('1');
+				expect(_target.parent()[0].lastChild.value).toBe('-150 points');			
+			});
+
+			afterEach(function(){
+				c = gameType = null;
+				if (collection){
+					collection.reset();
+					collection = null;
+				}
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			});
+		});
+
+		describe('Score points list - rentz game type (6 players)', function(){
+			var c,gameType, playerCollection;
+			beforeEach(function(){
+				gameType = _g.gameType.RENTZ
+				c = Backbone.Collection.extend({ model: Score });
+				p = Backbone.Collection.extend({ model: Player });
+
+				playerCollection = new p();
+				playerCollection.add(bogusPlayers);
+				playerCollection.add(bogusPlayersAdd);
+
+
+				collection = new c();
+				for (var i=0;i<playerCollection.models.length;i++){
+					collection.add(new Score({ 
+						maxItems: gameType.get('maxItems'), 
+						multiplier: gameType.get('multiplier')
+					}));
+				}
+			});
+
+			it('must be corectly defined and fuction', function(){
+				view = new ScoreList({
+					players: playerCollection
+					,collection: collection
+					,gameType: gameType
+					,sortable: true
+					,type: 'icon'
+				}).render();		
+				var _target = view.elements[2];
+
+				expect(Number(view.total.firstChild.value)).toBe(21);
+				expect(view.elements[0].model.get('value')).toBe(1);
+				expect(view.elements[1].model.get('value')).toBe(2);
+				expect(view.elements[2].model.get('value')).toBe(3);
+				expect(view.elements[5].model.get('value')).toBe(6);
+				expect(view.collection.get(_target.model.cid).get('value')).toBe(3)
+				
+				// emulate sorting - move third player to first
+				view.$el.prepend(_target.el);
+				view.handleSorting();
+				expect(view.collection.get(_target.model.cid).get('value')).toBe(6)
+				expect(_target.el.lastChild.value).toBe('300 points')
+
+				// emulate sorting - move first player to last
+				view.$el.find('li.description').before(_target.el)
+				view.handleSorting();
+				expect(view.collection.get(_target.model.cid).get('value')).toBe(1)
+				expect(_target.el.lastChild.value).toBe('50 points')
+			});
+
+			afterEach(function(){
+				c = gameType = null;
+				if (collection){
+					collection.reset();
+					collection = null;
+				}
+				if(view){
+					view.remove();
+					view = null;	
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			});
+		});
+
+		describe('Players form view', function(){
+			it('correctly defined with elements for name, surname, nick, photo and games won', function(){
+				view = new EditPlayers().render();
+
+				expect(view.el.tagName.toLowerCase()).toBe('form')
+				expect(view.el.children.length).toBeGreaterThan(0);
+				expect(view.$el.find('input').length).toBe(3);
+				expect(view.model).toBeNull();
+				expect(view.submit).toBeDefined();
+				expect(view.cancel).toBeDefined();
+
+				view.submit.click();
+				expect(view.model).not.toBeNull();
+			});
+
+			it('adding a model can save/modify a player and his data', function(){
+				model = new Player();
+				view = new EditPlayers({model: model }).render();
+
+				view.$el.find('input[name=nick]').val('gigel');
+				view.$el.find('input[name=name]').val('Horezu');
+				view.$el.find('input[name=surname]').val('Alexandrovici');
+
+				view.submit.click();
+				expect(view.model.get('nick')).toBe('gigel');
+				expect(view.model.isValid()).toBeTruthy();
+				view.cancel.click();
+				view.submit.click();
+				expect(view.model.isValid()).toBeFalsy();
+
+				view.$el.find('input[name=nick]').val(' ');
+				view.$el.find('input[name=name]').val('       ');
+				view.$el.find('input[name=surname]').val('      ');
+				view.submit.click();
+				
+				expect(view.model.isValid()).toBeFalsy();
+			});
+
+			it('existing data can be changed or reverted back', function(){
+				model = new Player(bogusPlayersAdd[1]);
+				view = new EditPlayers({model: model }).render();
+				
+				expect(view.$el.find('input[name=nick]').val()).toBe('mrcanton')
+				
+				view.$el.find('input[name=nick]').val('shugarTits')
+				view.submit.click();
+				expect(view.model.get('nick')).toBe(view.$el.find('input[name=nick]').val())
+
+				view.cancel.click();
+				expect(view.model.get('nick')).toBe('mrcanton')
+			});
+
+			afterEach(function(){
+				if(view){
+					view.remove();
+					view = null;
+				}
+				if(model){
+					model.destroy();
+					model = null;
+				}
+			});
+		});
+		
+		describe('Header view', function(){
+			var val, backC, fwC;
+			beforeEach(function(done){
+				setTimeout(function(){
+					backC = function(){ val = "back was clicked";}
+					fwC = function(){ val = "continue was clicked";}
+					Backbone.on(_g.events.HEAD_CLICK_BACK, backC);
+					Backbone.on(_g.events.HEAD_CLICK_CONTINUE, fwC);
+					done();
+				},1);
+			});
+
+			it("must be correctly defined and service all types", function(done){
+				view = new Header({
 					back: {
-						title: "Edit",
-						type: ""
+						title: "Back",
+						type: "sharedView"
 					},
-					title: "Games",
+					title: "new header title",
 					next: {
-						title: "New Game",
-						type: "newGame"
+						title: "New action",
+						type: "newAction"
 					}
-				},
-				menu: [
-					{ title: "Games", type:"gamesScreen"}
-					,{ title: "Players", type:"playersScreen"}
-				]
-			}).render();
+				}).render();
 
-			view.$el.find('.nav a:eq(0)').click();
-			expect(view.$el.find('.nav a:eq(0)').hasClass('selected')).toBeTruthy();
-			expect(val).toBe("gamesScreen");
+				expect(view.el.tagName).toBe('HEADER');
+				expect(view.el.children.length).toEqual(3);
+				expect(view.$el.find('a.back').attr('href')).toBe('#sharedView');
+				
+				view.$el.find('a.next').click();
+				expect(val).toBe("continue was clicked");
+				
+				view.$el.find('a.back').click();
+				expect(val).toBe("back was clicked");
+				done();			
+			});
 
-			view.$el.find('.nav a:eq(1)').click();
-			expect(val).toBe("playersScreen");
-			expect(view.$el.find('.nav a:eq(0)').hasClass('selected')).not.toBeTruthy();
-			
-			done();
+			afterEach(function(){
+				Backbone.off(_g.events.HEAD_CLICK_BACK, backC);
+				Backbone.off(_g.events.HEAD_CLICK_CONTINUE, fwC);
+				backC = fwC = val = null;
+				if (view){
+					view.remove()
+					view = null;
+				}
+			})
 		});
-		afterEach(function(){
-			Backbone.off(_g.events.NAV_CLICKED, clsr);
-			clsr = null;
-			if (view){
-				view.remove();
-				view = null;
-			}
-		})
-	});
 
+		describe('Page view', function(){
+			var val, clsr;
+			beforeEach(function(done){
+				setTimeout(function(){
+					clsr = function(e){ val = e;}
+					Backbone.on(_g.events.NAV_CLICKED, clsr);
+					done();
+				},1);
+			});
+
+			it("must be correctly defined and sercvice all types", function(done){
+				view = new Page({
+					type: "gamesScreen",
+					menu: [
+						{ title: "Games", type:"gamesScreen"}
+						,{ title: "Players", type:"playersScreen"}
+					],
+					header: {
+						back: {
+							title: "Edit",
+							type: ""
+						},
+						title: "Games",
+						next: {
+							title: "New Game",
+							type: "newGame"
+						}
+					}
+				}).render();
+
+				view.$el.find('.nav a:eq(0)').click();
+				expect(view.$el.find('.nav a:eq(0)').hasClass('selected')).toBeTruthy();
+				expect(val).toBe("gamesScreen");
+
+				view.$el.find('.nav a:eq(1)').click();
+				expect(val).toBe("playersScreen");
+				expect(view.$el.find('.nav a:eq(0)').hasClass('selected')).not.toBeTruthy();
+				stage.append(view.el);
+
+				done();
+			});
+
+			afterEach(function(){
+				Backbone.off(_g.events.NAV_CLICKED, clsr);
+				clsr = null;
+				if (view){
+					view.remove();
+					view = null;
+				}
+			});
+		});
+
+		describe("New game - player selection page", function(){
+			beforeEach(function(){
+				_g.players.add(bogusPlayers);
+				_g.players.add(bogusPlayersAdd);
+
+				view = new Page({
+					type: _g.viewType.PLAYERS_SELECT_SCREEN.type,
+					menu: [
+						_g.viewType.PLAYER_EDIT_SCREEN
+						,_g.viewType.GAME_QUIT_SCREEN
+					],
+					header: {
+						title: "Select users",
+						next: _g.viewType.PLAYERS_SORT_SCREEN
+					},
+					view: new List({
+						selectable: true,
+						maxItems: 6,
+						collection: _g.players
+					})
+				}).render();
+
+				MainController.init(view);
+				stage.append(view.el);
+			});
+
+			xit("add new player from selection screen", function(){
+				view.menu.find('a:eq(0)').click();
+
+				var m = MainController.view();
+				m.$el.find('input[name=nick]').val('cireshescu');
+				m.$el.find('input[name=name]').val('Vasile');
+				m.$el.find('input[name=surname]').val('Ionela');
+				m.$el.find('button.submit').click()
+
+				expect(m.subview.model.isValid()).toBeTruthy();
+				expect(_g.players.models[6].get('nick')).toBe('cireshescu');
+
+				m = null;
+			});
+
+			it("select three players to play", function(){
+				view.subview.$el.find('a[data-type=select]:eq(2)').click();
+				view.subview.$el.find('a[data-type=select]:eq(0)').click();
+				view.subview.$el.find('a[data-type=select]:eq(3)').click();
+				expect(view.subview.$el.find('a.selected').length).toEqual(3);
+
+				view.head.$el.find('a').click();
+			});
+
+			afterEach(function(){
+				return;
+				if (view){
+					view.remove()
+					view = null;
+				}
+				_g.players.reset();
+			});
+
+			
+		});
+	});
+	xdescribe("Controllers", function(){
+		describe("Main Screen Controller", function(){
+			beforeEach(function(){
+				_g.players.add(bogusPlayers);
+
+				view = new Page({
+					menu: [
+						_g.viewType.GAMES_SCREEN
+						,_g.viewType.PLAYERS_LIST_SCREEN
+					],
+					header: {
+						back: {
+							title: "Edit",
+							type: ""
+						},
+						title: "Players",
+						next: {
+							title: "New Player",
+							type: "newPlayer"
+						}
+					}
+				}).render();
+			});
+
+			it("you can switch between games/players lists", function(){
+				expect(function(){ MainController.init()}).toThrowError();
+				expect(function(){ MainController.init(view)}).not.toThrowError();
+				MainController.init(view);
+				stage.append(view.el);
+
+				view.menu.find('a:eq(1)').click();
+				expect(view.head.title.text()).toBe("Players");
+				expect(view.subview).not.toBeNull();
+				expect(view.viewType).toBe(_g.viewType.PLAYERS_LIST_SCREEN.type);
+
+				view.menu.find('a:eq(0)').click();
+				expect(view.head.title.text()).toBe("Games");
+				expect(view.subview.el.children.length).toBe(0);
+				expect(view.viewType).toBe(_g.viewType.GAMES_SCREEN.type);
+
+				view.menu.find('a:eq(1)').click();
+			});
+
+			it("create/edit new player", function(){
+				stage.append(view.el);
+
+				MainController.init(view);
+				view.menu.find('a:eq(1)').click();
+				view.head.$el.find('a:eq(1)').click();
+				
+				expect(_g.players.models.length).toBe(3);
+				expect(stage[0].children.length).toBeGreaterThan(1);
+
+				var m = MainController.view()
+				m.$el.find('input[name=nick]').val('cireshescu');
+				
+				m.$el.find('input[name=surname]').val('Ionela');
+				m.$el.find('button.submit').click()
+
+				expect(m.subview.model.isValid()).toBeFalsy();
+
+				m.$el.find('input[name=name]').val('Vasile');
+				m.$el.find('button.submit').click()
+
+				expect(m.subview.model.isValid()).toBeTruthy();
+				expect(stage[0].children.length).toBe(1);
+				expect(_g.players.models.length).toBe(4);
+				expect(view.subview.el.children.length).toBe(4)
+				expect(_g.players.models[3].get('nick')).toBe('cireshescu');
+
+
+				view.subview.$el.find('a.clicker:eq(0)').click();
+				m = MainController.view();
+				m.$el.find('input[name=nick]').val('miranda');
+				m.$el.find('button.submit').click()
+
+				expect(m.subview.model.isValid()).toBeTruthy();
+				expect(_g.players.models[3].get('nick')).toBe('miranda');
+
+
+				m = null;
+			})
+
+			afterEach(function(){
+				MainController.remove();
+				if(view){
+					view.remove();
+					view = null;
+				}
+				_g.players.reset();
+			});
+		});
+	});
 }) 

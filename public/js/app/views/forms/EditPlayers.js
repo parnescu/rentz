@@ -3,6 +3,7 @@ define([
 	'app/models/Player',
 	'text!/templates/EditPlayers.html'
 ], function(B, Player, template){
+	"use strict";
 	return Backbone.View.extend({
 		tagName: 'form',
 		model: null,
@@ -35,15 +36,17 @@ define([
 				item.value = item.value.replace(/\s/ig,"")
 				that.model.set(item.name, item.value)
 				item.className = item.checkValidity() ? 'valid' : 'invalid'
-			});
+			});	
 		},
 		handleSubmit:function(e){
 			e.preventDefault();
-			if (this.model === null){
+			if (!this.model){
 				this.model = new Player();
 			};
-
 			this._mergeData();
+			if (this.model.isValid()){
+				Backbone.trigger(_g.events.FORM_SUBMIT, this.model);
+			}
 		},
 
 		handleReset:function(e){
