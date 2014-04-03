@@ -12,6 +12,7 @@ define([
 		},
 		initialize: function(data){
 			this.data = data;
+			this.data.title = this.data.title || ""
 		},
 		render: function(){
 			this.$el.html(this.template(this.data));
@@ -19,7 +20,9 @@ define([
 			return this;
 		},
 		handleClick: function(e){
-			Backbone.trigger($(e.target).hasClass('next') ? _g.events.HEAD_CLICK_CONTINUE : _g.events.HEAD_CLICK_BACK, e.target);
+			var evt = $(e.target).hasClass('next') ? _g.events.HEAD_CLICK_CONTINUE : _g.events.HEAD_CLICK_BACK;
+				data = $(e.target).hasClass('next') ? this.data.next : this.data.back;
+			Backbone.trigger(evt, data);
 			e.preventDefault();
 		},
 		setButtonState: function(type, state, label){

@@ -26,6 +26,7 @@ define([
 				this.$el.addClass(this.viewType);
 			}
 			if (this.data.header){
+				this.data.header.title = this.data.header.title || (this.model ? this.model.fullname() : "")
 				this.head = new Header(this.data.header).render()
 				this.$el.append(this.head.el);
 			}

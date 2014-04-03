@@ -4,7 +4,7 @@ define([
 	'app/views/lists/ListItem',
 	'app/models/Player'
 ], function(B, _g, ListItem, Player){
-	var view = Backbone.View.extend({
+	return Backbone.View.extend({
 		tagName: 'ul',
 		className: 'list',
 		collection: null,
@@ -76,7 +76,24 @@ define([
 			}
 		},
 		handleSorting: function(e){
-			trace('update sorting');
+			/*
+				1. build temp collection
+				2. reset current collection
+				3. sort temp collection 
+				4. re-add items to collection
+			*/
+			var _c = Backbone.Collection.extend({}),
+				tmp = new _c();
+
+			tmp.add(this.collection.models);
+			this.collection.reset();
+
+			_.each(this.$el.find('li'), function(el,index){
+			 	this.collection.add(tmp.models[Number(el.dataset.pos)], {silent:true})
+			}, this);
+
+			tmp.reset()
+			tmp = _c = null;
 		},
 		handleItemSelection: function(data){		
 			var sum = 0;
@@ -86,6 +103,4 @@ define([
 			sum = null;
 		}
 	});
-
-	return view;
 })

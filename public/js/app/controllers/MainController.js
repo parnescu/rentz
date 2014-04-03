@@ -19,6 +19,7 @@ define([
 
 				_end();
 				_currView = _g.pageStack.pop();
+				
 				if (_currView){
 					_start(_currView);	
 
@@ -33,14 +34,44 @@ define([
 				Backbone.trigger(_g.events.BUILD_PAGE, {
 					type: _g.viewType.PLAYER_EDIT_SCREEN.type,
 					header:{
-						back: {
-							title: "Back",
-							type: ""
-						},
+						back: _g.viewType.GO_BACK,
 						title: model ? model.fullname() : "New Player"
 					}
 					,view: new EditPlayers({ model: model})
 				});
+			},
+			_addPlayersSelectScreen = function(){
+				//	1. determine which players were selected
+				//	2. build a new collection based on those players
+				//	3. change list subview with sortable list if enough players are selected
+				
+				_g.sPlayers.reset();
+				_g.players.each(function(item, i){ if (item.get('_select')){ item.set('_select', false);_g.sPlayers.add(item);}}, this);
+
+				if (_g.sPlayers.length >= _g.MIN_PLAYERS && _g.sPlayers.length <= _g.MAX_PLAYERS){
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.PLAYERS_SORT_SCREEN.type,
+						header:{
+							back: _g.viewType.GO_BACK,
+							title: "Players Order",
+							next: _g.viewType.START_NEW_GAME
+						}
+						,view: new List({ collection: _g.sPlayers, sortable:true})
+					});
+				}else{
+					throw new Error('The allowed number of players is between '+_g.MIN_PLAYERS+' and '+_g.MAX_PLAYERS);
+				}
+			},
+			_startNewGame = function(){
+				// clear page stack 
+				// cancel currview
+				// build new page
+
+				_.each(_g.pageStack, function(view){ view.remove();});
+				_currView.remove();
+
+				trace('trigger build new page')
+				
 			},
 		// end - base screen actions
 
@@ -55,40 +86,37 @@ define([
 		_handleBackButton = function(button){
 			trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
 
-			switch(_currView.viewType){
-				case _g.viewType.PLAYER_EDIT_SCREEN.type:
-					_goBack();
-					break;
-				default:
-					var pressed = button.dataset.pressed;
-					pressed = pressed === undefined ? "on" : pressed === 'off' ? "on" : "off";
-					_currView.head.setButtonState('back', pressed);
+			if (_currView.head.data.back.type === _g.viewType.GO_BACK.type){
+				_goBack();
+			}else{
+				// edit button enabled
+				var pressed = button.dataset.pressed;
+				pressed = pressed === undefined ? "on" : pressed === 'off' ? "on" : "off";
+				_currView.head.setButtonState('back', pressed);
 
-					if (pressed == 'on'){ _currView.content.addClass("editable");
-					}else{ _currView.content.removeClass("editable");}
-					trace(" -> "+pressed);
+				if (pressed == 'on'){ _currView.content.addClass("editable");
+				}else{ _currView.content.removeClass("editable");}
+				trace(" -> "+pressed);
 
-					pressed = null;
-					break;
+				pressed = null;
 			}
 		},
-		_handleContinueButton = function(){
-			trace('MAIN_CTRL:: switch to new page ' + _currView.viewType)
+		_handleContinueButton = function(data){
+			trace('MAIN_CTRL:: switch to new page ' + data.type)
 
-			switch(_currView.viewType){
-				case _g.viewType.PLAYERS_LIST_SCREEN.type:
+			switch(data.type){
+				case _g.viewType.PLAYER_EDIT_SCREEN.type:
 					_addPlayerScreen();
 					break;
-				case _g.viewType.GAMES_SCREEN.type:
-					trace(' -> "new game"')
+				case _g.viewType.PLAYERS_SORT_SCREEN.type:
+					_addPlayersSelectScreen();
 					break;
-				case _g.viewType.PLAYERS_SELECT_SCREEN.type:
-					trace(' -> build players sort page')
-					/*
-						1. determine which players were selected
-						2. build a new collection based on those players
-						3. change list subview with sortable list
-					*/
+				case _g.viewType.START_NEW_GAME.type:
+					_startNewGame();
+					break;
+				default:
+					trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
+			 		trace(data);
 					break;
 			}
 		},
@@ -151,7 +179,7 @@ define([
 			}
 		},
 		_handleBuildPage = function(data){
-			trace('MAIN_CTRL:: build new page ' + data.viewType);
+			trace('MAIN_CTRL:: build new page ' + data.type);
 			_g.pageStack.push(_currView);
 
 			_end();

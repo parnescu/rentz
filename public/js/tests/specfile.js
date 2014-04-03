@@ -11,6 +11,9 @@ describe("Rentz TDD specs", function(){
 			,{ name:"Ashura", surname:"Keniji", nick:'mrcanton'}
 			,{ name:"Lancaster", surname:"Void", nick:'rikudanton'}
 		],
+		bogusPlayersMore = [
+			{ name:"Gigi", surname:"Castelano", nick:'tzatzemoi'}
+		]
 		bogusGames = [];
 		window.view = null;
 	describe('Views', function(){
@@ -581,19 +584,13 @@ describe("Rentz TDD specs", function(){
 				view = new Page({
 					type: "gamesScreen",
 					menu: [
-						{ title: "Games", type:"gamesScreen"}
-						,{ title: "Players", type:"playersScreen"}
+						_g.viewType.GAMES_SCREEN
+						,_g.viewType.PLAYERS_LIST_SCREEN
 					],
 					header: {
-						back: {
-							title: "Edit",
-							type: ""
-						},
+						back: _g.viewType.EDIT,
 						title: "Games",
-						next: {
-							title: "New Game",
-							type: "newGame"
-						}
+						next: _g.viewType.PLAYER_EDIT_SCREEN
 					}
 				}).render();
 
@@ -623,6 +620,7 @@ describe("Rentz TDD specs", function(){
 			beforeEach(function(){
 				_g.players.add(bogusPlayers);
 				_g.players.add(bogusPlayersAdd);
+				_g.players.add(bogusPlayersMore);
 
 				view = new Page({
 					type: _g.viewType.PLAYERS_SELECT_SCREEN.type,
@@ -655,30 +653,63 @@ describe("Rentz TDD specs", function(){
 				m.$el.find('button.submit').click()
 
 				expect(m.subview.model.isValid()).toBeTruthy();
-				expect(_g.players.models[6].get('nick')).toBe('cireshescu');
+				expect(_g.players.models[7].get('nick')).toBe('cireshescu');
 
 				m = null;
 			});
 
-			it("select three players to play", function(){
+			xit("select three players to play, add them to next step and go back", function(){
 				view.subview.$el.find('a[data-type=select]:eq(2)').click();
-				view.subview.$el.find('a[data-type=select]:eq(0)').click();
 				view.subview.$el.find('a[data-type=select]:eq(3)').click();
+				view.subview.$el.find('a[data-type=select]:eq(4)').click();
 				expect(view.subview.$el.find('a.selected').length).toEqual(3);
 
 				view.head.$el.find('a').click();
+
+				var m = MainController.view();
+				expect(stage[0].children.length).toBe(2);
+				expect(m.subview.collection).toBe(_g.sPlayers);
+
+				// olga is last, make her the first, make ashura the last from 2nd
+				m.subview.$el.prepend(m.subview.$el.find('li:eq(2)'));
+				m.subview.$el.append(m.subview.$el.find('li:eq(1)'));
+				m.subview.handleSorting()
+				
+				expect(m.subview.collection.models[0].fullname()).toBe('Olga Cracinova')
+				expect(m.subview.collection.models[1].fullname()).toBe('Ito Akuji')
+
+				m.head.$el.find('a:eq(0)').click();
+				expect(stage[0].children.length).toBe(1);
+				expect(_g.sPlayers.length).toBe(3);
+				m = null;
+			});
+
+			xit("select seven players and fail to play", function(){
+				view.subview.$el.find('a[data-type=select]').click();
+				expect(function(){ view.head.$el.find('a').click() }).toThrowError();
+			});
+
+			it("select five players to play, add them to next step and start new game", function(){
+				view.subview.$el.find('a[data-type=select]:even').click();
+				view.subview.$el.find('a[data-type=select]:eq(1)').click();
+
+				view.head.$el.find('a').click();
+				var m = MainController.view();
+				m.subview.$el.prepend(m.subview.$el.find('li:eq(3)'));
+
+				m.head.$el.find('a:eq(1)').click();
+				
+				m = null;
 			});
 
 			afterEach(function(){
 				return;
+				_g.players.reset();
 				if (view){
 					view.remove()
 					view = null;
 				}
-				_g.players.reset();
 			});
-
-			
 		});
 	});
 	xdescribe("Controllers", function(){
@@ -692,15 +723,9 @@ describe("Rentz TDD specs", function(){
 						,_g.viewType.PLAYERS_LIST_SCREEN
 					],
 					header: {
-						back: {
-							title: "Edit",
-							type: ""
-						},
+						back: _g.viewType.EDIT,
 						title: "Players",
-						next: {
-							title: "New Player",
-							type: "newPlayer"
-						}
+						next: _g.viewType.PLAYER_EDIT_SCREEN
 					}
 				}).render();
 			});

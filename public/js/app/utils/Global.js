@@ -74,10 +74,16 @@ define([
 		_views = {
 			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}
 			,GAMES_SCREEN: { title: "Games", type:"gamesScreen"}
-			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
+			
 			,PLAYER_EDIT_SCREEN: { title: "New Player", type:"newPlayer"}
 			,PLAYERS_SELECT_SCREEN: { title: "Choose players", type:"selectPlayers"}
-			,PLAYERS_SORT_SCREEN: { title: "Player order", type:"sortPlayers"}
+			,PLAYERS_SORT_SCREEN: { title: "Continue", type:"sortPlayers"}
+
+			,START_NEW_GAME: { title: 'Continue', type:"newGame"}
+
+			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
+			,GO_BACK: { title: "Back", type:"goBack"}
+			,EDIT: { title: "Edit", type:"edit"}
 		};
 
 		obj = {
@@ -90,6 +96,7 @@ define([
 			
 			,players: null 			// all players collection
 			,games: null 			// all the saved games collection
+			,sPlayers: null 		// selected players for the game
 			,pageStack: []			// used for back button
 		}
 		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
@@ -97,6 +104,8 @@ define([
 
 		c = Backbone.Collection.extend({ model: Player});
 		obj.players = new c();
+		obj.sPlayers = new c();
+
 		c = Backbone.Collection.extend({ model: Game});
 		obj.games = new c();
 		c = null;
