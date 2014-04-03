@@ -3,8 +3,7 @@ define(['backbone'], function(){
 		defaults: {
 			name: new Date().toString(),
 			players: [],
-			rounds: [],
-			count: 0
+			rounds: null
 		}
-	})
+	});
 })

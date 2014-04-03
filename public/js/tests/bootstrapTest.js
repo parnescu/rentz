@@ -41,15 +41,18 @@
 			'/js/app/utils/Global.js'
 			,'/js/app/models/Player.js'
 			,'/js/app/models/Game.js'
+			,'/js/app/models/GameRound.js'
 			,'/js/app/models/Scoring.js'
 			,'/js/app/views/lists/ListItem.js'
 			,'/js/app/views/lists/List.js'
 			,'/js/app/views/lists/ScoringElement.js'
 			,'/js/app/views/lists/ScoringList.js'
+			,'/js/app/views/lists/GameTypeList.js'
 			,'/js/app/views/pages/Header.js'
 			,'/js/app/views/pages/Page.js'
 			,'/js/app/views/forms/EditPlayers.js'
 			,'/js/app/controllers/MainController.js'
+			,'/js/app/controllers/GameController.js'
 		];
 
 	specs = specs.concat(dependencies);
@@ -58,30 +61,36 @@
 			_g,
 			Player,
 			Game,
+			Round,
 			Score,
 			ListItem,
 			List,
 			ScoreElement,
 			ScoreList,
+			GameTypeList,
 			Header,
 			Page,
 			EditPlayers,
-			MainController
+			MainController,
+			GameController
 		){
 			// models
 			window.Player = Player;
 			window.Game = Game;
+			window.Round = Round;
 			window.Score = Score;
 			// views
 			window.ListItem = ListItem;
 			window.List = List;
 			window.ScoreElement = ScoreElement;
 			window.ScoreList = ScoreList;
+			window.GameTypeList = GameTypeList;
 			window.Header = Header;
 			window.Page = Page;
 			window.EditPlayers = EditPlayers;
 			//controllers
 			window.MainController = MainController;
+			window.GameController = GameController;
 			// boot
 			window._g = _g;
 			window.onload();

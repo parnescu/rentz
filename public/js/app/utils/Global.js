@@ -70,6 +70,9 @@ define([
 			,NAV_CLICKED: "footerClick"
 			,BUILD_PAGE: "buildNewPage"
 			,FORM_SUBMIT: "submitNewData"
+
+			,START_NEW_GAME: "initNewGame"
+			,CHOOSE_GAME_TYPE: "typeSelected"
 		},
 		_views = {
 			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}
@@ -79,7 +82,9 @@ define([
 			,PLAYERS_SELECT_SCREEN: { title: "Choose players", type:"selectPlayers"}
 			,PLAYERS_SORT_SCREEN: { title: "Continue", type:"sortPlayers"}
 
+			,GAME_OUTCOME_SCREEN: { title: 'Game details', type:"gameOutcome"}
 			,START_NEW_GAME: { title: 'Continue', type:"newGame"}
+			
 
 			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
 			,GO_BACK: { title: "Back", type:"goBack"}

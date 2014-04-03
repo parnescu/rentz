@@ -1,8 +1,9 @@
 body, html, h1, h2,h3,h4,h5,h6,p,div,ul,li { margin:0; padding:0;}
 /*body, html { width:100%; height:100%;}*/
 
-a { display: block; text-decoration:none;}
+a { display: block; text-decoration:none; overflow: hidden;}
 
+.avatar { width:3em; height:3em; float:left; margin-right:.em;}
 .itemNotify { position:absolute; top:0; right:0;}
 .selected { background:red;}
 .ui-sortable-placeholder { display:block; overflow: hidden; background:rgba(0,0,0,.5); visibility: visible !important;}
@@ -22,6 +23,11 @@ a { display: block; text-decoration:none;}
 .nav li { float:left;}
 .nav li a { width:3em; height:3em;}
 
+.gameTypes li { float:left; margin-right:.5em;}
+.gameTypes a[data-active=false] { background:rgba(0,0,0,.3); pointer-events:none;}
+
+
+#stage { clear:both; float:none; display: block; overflow: hidden; background:#ddd;}
 
 form input.invalid { background:rgba(255,0,0,.5); font-weight: bold; color:#fff; }
 form input.invalid:focus { background:white; color:#000; font-weight:normal;}

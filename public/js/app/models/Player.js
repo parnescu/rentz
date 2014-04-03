@@ -3,6 +3,7 @@ define(['backbone'], function(){
 		defaults:{
 			_select: false,
 			_delete: false,
+			_score: 0,
 			name: '',
 			surname: '',
 			nick: '',

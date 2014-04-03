@@ -1,10 +1,11 @@
 define([
-	'backbone',
-	'app/utils/Global',
-	'app/views/lists/List',
-	'app/views/pages/Page',
-	'app/views/forms/EditPlayers'
-], function(B, _g, List, Page, EditPlayers){
+	'backbone'
+	,'app/utils/Global'
+	,'app/views/lists/List'
+	,'app/views/pages/Page'
+	,'app/views/forms/EditPlayers'
+	,'app/controllers/GameController'
+], function(B, _g, List, Page, EditPlayers, GameController){
 	"use strict";
 	var f = function(){
 		var _currView,stage,
@@ -63,15 +64,19 @@ define([
 				}
 			},
 			_startNewGame = function(){
-				// clear page stack 
-				// cancel currview
-				// build new page
-
-				_.each(_g.pageStack, function(view){ view.remove();});
-				_currView.remove();
-
-				trace('trigger build new page')
-				
+				GameController.remove();
+				GameController.init();
+				Backbone.trigger(_g.events.START_NEW_GAME);
+				Backbone.trigger(_g.events.BUILD_PAGE, {
+						menu: [
+							_g.viewType.GAME_OUTCOME_SCREEN
+							,_g.viewType.GAME_QUIT_SCREEN
+						],
+						header:{
+							title: "Select game type"
+						},
+						view: null
+					}, true);
 			},
 		// end - base screen actions
 
@@ -160,6 +165,9 @@ define([
 						trace("MAIN_CTR:: quit current game");
 						_goBack();
 						break;
+					default:
+						trace('------ SCREEN TYPE NOT HANDLED YET: '+type);
+						break;
 				}
 
 				if (view){
@@ -178,13 +186,17 @@ define([
 				}
 			}
 		},
-		_handleBuildPage = function(data){
+		_handleBuildPage = function(data, clear){
 			trace('MAIN_CTRL:: build new page ' + data.type);
-			_g.pageStack.push(_currView);
 
+			if (clear){
+				_.each(_g.pageStack, function(view){ view.remove();});
+				_currView.remove();
+			}else{
+				_g.pageStack.push(_currView);
+			}
 			_end();
 			_currView = null;
-
 			_currView = new Page(data).render();
 			stage.append(_currView.el);
 			_start(_currView);
@@ -214,7 +226,7 @@ define([
 			Backbone.off(_g.events.BUILD_PAGE, _handleBuildPage);
 			Backbone.off(_g.events.FORM_SUBMIT, _handleFormSubmit);
 		}
-		stage = $('#stage');		
+		stage = $('#stage');
 		return {
 			init: _start,
 			remove: _end,
