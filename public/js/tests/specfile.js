@@ -17,7 +17,7 @@ describe("Rentz TDD specs", function(){
 		bogusGames = [];
 		window.view = null;
 	describe('Views', function(){
-		xdescribe('List element view', function(){
+		describe('List element view', function(){
 			it ('element must be correctly defined and have default value', function(){
 				view = new ListItem();
 				expect(view).toBeDefined();
@@ -90,7 +90,7 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 		
-		xdescribe('List view', function(){
+		describe('List view', function(){
 			var c;
 			beforeEach(function(){
 				c = Backbone.Collection.extend({ model: Player });
@@ -186,7 +186,7 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 
-		xdescribe('Score points element', function(){
+		describe('Score points element', function(){
 			beforeEach(function(){
 				var gameType = _g.gameType.DAMES
 				model = new Score({
@@ -248,8 +248,8 @@ describe("Rentz TDD specs", function(){
 			})
 		});
 
-		xdescribe('Score points list - red priest game type', function(){
-			var c,gameType, playerCollection;
+		describe('Score points list - red priest game type', function(){
+			var c,p,gameType, playerCollection;
 			beforeEach(function(){
 				gameType = _g.gameType.RED_PRIEST
 				c = Backbone.Collection.extend({ model: Score });
@@ -307,8 +307,8 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 
-		xdescribe('Score points list - dames (or normal) game type', function(){
-			var c,gameType, playerCollection;
+		describe('Score points list - dames (or normal) game type', function(){
+			var c, p, gameType, playerCollection;
 			beforeEach(function(){
 				gameType = _g.gameType.DAMES
 				c = Backbone.Collection.extend({ model: Score });
@@ -392,8 +392,8 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 
-		xdescribe('Score points list - rentz game type (6 players)', function(){
-			var c,gameType, playerCollection;
+		describe('Score points list - rentz game type (6 players)', function(){
+			var c,p,gameType, playerCollection;
 			beforeEach(function(){
 				gameType = _g.gameType.RENTZ
 				c = Backbone.Collection.extend({ model: Score });
@@ -460,7 +460,7 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 
-		xdescribe('Players form view', function(){
+		describe('Players form view', function(){
 			it('correctly defined with elements for name, surname, nick, photo and games won', function(){
 				view = new EditPlayers().render();
 
@@ -524,7 +524,7 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 		
-		xdescribe('Header view', function(){
+		describe('Header view', function(){
 			var val, backC, fwC;
 			beforeEach(function(done){
 				setTimeout(function(){
@@ -572,7 +572,7 @@ describe("Rentz TDD specs", function(){
 			})
 		});
 
-		xdescribe('Page view', function(){
+		describe('Page view', function(){
 			var val, clsr;
 			beforeEach(function(done){
 				setTimeout(function(){
@@ -618,7 +618,143 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 
-		xdescribe("New game - player selection page", function(){
+		describe('GameType selection view', function(){
+			var round, view, scores, type, _s, _c, ii,model, collection;
+			beforeEach(function(){
+				_g.sPlayers.add(bogusPlayersAdd);
+
+				_s = Backbone.Collection.extend({ model: Score });
+				_c = Backbone.Collection.extend({ model: Round });
+
+				model = _g.sPlayers.models[0];
+				collection = new _c();
+
+				for(ii in _g.gameType){
+		 	 		scores = new _s();
+		 	 		type = _g.gameType[ii]
+		 	 		
+		 	 		round = new Round({
+		 	 		 	playerId: model.fullname(),
+		 	 		 	gameType: type,
+		 	 		 	scores: scores
+		 	 		});
+
+		 	 		collection.add(round);
+		 	 	}
+		 	 	_s = _c = type = null ;
+			});
+			it('needs model and rounds for that model',function(){
+				collection.models[3].set('available', false);
+				view = new GameTypeList({
+					model: model,
+					collection: collection
+				}).render();
+				stage.append(view.el)
+
+				expect(view.el.tagName).toBe('ARTICLE');
+				expect(view.el.children.length).toEqual(2);
+				expect(view.el.lastChild.tagName).toBe('UL');
+				expect(view.el.lastChild.children.length).toBe(7);
+
+				expect(view.list.find('a[data-active=false]').length).toBe(1);
+			});
+
+			afterEach(function(){
+				if (view){
+					view.remove();
+					view = null;
+				}
+				
+				collection.reset();
+				collection = null;
+				model = null;
+			})
+		});
+
+		describe('Game details view', function(){
+			beforeEach(function(){
+				_g.sPlayers.add(bogusPlayers);
+				GameController.init();
+				Backbone.trigger(_g.events.START_NEW_GAME);
+
+
+				collection = GameController.currentGame().get('rounds');
+				// var _c = Backbone.Collection.extend({ model: Round}),
+				// 	coll = new _c();
+				
+
+				// ordered players
+				// shigy - c8, mutaflex - c9, olga - c10
+				// first game .. totals
+				// c8 -> 30, c9->5. c10 -> 14
+				var d = _g.util.playerRoundByType(				
+					_g.sPlayers.models[0].cid
+					,_g.gameType.ALL.get('type')
+					,collection
+				);
+				d.get('scores').models[0].set("value", 30);
+				d.get('scores').models[1].set("value", 5);
+				d.get('scores').models[2].set("value", 14);
+				d.isValid();
+				//coll.add(d)
+				d = null;
+
+				// next game ... red priest
+				// c9 -> 1
+				d = _g.util.playerRoundByType(				
+					_g.sPlayers.models[1].cid
+					,_g.gameType.RED_PRIEST.get('type')
+					,collection
+				)
+				d.get('scores').models[1].set("value", 1);
+				d.isValid();
+				//coll.add(d)
+				d = null;
+				
+				// next game broke
+				// c8 -> 2, c9 -> 3, c10->3
+				d = _g.util.playerRoundByType(
+					_g.sPlayers.models[2].cid
+					,_g.gameType.BROKE.get('type')
+					,collection
+				)
+				d.get('scores').models[0].set("value", 2);
+				d.get('scores').models[1].set("value", 3);
+				d.get('scores').models[2].set("value", 3);
+				d.isValid();
+				//coll.add(d)
+				d = null;
+
+				// next game dames
+				// c8 -> 1, c9 -> 3, c10->0
+				d = _g.util.playerRoundByType(
+					_g.sPlayers.models[0].cid
+					,_g.gameType.DAMES.get('type')
+					,collection
+				)
+				d.get('scores').models[0].set("value", 1);
+				d.get('scores').models[1].set("value", 3);
+				d.isValid();
+				//coll.add(d)
+				d = null;
+
+				
+				view = new GameDetailList({
+					collection: collection
+				}).render();
+			});
+			it('---------------- WIP ----------', function(){
+
+			});
+			afterEach(function(){
+				GameController.remove();
+				_g.sPlayers.reset();
+				collection.reset();
+				collection = null;
+			});
+		});
+
+		describe("New game - player selection page", function(){
 			beforeEach(function(){
 				_g.players.reset();
 				
@@ -715,62 +851,96 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 
-		xdescribe('GameType selection view', function(){
-			var round, view, scores, type, _s, _c, model, collection;
+		describe('New game - game selection page', function(){
+			var m;
 			beforeEach(function(){
-				_g.sPlayers.add(bogusPlayersAdd);
+				_g.players.reset();
+				
+				_g.players.add(bogusPlayers);
+				_g.players.add(bogusPlayersAdd);
+				_g.players.add(bogusPlayersMore);
 
-				_s = Backbone.Collection.extend({ model: Score });
-				_c = Backbone.Collection.extend({ model: Round });
-
-				model = _g.sPlayers.models[0];
-				collection = new _c();
-
-				for(ii in _g.gameType){
-		 	 		scores = new _s();
-		 	 		type = _g.gameType[ii]
-		 	 		
-		 	 		round = new Round({
-		 	 		 	playerId: model.fullname(),
-		 	 		 	gameType: type,
-		 	 		 	scores: scores
-		 	 		});
-
-		 	 		collection.add(round);
-		 	 	}
-		 	 	_s = _c = type = null ;
-			});
-			it('needs model and rounds for that model',function(){
-				collection.models[3].set('available', false);
-				view = new GameTypeList({
-					model: model,
-					collection: collection
+				view = new Page({
+					type: _g.viewType.PLAYERS_SELECT_SCREEN.type,
+					menu: [
+						_g.viewType.PLAYER_EDIT_SCREEN
+						,_g.viewType.GAME_QUIT_SCREEN
+					],
+					header: {
+						title: "Select users",
+						next: _g.viewType.PLAYERS_SORT_SCREEN
+					},
+					view: new List({
+						selectable: true,
+						maxItems: 6,
+						collection: _g.players
+					})
 				}).render();
-				stage.append(view.el)
+				stage.append(view.el);
 
-				expect(view.el.tagName).toBe('ARTICLE');
-				expect(view.el.children.length).toEqual(2);
-				expect(view.el.lastChild.tagName).toBe('UL');
-				expect(view.el.lastChild.children.length).toBe(7);
+				MainController.init(view);
 
-				expect(view.list.find('a[data-active=false]').length).toBe(1);
+				// select four players, make olga the first and hit "next"
+				view.subview.$el.find('a[data-type=select]:eq(1)').click();
+				view.subview.$el.find('a[data-type=select]:eq(2)').click();
+				view.subview.$el.find('a[data-type=select]:eq(3)').click();
+				view.subview.$el.find('a[data-type=select]:eq(4)').click();
+				
+				view.head.$el.find('a').click();
+				view.remove();
+				view = null;
+
+				var m = MainController.view();
+				m.data.view.$el.prepend(m.$el.find('li:eq(3)'));
+				m.head.$el.find('a:eq(1)').click();
+				m.remove();
+				m = null;
+			});
+			it('choose red priest game', function(){
+				m = MainController.view();
+				expect(m.subview.model.fullname()).toBe('Olga Cracinova');
+				expect(m.subview.collection.length).toBe(7);
+
+				m.subview.list.find('li a:eq(0)').click();
+				expect(GameController.currentRound().get('gameType')).toBe(_g.gameType.RED_PRIEST);
 			});
 
+			it('choose game details page', function(){
+				view = MainController.view();
+				view.menu.find('a:eq(0)').click();
+
+				trace(view.subview);
+				// current view should be game details page with an empty list
+				m = MainController.view();
+				expect(m.viewType).toBe(_g.viewType.GAME_OUTCOME_SCREEN.type);
+				expect(m.subview).not.toBeDefined();
+
+				m.head.$el.find('a').click();
+
+
+
+			});
 			afterEach(function(){
+				if (m){
+					m.remove();
+					m = null;
+				}
 				if (view){
 					view.remove();
 					view = null;
 				}
+				if (MainController.view()){
+					MainController.view().remove();
+				}
+				MainController.remove();
+				GameController.remove();
 				
-				collection.reset();
-				collection = null;
-				model = null;
-			})
+			});
 		});
 	});
 
 	describe("Controllers", function(){
-		xdescribe("Main Screen Controller", function(){
+		describe("Main Screen Controller", function(){
 			beforeEach(function(){
 				_g.players.add(bogusPlayers);
 

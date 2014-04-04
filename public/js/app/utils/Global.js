@@ -7,6 +7,7 @@ define([
 	var max = 6, min = 3, c, obj, current;
 	if (!window.__g){
 		var _utils = {}
+		_utils.months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
 		_utils.plural = function(nr, str){
 			if (str == "") return "";
 			return str + (Number(nr) === 1 ? "" : "s")
@@ -16,10 +17,29 @@ define([
 				data[ii] = obj[ii];
 			}
 		}
+		_utils.format = function(date, style){
+			var str = "";
+			style = style || "dd MM yyyy";
+			switch(style){
+				case "dd MM yyyy":
+					str += date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear();
+					break;
+			}
+			return str;
+		}
 		_utils.progressive = function(nr){
 			var sum = 1;
 			for (var i=2;i<=nr;i++) { sum += i; }
 			return sum;
+		}
+		_utils.playerRoundByType = function(player, type, collection){
+			var i,model;
+			for (var i=0;i<collection.models.length;i++){
+				model = collection.models[i];
+				if (model.get('playerId') === player && model.get('gameType').get('type')  === type){
+					return model;
+				}
+			}
 		}
 
 		var _types = {
@@ -89,6 +109,11 @@ define([
 			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
 			,GO_BACK: { title: "Back", type:"goBack"}
 			,EDIT: { title: "Edit", type:"edit"}
+		},
+		_filters = {
+			finishedRounds: function(round){
+				return round.get('available') === false;
+			}
 		};
 
 		obj = {
@@ -98,9 +123,11 @@ define([
 			,util: _utils
 			,gameType: _types
 			,viewType: _views
+			,filter: _filters
 			
 			,players: null 			// all players collection
 			,games: null 			// all the saved games collection
+
 			,sPlayers: null 		// selected players for the game
 			,pageStack: []			// used for back button
 		}
@@ -110,10 +137,12 @@ define([
 		c = Backbone.Collection.extend({ model: Player});
 		obj.players = new c();
 		obj.sPlayers = new c();
+		c = null;
 
 		c = Backbone.Collection.extend({ model: Game});
 		obj.games = new c();
 		c = null;
+
 		window.__g = obj
 	}
 

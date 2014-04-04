@@ -9,6 +9,9 @@ define(['backbone'],function(B){
 			if (this.get('value') > this.get('maxItems')){
 				return 'You cannot add more items than it is allowed';
 			}
+		},
+		getScore: function(){
+			return this.get('value')*this.get('multiplier');
 		}
 	});
 })

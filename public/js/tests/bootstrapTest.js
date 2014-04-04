@@ -48,6 +48,7 @@
 			,'/js/app/views/lists/ScoringElement.js'
 			,'/js/app/views/lists/ScoringList.js'
 			,'/js/app/views/lists/GameTypeList.js'
+			,'/js/app/views/lists/GameDetailList.js'
 			,'/js/app/views/pages/Header.js'
 			,'/js/app/views/pages/Page.js'
 			,'/js/app/views/forms/EditPlayers.js'
@@ -68,6 +69,7 @@
 			ScoreElement,
 			ScoreList,
 			GameTypeList,
+			GameDetailList,
 			Header,
 			Page,
 			EditPlayers,
@@ -85,6 +87,7 @@
 			window.ScoreElement = ScoreElement;
 			window.ScoreList = ScoreList;
 			window.GameTypeList = GameTypeList;
+			window.GameDetailList = GameDetailList;
 			window.Header = Header;
 			window.Page = Page;
 			window.EditPlayers = EditPlayers;

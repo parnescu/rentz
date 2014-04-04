@@ -19,10 +19,12 @@ a { display: block; text-decoration:none; overflow: hidden;}
 .list li a[data-type=delete] { background:red; display:none;}
 .editable .list li a[data-type=delete] { display:block;}
 
-.nav { clear:both; float:none; display: block; overflow: hidden; margin-top:3em;}
+.nav { clear:both; float:none; display: block; overflow: hidden;}
 .nav li { float:left;}
 .nav li a { width:3em; height:3em;}
+.nav li a.selected {  pointer-events:none;}
 
+.gameTypes { display: block; overflow: hidden;}
 .gameTypes li { float:left; margin-right:.5em;}
 .gameTypes a[data-active=false] { background:rgba(0,0,0,.3); pointer-events:none;}
 
