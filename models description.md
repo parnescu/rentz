@@ -36,6 +36,6 @@
 			id: 		uint,
 			name: 		string, [ date it was started on pretty printed ]
 			players: 	array[uint], [ player ids arranged by score, first one is the winner ]
-			rounds: 	array[<round model>]
+			rounds: 	collection [ game round models ]
 		}
 	*/

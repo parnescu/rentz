@@ -5,8 +5,9 @@ define([
 	,'app/views/pages/Page'
 	,'app/views/forms/EditPlayers'
 	,'app/views/lists/GameTypeList'
+	,'app/views/lists/GameDetailList'
 	,'app/controllers/GameController'
-], function(B, _g, List, Page, EditPlayers, GameTypeList, GameController){
+], function(B, _g, List, Page, EditPlayers, GameTypeList, GameDetailList, GameController){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
@@ -95,17 +96,18 @@ define([
 					}
 				},
 				_addGameDetailsScreen = function(){
+					var game = GameController.currentGame();
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.GAME_OUTCOME_SCREEN.type,
 						header:{
-							title: _g.util.format(new Date(GameController.currentGame().get('name')))
+							title: _g.util.format(new Date(game.get('name')))
 							,back: _g.viewType.GO_BACK
 						},
-						menu:[
-							_g.viewType.GAME_OUTCOME_SCREEN
-							,_g.viewType.GAME_QUIT_SCREEN
-						],
-						view: null
+						// menu:[
+						// 	_g.viewType.GAME_OUTCOME_SCREEN
+						// 	,_g.viewType.GAME_QUIT_SCREEN
+						// ],
+						view: new GameDetailList({ model: game})
 					});
 				},
 			// end - base screen actions

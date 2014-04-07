@@ -40,15 +40,10 @@ define([
 			 	};
 			 	_g.currentPlayers = _g.sPlayers.length;
 			 	var type, round, scores, ii, i, players = [],
-			 		_c = Backbone.Collection.extend({ model: Round }),
-			 		_s = Backbone.Collection.extend({ model: Score }),
-			 		collection = new _c();
+			 		_s = Backbone.Collection.extend({ model: Score });
 
 			 	_.each(_g.sPlayers.models, function(item){ players.push(item.cid);});
-			 	_currGame = new Game({
-			 		rounds: collection,
-			 		players: players
-			 	});
+			 	_currGame = new Game({ players: players });
 
 			 	// populate game with data
 				_.each(_g.sPlayers.models, function(model, index){
@@ -68,14 +63,13 @@ define([
 			 	 				multiplier: type.get('multiplier'),
 			 	 			}));
 			 	 		}
-			 	 		collection.add(round);
+			 	 		_currGame.get('rounds').add(round);
 			 	 	}
 			 	});
-
 				Backbone.trigger(_g.events.SET_NEXT_PLAYER);
 
 			 	type = round = scores = ii = i = null;
-			 	players = round = collection = _c = _s = null;
+			 	players = round = _s = null;
 			},
 			_subscribe = function(){
 				Backbone.on(_g.events.START_NEW_GAME, _handleStartNewGame);

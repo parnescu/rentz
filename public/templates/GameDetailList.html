@@ -1,0 +1,28 @@
+<thead>
+	<tr>
+		<td></td>
+		<% _.each(_players, function(player, index){ %>
+		<td><img src="<%= player.picture %>" alt="<%= player.nick %>"/></td>
+		<% }); %>
+	</tr>
+</thead>
+<tbody>
+<% _.each(_items, function(round,index){ %>
+	<tr>
+		<td><%= round.get('gameType').get('type') %></td>
+		<% _.each(_players, function(player,index){ %>
+		<td><%= round.get('_points')[index] %></td>
+		<% }); %>
+	</tr>
+<% }); %>
+<% if (_items.length > 0){ %>
+<tfoot>
+	<tr>
+		<td>TOTAL:</td>
+		<% _.each(_points, function(item){ %>
+		<td><%= item %></td>
+		<% }); %>
+	</tr>
+</tfoot>
+<% } %>
+</tbody>

@@ -41,6 +41,15 @@ define([
 				}
 			}
 		}
+		_utils.updateRound = function(game, model){
+			var i = Number(game.get('_index'));
+			i++;
+
+			model.isValid();
+			model.set("_index",i);
+			game.set('_index',i);
+			game.isValid();
+		}
 
 		var _types = {
 			RED_PRIEST: new GameType({

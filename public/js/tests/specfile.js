@@ -673,18 +673,18 @@ describe("Rentz TDD specs", function(){
 
 		describe('Game details view', function(){
 			beforeEach(function(){
+				var game, _p = [];
+				_g.sPlayers.reset();
 				_g.sPlayers.add(bogusPlayers);
 				GameController.init();
 				Backbone.trigger(_g.events.START_NEW_GAME);
 
-
-				collection = GameController.currentGame().get('rounds');
-				// var _c = Backbone.Collection.extend({ model: Round}),
-				// 	coll = new _c();
-				
+				game = GameController.currentGame();
+				collection = game.get('rounds');
 
 				// ordered players
 				// shigy - c8, mutaflex - c9, olga - c10
+				
 				// first game .. totals
 				// c8 -> 30, c9->5. c10 -> 14
 				var d = _g.util.playerRoundByType(				
@@ -695,8 +695,7 @@ describe("Rentz TDD specs", function(){
 				d.get('scores').models[0].set("value", 30);
 				d.get('scores').models[1].set("value", 5);
 				d.get('scores').models[2].set("value", 14);
-				d.isValid();
-				//coll.add(d)
+				_g.util.updateRound(game, d);
 				d = null;
 
 				// next game ... red priest
@@ -707,9 +706,9 @@ describe("Rentz TDD specs", function(){
 					,collection
 				)
 				d.get('scores').models[1].set("value", 1);
-				d.isValid();
-				//coll.add(d)
+				_g.util.updateRound(game, d);
 				d = null;
+
 				
 				// next game broke
 				// c8 -> 2, c9 -> 3, c10->3
@@ -721,10 +720,9 @@ describe("Rentz TDD specs", function(){
 				d.get('scores').models[0].set("value", 2);
 				d.get('scores').models[1].set("value", 3);
 				d.get('scores').models[2].set("value", 3);
-				d.isValid();
-				//coll.add(d)
+				_g.util.updateRound(game, d);
 				d = null;
-
+				
 				// next game dames
 				// c8 -> 1, c9 -> 3, c10->0
 				d = _g.util.playerRoundByType(
@@ -734,22 +732,29 @@ describe("Rentz TDD specs", function(){
 				)
 				d.get('scores').models[0].set("value", 1);
 				d.get('scores').models[1].set("value", 3);
-				d.isValid();
-				//coll.add(d)
+				_g.util.updateRound(game, d);
 				d = null;
-
 				
-				view = new GameDetailList({
-					collection: collection
-				}).render();
-			});
-			it('---------------- WIP ----------', function(){
+				view = new GameDetailList({ model: game }).render();
+				_p = game = null;
 
+			});
+			it('play four games (totals, red priest, broke, dames) and display outcome, total points', function(){
+				stage.append(view.el);
+
+				expect(view.el.tagName).toBe('TABLE');
+				expect(view.el.children.length).toEqual(3);
+				expect(view.el.children[1].children.length).toBe(4);
+				expect(view.el.children[2].children[0].children[0].innerHTML).toBe('TOTAL:');
 			});
 			afterEach(function(){
 				GameController.remove();
 				_g.sPlayers.reset();
 				collection.reset();
+				if(view){
+					view.remove();
+					view = null;
+				}
 				collection = null;
 			});
 		});
@@ -909,16 +914,11 @@ describe("Rentz TDD specs", function(){
 				view = MainController.view();
 				view.menu.find('a:eq(0)').click();
 
-				trace(view.subview);
-				// current view should be game details page with an empty list
 				m = MainController.view();
 				expect(m.viewType).toBe(_g.viewType.GAME_OUTCOME_SCREEN.type);
-				expect(m.subview).not.toBeDefined();
-
+				expect(m.subview.model.get('players').length).toEqual(4);
+				expect(m.subview.$el.find('tfoot').length).toBe(0);
 				m.head.$el.find('a').click();
-
-
-
 			});
 			afterEach(function(){
 				if (m){
@@ -1057,6 +1057,14 @@ describe("Rentz TDD specs", function(){
 					view.remove();
 					view = null;
 				}
+			});
+		});
+	});
+	
+	describe("Full games", function(){
+		describe("3 player game", function(){
+			it("main screen -> add players x3", function(){
+				
 			});
 		});
 	});
