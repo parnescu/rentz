@@ -11,15 +11,19 @@ define([
 		},
 		initialize: function(data){
 			this.data = data
-			this.viewType = data.type || null;
+			this.viewType = data.type ? data.type.type : null;
 			/*
-				page has:
+				page has these objects defined:
 					- head 		[ header view ]
 					- subview 	[ list view ]
 					- content 	[ section jquery object]
 					- menu  	[ footer jquery object ]
-				objects defined
 			*/
+
+			if (data.type && data.header && !data.header.title){
+				trace('------> '+data.type)
+				data.header.title = data.type.title
+			}
 		},
 		render: function(){
 			if (this.viewType){

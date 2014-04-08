@@ -42,6 +42,7 @@ define([
 			}
 		}
 		_utils.updateRound = function(game, model){
+			// used for TDD tests
 			var i = Number(game.get('_index'));
 			i++;
 
@@ -102,6 +103,7 @@ define([
 
 			,START_NEW_GAME: "initNewGame"
 			,CHOOSE_GAME_TYPE: "typeSelected"
+			,UPDATE_ROUND: "updateRound"
 		},
 		_views = {
 			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}
@@ -113,11 +115,13 @@ define([
 
 			,GAME_OUTCOME_SCREEN: { title: 'Game details', type:"gameOutcome"}
 			,START_NEW_GAME: { title: 'Continue', type:"newGame"}
+			,ROUND_DATA_SCREEN: { title: 'Input round outcome', type:"completeRound"}
 			
 
 			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
 			,GO_BACK: { title: "Back", type:"goBack"}
 			,EDIT: { title: "Edit", type:"edit"}
+			,SAVE_ROUND: { title: "Save", type:"saveRound"}
 		},
 		_filters = {
 			finishedRounds: function(round){
@@ -133,6 +137,9 @@ define([
 			,gameType: _types
 			,viewType: _views
 			,filter: _filters
+
+			,mainCtrl: null			// reference to MainController
+			,gameCtrl: null			// reference to GameController
 			
 			,players: null 			// all players collection
 			,games: null 			// all the saved games collection

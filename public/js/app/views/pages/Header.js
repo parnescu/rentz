@@ -16,7 +16,11 @@ define([
 		},
 		render: function(){
 			this.$el.html(this.template(this.data));
+			
 			this.title = this.$el.find('h1');
+			this.back = this.$el.find('a.back');
+			this.next = this.$el.find('a.next');
+
 			return this;
 		},
 		handleClick: function(e){

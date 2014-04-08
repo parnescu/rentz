@@ -13,24 +13,37 @@ define([
 		var f = function(){
 			var _currView,stage,
 			// base screen actions
+				_resetCurrent = function(){
+					if(_currView){
+						_currView.remove();
+						_currView = null;
+					}
+					_.each(_g.pageStack, function(page, i){
+						if (page === null){
+							_g.pageStack.splice(i,1);
+						}
+					});
+				},
 				_resetEditMode = function(){
 					_currView.head.setButtonState('back', "off");
 					_currView.content.removeClass("editable");
 				},
 				_resetViews = function(){
 					_.each(_g.pageStack, function(view){ 
-						view.remove();
-						view = null;
+						if (view){
+							view.remove();
+							view = null;	
+						}
 					});
 					_g.pageStack = [];
 				},
 				_goBack = function(){
 					var _type = _currView.viewType;
-					_currView.remove();
-					_currView = null;
+					_resetCurrent();
 
 					_end();
 					_currView = _g.pageStack.pop();
+
 					
 					if (_currView){
 						_start(_currView);
@@ -41,13 +54,15 @@ define([
 					}
 				},
 				_startNewGame = function(){
-					GameController.remove();
-					GameController.init();
-					Backbone.trigger(_g.events.START_NEW_GAME);
+					if (!GameController.currentGame()){
+						GameController.remove();
+						GameController.init();
+						Backbone.trigger(_g.events.START_NEW_GAME);	
+					}
 					
 					var model = _g.sPlayers.models[GameController.currentPlayer()];
 					Backbone.trigger(_g.events.BUILD_PAGE, {
-							type: _g.viewType.START_NEW_GAME.type,
+							type: _g.viewType.START_NEW_GAME,
 							menu: [
 								_g.viewType.GAME_OUTCOME_SCREEN
 								,_g.viewType.GAME_QUIT_SCREEN
@@ -60,17 +75,32 @@ define([
 								,model: model
 							})
 						}, true);
+					
+					model = null;
 				},				
 				_addPlayerScreen = function(model){
 					_resetEditMode();
 					trace("MAIN_CTRL:: -> "+(model ? "edit" : "new ")+" player screen");
 					Backbone.trigger(_g.events.BUILD_PAGE, {
-						type: _g.viewType.PLAYER_EDIT_SCREEN.type,
+						type: _g.viewType.PLAYER_EDIT_SCREEN,
 						header:{
 							back: _g.viewType.GO_BACK,
 							title: model ? model.fullname() : "New Player"
 						}
 						,view: new EditPlayers({ model: model})
+					});
+				},
+				_addPlayersChooseScreen = function(){
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.PLAYERS_SELECT_SCREEN,
+						header:{
+							back: _g.viewType.BACK,
+							next: _g.viewType.PLAYERS_SORT_SCREEN
+						},
+						view: new List({
+							selectable: true,
+							collection: _g.players
+						})
 					});
 				},
 				_addPlayersSelectScreen = function(){
@@ -83,7 +113,7 @@ define([
 
 					if (_g.sPlayers.length >= _g.MIN_PLAYERS && _g.sPlayers.length <= _g.MAX_PLAYERS){
 						Backbone.trigger(_g.events.BUILD_PAGE, {
-							type: _g.viewType.PLAYERS_SORT_SCREEN.type,
+							type: _g.viewType.PLAYERS_SORT_SCREEN,
 							header:{
 								back: _g.viewType.GO_BACK,
 								title: "Players Order",
@@ -98,7 +128,7 @@ define([
 				_addGameDetailsScreen = function(){
 					var game = GameController.currentGame();
 					Backbone.trigger(_g.events.BUILD_PAGE, {
-						type: _g.viewType.GAME_OUTCOME_SCREEN.type,
+						type: _g.viewType.GAME_OUTCOME_SCREEN,
 						header:{
 							title: _g.util.format(new Date(game.get('name')))
 							,back: _g.viewType.GO_BACK
@@ -108,6 +138,46 @@ define([
 						// 	,_g.viewType.GAME_QUIT_SCREEN
 						// ],
 						view: new GameDetailList({ model: game})
+					});
+				},
+				_showPlayersPage = function(){
+					_resetViews();
+					_resetCurrent();
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.PLAYERS_LIST_SCREEN,
+						menu: [
+							_g.viewType.GAMES_SCREEN,
+							_g.viewType.PLAYERS_LIST_SCREEN
+						],
+						header: {
+							title: "Players",
+							next: _g.viewType.PLAYER_EDIT_SCREEN,
+							back: _g.viewType.EDIT
+						},
+						view: new List({
+							collection: _g.players,
+							deletable: true
+						})
+					});
+				},
+				_showGamesPage = function(){
+					_resetViews();
+					_resetCurrent();
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.GAMES_SCREEN,
+						menu: [
+							_g.viewType.GAMES_SCREEN,
+							_g.viewType.PLAYERS_LIST_SCREEN
+						],
+						header: {
+							title: "Games",
+							next: _g.viewType.PLAYERS_SELECT_SCREEN,
+							back: _g.viewType.EDIT
+						},
+						view: new List({
+							collection: _g.games,
+							deletable: true
+						})
 					});
 				},
 			// end - base screen actions
@@ -120,14 +190,15 @@ define([
 				}
 				_goBack();
 			},
-			_handleBackButton = function(button){
+			_handleBackButton = function(){
 				trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
 
 				if (_currView.head.data.back.type === _g.viewType.GO_BACK.type){
 					_goBack();
 				}else{
 					// edit button enabled
-					var pressed = button.dataset.pressed;
+					var button = _currView.head.back[0],
+						pressed = button.dataset.pressed;
 					pressed = pressed === undefined ? "on" : pressed === 'off' ? "on" : "off";
 					_currView.head.setButtonState('back', pressed);
 
@@ -145,11 +216,17 @@ define([
 					case _g.viewType.PLAYER_EDIT_SCREEN.type:
 						_addPlayerScreen();
 						break;
+					case _g.viewType.PLAYERS_SELECT_SCREEN.type:
+						_addPlayersChooseScreen();
+						break;
 					case _g.viewType.PLAYERS_SORT_SCREEN.type:
 						_addPlayersSelectScreen();
 						break;
 					case _g.viewType.START_NEW_GAME.type:
 						_startNewGame();
+						break;
+					case _g.viewType.SAVE_ROUND.type:
+						Backbone.trigger(_g.events.UPDATE_ROUND);
 						break;
 					default:
 						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
@@ -184,18 +261,22 @@ define([
 					trace('MAIN_CTRL:: navigation item was clicked -> '+type);
 					switch(type){
 						case _g.viewType.PLAYERS_LIST_SCREEN.type:
-							title = _g.viewType.PLAYERS_LIST_SCREEN.title;
-							view = new List({
-								deletable: true,
-								collection: _g.players
-							}).render();
+							// title = _g.viewType.PLAYERS_LIST_SCREEN.title;
+							// view = new List({
+							// 	deletable: true,
+							// 	collection: _g.players
+							// }).render();
+							_resetCurrent();
+							_showPlayersPage();
 							break;
 						case _g.viewType.GAMES_SCREEN.type:
-							title = _g.viewType.GAMES_SCREEN.title;
-							view = new List({
-								deletable: true,
-								collection: _g.games
-							}).render();
+							// title = _g.viewType.GAMES_SCREEN.title;
+							// view = new List({
+							// 	deletable: true,
+							// 	collection: _g.games
+							// }).render();
+							_resetCurrent();
+							_showGamesPage();
 							break;
 						case _g.viewType.PLAYER_EDIT_SCREEN.type:
 							_addPlayerScreen();
@@ -208,6 +289,8 @@ define([
 							break;
 					}
 
+
+					// to be removed ... here for tests only
 					if (view){
 						if (_currView.subview){ _currView.subview.remove();}
 
@@ -225,7 +308,7 @@ define([
 				}
 			},
 			_handleBuildPage = function(data, clear){
-				trace('MAIN_CTRL:: build new page ' + data.type);
+				trace('MAIN_CTRL:: build new page ' + data.type.type);
 
 				if (clear){
 					trace(' ---> remove all pages from stack');
@@ -241,7 +324,7 @@ define([
 				stage.append(_currView.el);
 				_start(_currView);
 			},
-			_start = function(view){
+			_start = function(view){				
 				if (view){
 					//trace('MAIN_CTRL:: init');
 					_end(view);
@@ -252,13 +335,14 @@ define([
 					Backbone.on(_g.events.LIST_CLICK, _handleListClicked);
 					Backbone.on(_g.events.BUILD_PAGE, _handleBuildPage);
 					Backbone.on(_g.events.FORM_SUBMIT, _handleFormSubmit);
+					
 				}else{
 					throw new Error('Specify a view to init on');
 				}
 			},
 			_end = function(){
 				//trace('MAIN_CTRL:: reset');
-				_currView = null;
+				_currView = null;				
 				Backbone.off(_g.events.HEAD_CLICK_BACK, _handleBackButton);
 				Backbone.off(_g.events.HEAD_CLICK_CONTINUE, _handleContinueButton);
 				Backbone.off(_g.events.NAV_CLICKED, _handleNavClicked);
