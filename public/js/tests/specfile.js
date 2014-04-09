@@ -14,32 +14,10 @@ describe("Rentz TDD specs", function(){
 		bogusPlayersMore = [
 			{ name:"Gigi", surname:"Castelano", nick:'tzatzemoi'}
 		],
-		bogusRounds = [
-			[20,22,7]
-			,[0,2,4]
-			,[0,4,0]
-			,[0,0,1]
-			,[0,1,3]
-			,[3,1,4]
-			,[2,3,3]
-			,[2,3,1]
-			,[10,32,7]
-			,[3,2,1]
-			,[1,3,4]
-			,[3,2,1]
-			,[0,2,4]
-			,[3,2,1]
-			,[3,0,5]
-			,[0,1,0]
-			,[0,0,1]
-			,[3,1,4]
-			,[1,5,2]
-			,[4,0,4]
-			,[2,1,1]
-			,[1,41,7]
-			,[1,0,7]
-		];
+		bogusRoundsIndex = [6,5,1,0,1,3,2,4,6,4,2,4,5,0,0,3,3,2,1,6,5],
+		bogusRounds = [[20,22,7],[0,2,4],[0,4,0],[0,0,1],[0,1,3],[3,1,4],[2,3,3],[2,3,1],[10,32,7],[3,2,1],[1,3,4],[3,2,1],[3,0,5],[0,1,0],[0,0,1],[3,1,4],[1,5,2],[4,0,4],[2,1,1],[1,41,7],[1,0,7]];
 		window.view = null;
+
 	describe('Views', function(){
 		describe('List element view', function(){
 			it ('element must be correctly defined and have default value', function(){
@@ -1096,7 +1074,7 @@ describe("Rentz TDD specs", function(){
 	
 	describe("Full games", function(){
 		describe("3 player game", function(){
-			var view, collection, m, i;
+			var view, collection, m, i, round, scores;
 			it("from main, go and add three players", function(){
 				view = new Page({
 					menu: [
@@ -1207,16 +1185,16 @@ describe("Rentz TDD specs", function(){
 					view.subview.model.cid,
 					_g.gameType.ALL.get('type'),
 					GameController.currentGame().get('rounds')
-				), round, scores, i = -1;
+				);
 
-				i++
+				i = 0
 				view = MainController.view();
 				round = GameController.currentRound();
 				scores = round.get('scores');
 				scores.models[0].set('value', bogusRounds[i][0]);
 				scores.models[1].set('value', bogusRounds[i][1]);
 				scores.models[2].set('value', bogusRounds[i][2]);
-				//view.head.next.click();
+				view.head.next.click();
 
 				expect(round).toBe(p);
 				expect(view.subview.$el.find('li:eq(2) input.points').val()).toBe('-200 points');
@@ -1227,21 +1205,63 @@ describe("Rentz TDD specs", function(){
 			});
 
 			it("play 15 games according to pen'n'paper design (bogusRounds)", function(){
+				var game = GameController.currentGame();
+				while(i<15){
+					i++;
+					view = MainController.view();
+					view.subview.list.find('li:eq('+bogusRoundsIndex[i]+') a').click();
+					round = GameController.currentRound();
+					scores = round.get('scores');
+					scores.models[0].set('value', bogusRounds[i][0]);
+					scores.models[1].set('value', bogusRounds[i][1]);
+					scores.models[2].set('value', bogusRounds[i][2]);
+					view = MainController.view();
+					view.head.next.click();
+				}
+				game = game.get('_points');
+				expect(game[0]).toBe(40);
+				expect(game[1]).toBe(-570);
+				expect(game[2]).toBe(-540);
+			});
+
+			it("play rest of games according to pen'n'paper design (bogusRounds)", function(){
+				var game = GameController.currentGame();
+				while(i<19){
+					i++;
+					view = MainController.view();
+					view.subview.list.find('li:eq('+bogusRoundsIndex[i]+') a').click();
+					round = GameController.currentRound();
+					scores = round.get('scores');
+					scores.models[0].set('value', bogusRounds[i][0]);
+					scores.models[1].set('value', bogusRounds[i][1]);
+					scores.models[2].set('value', bogusRounds[i][2]);
+					view = MainController.view();
+					view.head.next.click();
+				}
+				game = game.get('_points');
+				expect(game[0]).toBe(-40);
+				expect(game[1]).toBe(-1080);
+				expect(game[2]).toBe(-640);
+			});
+
+			it("show end-game screen after last round", function(){
+				var game = GameController.currentGame();
 				
-				// i++;
-				// view = MainController.view();
-				// trace(GameController.currentRound())
-				// return;
-				// round = GameController.currentRound();
-				// scores = round.get('scores');
-				// scores.models[0].set('value', bogusRounds[i][0]);
-				// scores.models[1].set('value', bogusRounds[i][1]);
-				// scores.models[2].set('value', bogusRounds[i][2]);
-				// view.head.next.click();
-			
-				// expect(view.subview.$el.find('li:eq(2) input.points').val()).toBe('-200 points');
-				// expect(view.subview.$el.find('li:eq(1) input.points').val()).toBe('-220 points');
-				// expect(view.subview.$el.find('li:eq(0) input.points').val()).toBe('-70 points');
+				i++;
+				view = MainController.view();
+				view.subview.list.find('li:eq('+bogusRoundsIndex[i]+') a').click();
+				round = GameController.currentRound();
+				scores = round.get('scores');
+				scores.models[0].set('value', bogusRounds[i][0]);
+				scores.models[1].set('value', bogusRounds[i][1]);
+				scores.models[2].set('value', bogusRounds[i][2]);
+				view = MainController.view();
+				view.head.next.click();	
+
+				game = game.get('_points');
+				expect(game[0]).toBe(-50);
+				expect(game[1]).toBe(-1080);
+				expect(game[2]).toBe(-710);
 			});
 
 			xit('reset everything', function(){
@@ -1256,4 +1276,4 @@ describe("Rentz TDD specs", function(){
 			});
 		});
 	});
-}) 
+});

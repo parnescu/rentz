@@ -75,7 +75,7 @@ define([
 								,model: model
 							})
 						}, true);
-					
+
 					model = null;
 				},				
 				_addPlayerScreen = function(model){
@@ -127,6 +127,7 @@ define([
 				},
 				_addGameDetailsScreen = function(){
 					var game = GameController.currentGame();
+					
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.GAME_OUTCOME_SCREEN,
 						header:{
@@ -182,6 +183,9 @@ define([
 				},
 			// end - base screen actions
 
+			_handleGameEnd = function(){
+				trace('_---__--_-_--__ GAME END')
+			},
 			_handleFormSubmit = function(model){
 				trace('MAIN_CTRL:: form was submitted from '+_currView.viewType);
 				if (_currView.viewType === _g.viewType.PLAYER_EDIT_SCREEN.type){
@@ -191,7 +195,7 @@ define([
 				_goBack();
 			},
 			_handleBackButton = function(){
-				trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
+				//trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
 
 				if (_currView.head.data.back.type === _g.viewType.GO_BACK.type){
 					_goBack();
@@ -210,7 +214,7 @@ define([
 				}
 			},
 			_handleContinueButton = function(data){
-				trace('MAIN_CTRL:: switch to new page ' + data.type)
+				//trace('MAIN_CTRL:: switch to new page ' + data.type)
 
 				switch(data.type){
 					case _g.viewType.PLAYER_EDIT_SCREEN.type:
@@ -308,7 +312,7 @@ define([
 				}
 			},
 			_handleBuildPage = function(data, clear){
-				trace('MAIN_CTRL:: build new page ' + data.type.type);
+				//trace('MAIN_CTRL:: build new page ' + data.type.type);
 
 				if (clear){
 					trace(' ---> remove all pages from stack');
@@ -335,7 +339,7 @@ define([
 					Backbone.on(_g.events.LIST_CLICK, _handleListClicked);
 					Backbone.on(_g.events.BUILD_PAGE, _handleBuildPage);
 					Backbone.on(_g.events.FORM_SUBMIT, _handleFormSubmit);
-					
+					Backbone.on(_g.events.GAME_ENDED, _handleGameEnd);
 				}else{
 					throw new Error('Specify a view to init on');
 				}
@@ -349,6 +353,7 @@ define([
 				Backbone.off(_g.events.LIST_CLICK, _handleListClicked);
 				Backbone.off(_g.events.BUILD_PAGE, _handleBuildPage);
 				Backbone.off(_g.events.FORM_SUBMIT, _handleFormSubmit);
+				Backbone.off(_g.events.GAME_ENDED, _handleGameEnd);
 			}
 			stage = $('#stage');
 

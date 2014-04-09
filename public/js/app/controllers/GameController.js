@@ -32,7 +32,6 @@ define([
 				trace('GAME_CTRL:: choose round "' +round.get('gameType').get('type')+'" for player '+round.get('playerId'))
 				_currRound = round;
 				
-				
 				Backbone.trigger(_g.events.BUILD_PAGE, {
 					type: _g.viewType.ROUND_DATA_SCREEN,
 					header:{
@@ -100,22 +99,23 @@ define([
 					_currRound.set('_index', i);
 					_currGame.set('_index', i);
 					_currGame.isValid();
-
-					if (i >= _currGame.get('rounds').length){
-						trace('SIGNAL THE END');
-						return;
-					}
 				}
 
-				// var v = _g.pageStack.pop()
-				// if (v){
-				// 	v.remove();
-				// 	v = null;
-				// }
 				Backbone.trigger(_g.events.SET_NEXT_PLAYER);
 
-				trace('--- continue')
-				//Backbone.trigger(_g.events.HEAD_CLICK_CONTINUE, _g.viewType.START_NEW_GAME);
+				var page = _g.pageStack.pop();
+				page.subview.model = _g.sPlayers.models[_currPlayer]
+				page.subview.collection = _getGamesForPlayer(page.subview.model)
+				page.subview.render();
+				_g.pageStack.push(page);
+
+				Backbone.trigger(_g.events.HEAD_CLICK_BACK, _g.viewType.START_NEW_GAME);
+				if (i >= _currGame.get('rounds').length-1){
+					trace('SIGNAL THE END');
+					Backbone.trigger(_g.events.GAME_ENDED, _currGame);
+					return;
+				}
+				page = null;
 			},
 			_subscribe = function(){
 				Backbone.on(_g.events.START_NEW_GAME, _handleStartNewGame);

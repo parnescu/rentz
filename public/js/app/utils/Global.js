@@ -104,6 +104,7 @@ define([
 			,START_NEW_GAME: "initNewGame"
 			,CHOOSE_GAME_TYPE: "typeSelected"
 			,UPDATE_ROUND: "updateRound"
+			,GAME_ENDED: "gameDone"
 		},
 		_views = {
 			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}
@@ -116,6 +117,7 @@ define([
 			,GAME_OUTCOME_SCREEN: { title: 'Game details', type:"gameOutcome"}
 			,START_NEW_GAME: { title: 'Continue', type:"newGame"}
 			,ROUND_DATA_SCREEN: { title: 'Input round outcome', type:"completeRound"}
+			,GAME_ENDED_SCREEN: { title: 'Game finished', type:"completeGame"}
 			
 
 			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}

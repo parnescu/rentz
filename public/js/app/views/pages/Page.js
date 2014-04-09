@@ -21,7 +21,6 @@ define([
 			*/
 
 			if (data.type && data.header && !data.header.title){
-				trace('------> '+data.type)
 				data.header.title = data.type.title
 			}
 		},
