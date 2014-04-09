@@ -251,8 +251,9 @@ describe("Rentz TDD specs", function(){
 		});
 
 		describe('Score points list - red priest game type', function(){
-			var c,p,gameType, playerCollection;
+			var playerCollection, gameType
 			beforeEach(function(){
+				var c,p;
 				gameType = _g.gameType.RED_PRIEST
 				c = Backbone.Collection.extend({ model: Score });
 				p = Backbone.Collection.extend({ model: Player });
@@ -267,6 +268,7 @@ describe("Rentz TDD specs", function(){
 						multiplier: gameType.get('multiplier')
 					}));
 				}
+				c = p = null;
 			});
 
 			it('must be corectly defined and fuction', function(){
@@ -276,7 +278,7 @@ describe("Rentz TDD specs", function(){
 					,gameType: gameType
 					,type: 'icon'
 				}).render();
-				
+
 				expect(view.$el.find('a').length).toBe(_g.currentPlayers);
 				expect(Number(view.total.firstChild.value)).toEqual(1);
 
@@ -288,12 +290,9 @@ describe("Rentz TDD specs", function(){
 
 				view.$el.find('a:eq(0)').click();
 				expect(Number(view.total.firstChild.value)).toEqual(1);
-
 			});
 
 			afterEach(function(){
-				c = gameType = null;
-
 				if (collection){
 					collection.reset();
 					collection = null;
@@ -816,7 +815,7 @@ describe("Rentz TDD specs", function(){
 				view.head.$el.find('a').click();
 
 				var m = MainController.view();
-				expect(stage[0].children.length).toBeGreaterThan(1);
+				expect(stage.children.length).toBeGreaterThan(1);
 				expect(m.subview.collection).toBe(_g.sPlayers);
 
 				// olga is last, make her the first, make ashura the last from 2nd
@@ -857,6 +856,8 @@ describe("Rentz TDD specs", function(){
 					view.remove();
 					view = null;
 				}
+				MainController.remove();
+				GameController.remove();
 			});
 		});
 
@@ -938,8 +939,41 @@ describe("Rentz TDD specs", function(){
 				}
 				MainController.remove();
 				GameController.remove();
-				
+				_g.sPlayers.reset();
 			});
+		});
+
+		describe("Game over screen", function(){
+			it('display olga as winner and sorted players list', function(){
+				_g.sPlayers.reset();
+				_g.sPlayers.add(bogusPlayers);
+				
+				var _p = [];
+				_.each(_g.sPlayers.models,function(player,i){ _p.push(player.cid);});
+
+				view = new GameOver({
+					model: new Game({
+						players: _p
+						,_points: [-30,-1080,-710]
+						,_winner: {
+							id: _g.sPlayers.models[0].cid
+							,score: "-30"
+						}
+					})
+				}).render();
+				stage.append(view.el);
+
+				expect(view.el.tagName).toBe('ARTICLE');
+				expect(view.$el.find('header p').text()).toBe(_g.sPlayers.models[0].fullname()+" with "+view.model.get('_points')[0]+" points");
+				expect(view.$el.find('.playersList li').length).toBe(3);
+			});
+			afterEach(function(){
+				if(view){
+					view.remove();
+					view = null;
+				}
+				_g.sPlayers.reset();
+			})
 		});
 	});
 
@@ -1005,7 +1039,7 @@ describe("Rentz TDD specs", function(){
 				m.$el.find('button.submit').click()
 
 				expect(m.subview.model.isValid()).toBeTruthy();
-				expect(stage[0].children.length).toBeGreaterThan(0);
+				expect(stage.children.length).toBeGreaterThan(0);
 				expect(_g.players.models.length).toBe(4);
 				expect(view.subview.el.children.length).toBe(4)
 				expect(_g.players.models[3].get('nick')).toBe('cireshescu');
@@ -1027,7 +1061,7 @@ describe("Rentz TDD specs", function(){
 					MainController.view().remove();
 				}
 				MainController.remove();
-
+				GameController.remove();
 				if(view){
 					view.remove();
 					view = null;
@@ -1074,8 +1108,12 @@ describe("Rentz TDD specs", function(){
 	
 	describe("Full games", function(){
 		describe("3 player game", function(){
-			var view, collection, m, i, round, scores;
-			it("from main, go and add three players", function(){
+			var view, round, scores, i, m, game;
+			it("from main, go and add three players", function(){			
+				MainController.purge();
+				_g.players.reset();
+				_g.games.reset();
+
 				view = new Page({
 					menu: [
 						_g.viewType.GAMES_SCREEN,
@@ -1085,6 +1123,7 @@ describe("Rentz TDD specs", function(){
 						title: "initial view"
 					}
 				}).render();
+				
 				stage.append(view.el)
 				MainController.init(view);
 				
@@ -1120,6 +1159,7 @@ describe("Rentz TDD specs", function(){
 				m.subview.submit.click();
 				expect(_g.players.length).toBe(3);
 				
+				m = null;
 			});
 
 			it("add another player and remove him", function(){
@@ -1205,7 +1245,7 @@ describe("Rentz TDD specs", function(){
 			});
 
 			it("play 15 games according to pen'n'paper design (bogusRounds)", function(){
-				var game = GameController.currentGame();
+				game = GameController.currentGame();
 				while(i<15){
 					i++;
 					view = MainController.view();
@@ -1225,7 +1265,7 @@ describe("Rentz TDD specs", function(){
 			});
 
 			it("play rest of games according to pen'n'paper design (bogusRounds)", function(){
-				var game = GameController.currentGame();
+				game = GameController.currentGame();
 				while(i<19){
 					i++;
 					view = MainController.view();
@@ -1237,7 +1277,7 @@ describe("Rentz TDD specs", function(){
 					scores.models[2].set('value', bogusRounds[i][2]);
 					view = MainController.view();
 					view.head.next.click();
-				}
+				}				
 				game = game.get('_points');
 				expect(game[0]).toBe(-40);
 				expect(game[1]).toBe(-1080);
@@ -1245,18 +1285,24 @@ describe("Rentz TDD specs", function(){
 			});
 
 			it("show end-game screen after last round", function(){
-				var game = GameController.currentGame();
+				game = GameController.currentGame();
 				
 				i++;
 				view = MainController.view();
 				view.subview.list.find('li:eq('+bogusRoundsIndex[i]+') a').click();
+				
 				round = GameController.currentRound();
 				scores = round.get('scores');
 				scores.models[0].set('value', bogusRounds[i][0]);
 				scores.models[1].set('value', bogusRounds[i][1]);
 				scores.models[2].set('value', bogusRounds[i][2]);
+				view.remove();
+				view = null;
+
 				view = MainController.view();
 				view.head.next.click();	
+				view.remove();
+				view = null;
 
 				game = game.get('_points');
 				expect(game[0]).toBe(-50);
@@ -1264,7 +1310,7 @@ describe("Rentz TDD specs", function(){
 				expect(game[2]).toBe(-710);
 			});
 
-			xit('reset everything', function(){
+			it('reset everything', function(){
 				MainController.remove();
 				GameController.remove();
 				if (view){

@@ -9,10 +9,11 @@ define([
 			rounds: new _c(),
 			players: [],
 			_points: [],
+			_winner: {},
 			_index: -1
 		},
 		validate: function(attr){
-			var i,j, tmp, points = [],  done = [];
+			var i,j, tmp, points = [],  done = [], max = 0, maxIndex = 0;
 			for(i=0;i<attr.rounds.length;i++){
 				if (attr.rounds.models[i].get('available') === false){
 					tmp = attr.rounds.models[i].get('_points')
@@ -23,9 +24,20 @@ define([
 					done.push(attr.rounds.models[i])
 				}
 			}
+			max = points.reduce(function(_max, curr, index){
+				if (curr > _max){ _max = curr; maxIndex = index}
+				return _max;
+			},Number.NEGATIVE_INFINITY);
+			
+			this.set("_winner", {
+				id: this.get('players')[maxIndex],
+				score: max
+			});
 			this.set("_points", points);
 			this.get('rounds').add(done);
-			tmp = i = j = points = null;
+
+			
+			i = j = tmp = points = done = max = maxIndex = null;
 		}
 	});
 })

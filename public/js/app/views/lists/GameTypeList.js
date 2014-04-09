@@ -17,7 +17,6 @@ define([
 				var _type, _enabled;
 				this.$el.html(this.template(this.model));
 				this.list = $(this.el.lastChild);
-
 				this.collection.each(function(item, i){
 					_type = item.get('gameType').get('type');
 					_enabled = item.get('available');

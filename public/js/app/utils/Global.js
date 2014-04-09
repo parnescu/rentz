@@ -107,20 +107,18 @@ define([
 			,GAME_ENDED: "gameDone"
 		},
 		_views = {
-			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}
-			,GAMES_SCREEN: { title: "Games", type:"gamesScreen"}
-			
-			,PLAYER_EDIT_SCREEN: { title: "New Player", type:"newPlayer"}
+			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}		
 			,PLAYERS_SELECT_SCREEN: { title: "Choose players", type:"selectPlayers"}
 			,PLAYERS_SORT_SCREEN: { title: "Continue", type:"sortPlayers"}
+			,PLAYER_EDIT_SCREEN: { title: "New Player", type:"newPlayer"}
 
+			,GAMES_SCREEN: { title: "Games", type:"gamesScreen"}
+			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
 			,GAME_OUTCOME_SCREEN: { title: 'Game details', type:"gameOutcome"}
-			,START_NEW_GAME: { title: 'Continue', type:"newGame"}
-			,ROUND_DATA_SCREEN: { title: 'Input round outcome', type:"completeRound"}
 			,GAME_ENDED_SCREEN: { title: 'Game finished', type:"completeGame"}
 			
-
-			,GAME_QUIT_SCREEN: { title: "Quit game", type:"quitScreen"}
+			,START_NEW_GAME: { title: 'Continue', type:"newGame"}
+			,ROUND_DATA_SCREEN: { title: 'Input round outcome', type:"completeRound"}
 			,GO_BACK: { title: "Back", type:"goBack"}
 			,EDIT: { title: "Edit", type:"edit"}
 			,SAVE_ROUND: { title: "Save", type:"saveRound"}

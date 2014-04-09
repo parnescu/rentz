@@ -51,6 +51,7 @@
 			,'/js/app/views/lists/GameDetailList.js'
 			,'/js/app/views/pages/Header.js'
 			,'/js/app/views/pages/Page.js'
+			,'/js/app/views/pages/GameOver.js'
 			,'/js/app/views/forms/EditPlayers.js'
 			,'/js/app/controllers/MainController.js'
 			,'/js/app/controllers/GameController.js'
@@ -72,6 +73,7 @@
 			GameDetailList,
 			Header,
 			Page,
+			GameOver,
 			EditPlayers,
 			MainController,
 			GameController
@@ -90,6 +92,7 @@
 			window.GameDetailList = GameDetailList;
 			window.Header = Header;
 			window.Page = Page;
+			window.GameOver = GameOver;
 			window.EditPlayers = EditPlayers;
 			//controllers
 			window.MainController = MainController;

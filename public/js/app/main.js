@@ -1,44 +1,59 @@
 trace = function(r){console.log(r);}
+define([
+	'app/utils/Global'
+	,'app/views/pages/Page'
+	,'app/controllers/MainController'
+	,'app/controllers/GameController'
+], function(_g, Page, MainController, GameController){
+	"use strict";
+	var f = function(){
+		function _start(element){
+			trace("APP:: init called");
+			
+			if (document.querySelector('#rentz')){
+				throw new Error('Only one instance of the game should be inited');
+				return;
+			}
+			
+			if (!element){
+				trace("APP:: no element given - build html node")
+				element = document.createElement('div');
+				element.id = "rentz";
+				document.body.appendChild(element);
+			}else{
+				element.id = "rentz"
+			}
+
+			var stage = $('#rentz'),
+				view = new Page({
+					menu: [
+						_g.viewType.GAMES_SCREEN,
+						_g.viewType.PLAYERS_LIST_SCREEN
+					],
+					header: {
+						title: "Rentz"
+					}
+				}).render();
+				stage.append(view.el)
+				MainController.init(view);
+			
+			stage = null;
+		}
+		function _end(){
+			_.each(_g.pageStack, function(view){ view.remove(); view = null; });
 
 
-// var globalMaxItems = 4,
-// 	multiplier = -50,
-// 	maxItems = 0,
-// 	sliders = $('.slider'),
-// 	inputs = $('.items'),
-// 	total = $('#remaining');
+			MainController.view().remove();
+			MainController.remove();
+			GameController.remove();
 
-// _getValue = function(event){
-// 	var element = event.target,
-// 		className = "."+element.className,
-// 		_v = Number(element.value),
-// 		_other = element.parentElement.children[className != '.slider' ? 1 : 2]
-// 		_points = element.parentElement.lastElementChild,
-// 		_sum = 0;
+			trace("APP:: destroy");
+		}
 
-// 	_v = _v < 0 ? 0 : _v > globalMaxItems ? globalMaxItems : _v;
-// 	$(className).each(function(i, item){ if (item != element){_sum += Number(item.value)}});
-// 	if (_v + _sum > globalMaxItems){ _v = globalMaxItems - _sum}
-// 	this.value = _other.value = _v
-// 	_points.value = multiplier*_v + " points";
-// 	total.val(globalMaxItems-_sum - _v);
-// 	element = className = _v = _other = _sum = null;
-// }
-
-// inputs.change(_getValue);
-// sliders.attr('max', globalMaxItems).change(_getValue);
-// total.val(globalMaxItems);
-
-// var canvas = document.createElement('canvas'),
-// 	ctx = canvas.getContext('2d');
-// canvas.width = canvas.height = 128;
-
-// var img = new Image();
-// img.src = "/res/logo.png";
-// img.onload = function(){
-// 	ctx.drawImage(img,0,0,128,128);
-// 	var d = document.createElement('img');
-// 	d.src = canvas.toDataURL()
-// 	trace(canvas.toDataURL());
-// 	$('section').append(d);
-// }	
+		return {
+			init: _start
+			,destroy: _end
+		}
+	}
+	return new f();
+});

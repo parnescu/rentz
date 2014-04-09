@@ -101,7 +101,10 @@ define([
 					_currGame.isValid();
 				}
 
+				_g.sPlayers.models[_currPlayer].set('_score', _currGame.get('_points')[_currPlayer])
 				Backbone.trigger(_g.events.SET_NEXT_PLAYER);
+
+
 
 				var page = _g.pageStack.pop();
 				page.subview.model = _g.sPlayers.models[_currPlayer]
@@ -110,8 +113,9 @@ define([
 				_g.pageStack.push(page);
 
 				Backbone.trigger(_g.events.HEAD_CLICK_BACK, _g.viewType.START_NEW_GAME);
+
 				if (i >= _currGame.get('rounds').length-1){
-					trace('SIGNAL THE END');
+					trace('GAME_CTRL: signal game ended');
 					Backbone.trigger(_g.events.GAME_ENDED, _currGame);
 					return;
 				}

@@ -1,7 +1,8 @@
 define([
-	'backbone',
-	'app/views/pages/Header'
-], function(B, Header){
+	'backbone'
+	,'app/utils/Global'
+	,'app/views/pages/Header'
+], function(B, _g, Header){
 	"use strict";
 	return Backbone.View.extend({
 		className: 'page',
@@ -47,8 +48,8 @@ define([
 				this.$el.append('<footer><ul class="nav"></ul></footer>');
 				this.menu = $(this.el.lastChild.firstChild);
 				_.each(this.data.menu,function(item, index){
-					this.menu.append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>")
-					if (this.data.type === item.type){
+					this.menu.append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>");
+					if (this.data.type && this.data.type.type === item.type){
 						$(this.menu[0].lastChild.firstChild).addClass('selected');
 					}
 				}, this);

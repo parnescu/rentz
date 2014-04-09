@@ -14,13 +14,14 @@ require.config({
 		},
 		jquery: {
 			exports: "$"
+		},
+		jqueryui:{
+			deps: ['jquery']
 		}
-
 	}
 });
 require([
-	'backbone',
-	'js/app/main.js',
-	'jqueryui'
-],function(B){
+	'js/app/main.js'
+],function(app){
+	app.init();
 });

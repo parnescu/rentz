@@ -3,15 +3,16 @@ define([
 	,'app/utils/Global'
 	,'app/views/lists/List'
 	,'app/views/pages/Page'
+	,'app/views/pages/GameOver'
 	,'app/views/forms/EditPlayers'
 	,'app/views/lists/GameTypeList'
 	,'app/views/lists/GameDetailList'
 	,'app/controllers/GameController'
-], function(B, _g, List, Page, EditPlayers, GameTypeList, GameDetailList, GameController){
+], function(B, _g, List, Page, GameOver, EditPlayers, GameTypeList, GameDetailList, GameController){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
-			var _currView,stage,
+			var _currView,stage, game, wasInited = false,
 			// base screen actions
 				_resetCurrent = function(){
 					if(_currView){
@@ -41,7 +42,7 @@ define([
 					var _type = _currView.viewType;
 					_resetCurrent();
 
-					_end();
+					//_end();
 					_currView = _g.pageStack.pop();
 
 					
@@ -49,7 +50,9 @@ define([
 						_start(_currView);
 						if (_currView.viewType === _g.viewType.PLAYERS_SELECT_SCREEN.type ||
 							_type === _g.viewType.GAME_OUTCOME_SCREEN.type){
-							_currView.menu.find('a').removeClass('selected');
+							if (_currView.menu){
+								_currView.menu.find('a').removeClass('selected');	
+							}
 						}
 					}
 				},
@@ -61,6 +64,8 @@ define([
 					}
 					
 					var model = _g.sPlayers.models[GameController.currentPlayer()];
+					game = GameController.currentGame();
+
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 							type: _g.viewType.START_NEW_GAME,
 							menu: [
@@ -91,6 +96,10 @@ define([
 					});
 				},
 				_addPlayersChooseScreen = function(){
+					if(_g.players.length < _g.MIN_PLAYERS){
+						throw new Error("There must be at least "+_g.MIN_PLAYERS+" players available to play");
+					}
+
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.PLAYERS_SELECT_SCREEN,
 						header:{
@@ -125,8 +134,8 @@ define([
 						throw new Error('The allowed number of players is between '+_g.MIN_PLAYERS+' and '+_g.MAX_PLAYERS);
 					}
 				},
-				_addGameDetailsScreen = function(){
-					var game = GameController.currentGame();
+				_addGameDetailsScreen = function(game){
+					game = game || GameController.currentGame();
 					
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.GAME_OUTCOME_SCREEN,
@@ -184,7 +193,17 @@ define([
 			// end - base screen actions
 
 			_handleGameEnd = function(){
-				trace('_---__--_-_--__ GAME END')
+				trace("MAIN_CTRL:: add game to collection + show final results")
+				_g.games.add(game);
+
+				Backbone.trigger(_g.events.BUILD_PAGE, {
+					type: _g.viewType.GAME_ENDED_SCREEN,
+					header: {
+						next: _g.viewType.GAMES_SCREEN,
+						title: "Game Results"
+					},
+					view: new GameOver({ model: game})
+				})
 			},
 			_handleFormSubmit = function(model){
 				trace('MAIN_CTRL:: form was submitted from '+_currView.viewType);
@@ -195,7 +214,7 @@ define([
 				_goBack();
 			},
 			_handleBackButton = function(){
-				//trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
+				trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
 
 				if (_currView.head.data.back.type === _g.viewType.GO_BACK.type){
 					_goBack();
@@ -214,7 +233,7 @@ define([
 				}
 			},
 			_handleContinueButton = function(data){
-				//trace('MAIN_CTRL:: switch to new page ' + data.type)
+				trace('MAIN_CTRL:: switch to new page ' + data.type)
 
 				switch(data.type){
 					case _g.viewType.PLAYER_EDIT_SCREEN.type:
@@ -232,6 +251,10 @@ define([
 					case _g.viewType.SAVE_ROUND.type:
 						Backbone.trigger(_g.events.UPDATE_ROUND);
 						break;
+					case _g.viewType.GAMES_SCREEN.type:
+						_resetCurrent();
+						_showGamesPage();
+						break;
 					default:
 						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
 				 		trace(data);
@@ -245,7 +268,11 @@ define([
 						_addPlayerScreen(model);
 						break;
 					case _g.viewType.GAMES_SCREEN.type:
-						trace('MAIN_CTRL:: switch to new page "view game details"')
+						trace('MAIN_CTRL:: switch to new page "view game details"');
+						_addGameDetailsScreen(model)
+						break;
+					default:
+						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
 						break;
 				}
 			},
@@ -265,20 +292,10 @@ define([
 					trace('MAIN_CTRL:: navigation item was clicked -> '+type);
 					switch(type){
 						case _g.viewType.PLAYERS_LIST_SCREEN.type:
-							// title = _g.viewType.PLAYERS_LIST_SCREEN.title;
-							// view = new List({
-							// 	deletable: true,
-							// 	collection: _g.players
-							// }).render();
 							_resetCurrent();
 							_showPlayersPage();
 							break;
 						case _g.viewType.GAMES_SCREEN.type:
-							// title = _g.viewType.GAMES_SCREEN.title;
-							// view = new List({
-							// 	deletable: true,
-							// 	collection: _g.games
-							// }).render();
 							_resetCurrent();
 							_showGamesPage();
 							break;
@@ -292,27 +309,10 @@ define([
 							trace('------ SCREEN TYPE NOT HANDLED YET: '+type);
 							break;
 					}
-
-
-					// to be removed ... here for tests only
-					if (view){
-						if (_currView.subview){ _currView.subview.remove();}
-
-						_currView.viewType = type;
-						_currView.subview = view;
-						
-						_currView.head.setButtonState('back', "off");
-						_currView.head.title.text(title);
-
-						_currView.content.remove("editable");
-						_currView.content.append(view.el);
-
-						title = null;
-					}
 				}
 			},
 			_handleBuildPage = function(data, clear){
-				//trace('MAIN_CTRL:: build new page ' + data.type.type);
+				trace('MAIN_CTRL:: build new page ' + data.type.type);
 
 				if (clear){
 					trace(' ---> remove all pages from stack');
@@ -322,17 +322,22 @@ define([
 					_g.pageStack.push(_currView);
 				}
 
-				_end();
+				//_end();
 				_currView = null;
 				_currView = new Page(data).render();
-				stage.append(_currView.el);
-				_start(_currView);
+				stage.appendChild(_currView.el);
+				//_start(_currView);
 			},
 			_start = function(view){				
+				if (wasInited) return;
 				if (view){
-					//trace('MAIN_CTRL:: init');
-					_end(view);
+					//_end(view);
 					_currView = view;
+					wasInited = true;
+					trace('\nMAIN_CTRL:: init');
+					if (!stage){
+						stage = document.querySelector('#rentz');
+					}
 					Backbone.on(_g.events.HEAD_CLICK_BACK, _handleBackButton);
 					Backbone.on(_g.events.HEAD_CLICK_CONTINUE, _handleContinueButton);
 					Backbone.on(_g.events.NAV_CLICKED, _handleNavClicked);
@@ -345,8 +350,7 @@ define([
 				}
 			},
 			_end = function(){
-				//trace('MAIN_CTRL:: reset');
-				_currView = null;				
+				trace('MAIN_CTRL:: reset');
 				Backbone.off(_g.events.HEAD_CLICK_BACK, _handleBackButton);
 				Backbone.off(_g.events.HEAD_CLICK_CONTINUE, _handleContinueButton);
 				Backbone.off(_g.events.NAV_CLICKED, _handleNavClicked);
@@ -354,16 +358,20 @@ define([
 				Backbone.off(_g.events.BUILD_PAGE, _handleBuildPage);
 				Backbone.off(_g.events.FORM_SUBMIT, _handleFormSubmit);
 				Backbone.off(_g.events.GAME_ENDED, _handleGameEnd);
+				if (_currView){
+					_currView.remove();
+					_currView = null;
+				}
+				wasInited = false;
 			}
-			stage = $('#stage');
 
 			return {
 				init: _start,
 				remove: _end,
-				view: function(){ return _currView;}
+				view: function(){ return _currView;},
+				purge: _resetCurrent
 			}
 		}
-
 		window.__mc = new f();;
 	}
 	return window.__mc
