@@ -33,4 +33,3 @@ require([
 	
 	app.init();
 });
-

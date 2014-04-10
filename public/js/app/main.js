@@ -9,7 +9,7 @@ define([
 	var f = function(){
 		function _start(element){
 			trace("APP:: init called");
-			
+
 			if (document.querySelector('#rentz')){
 				throw new Error('Only one instance of the game should be inited');
 				return;
@@ -37,6 +37,14 @@ define([
 			stage.append(view.el)
 			MainController.init(view);
 			view.$el.addClass('ui-page-active');
+
+			window.addEventListener('error', function(e){ alert(e.error.message); e.preventDefault();});
+
+
+
+
+
+
 
 
 			// T.B.D

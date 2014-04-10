@@ -41,6 +41,8 @@ define([
 				this.$el.sortable(sortConfig).disableSelection();
 			}
 
+			this.$el.addClass(this.data.gameType.get('type'))
+
 			if(this._gameType.get('type') === "rentz"){
 				this.handleSorting()
 			}

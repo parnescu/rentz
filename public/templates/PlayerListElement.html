@@ -3,7 +3,7 @@
 <% if(typeof(values) != 'undefined') {%>
 <div class='wrapper'>
 	<a href="#showItem" class="clicker" title="<%= values.name %> <%= values.surname %>">&nbsp;</a>
-	<img src="<%= values.picture %>" alt="<%= values.name %>"/>
+	<img class="avatar" src="<%= values.picture %>" alt="<%= values.name %>"/>
 	<span class="itemDetails">
 		<h2 class="playerName"><%= values.name %> <%= values.surname %></h2>
 		<p class="playerNick">nickname: <%= values.nick %></p>

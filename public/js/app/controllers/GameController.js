@@ -75,30 +75,39 @@ define([
 			_handleUpdateRound = function(){
 				if (!_currRound) return;
 
+				// check to see if data was actually inputed
+				// all scores values are 0 -> needs input
+				var sum = _currRound.get('scores').toJSON().reduce(function(sum, item){ sum+= item.value; return sum;},0);
+				trace(sum + " " + _currRound.get('scores').models[0].get('maxItems'));
+				if (sum === 0 || sum < _currRound.get('scores').models[0].get('maxItems')){
+					throw new Error(_g.errors.ROUND_DATA_NOT_GIVEN);
+				}
+				sum = null;
+				trace("GAME_CTRL:: round data ")
+
 				if (_currRound.get('_index')){
 					_currRound.isValid();
 					_currGame.isValid();
 				}else{
 					var i = _currGame.get('_index');
 					i++;
-
+					
 					_currRound.isValid();
 					_currRound.set('_index', i);
 					_currGame.set('_index', i);
 					_currGame.isValid();
 				}
 
-				//_g.sPlayers.models[_currPlayer].set('_score', _currGame.get('_points')[_currPlayer])
 
+
+
+				
 				// update models scores
-				_.each(_g.sPlayers.models, function(player, i){
-					player.set('_score', _currGame.get('_points')[i])
-				}, this)
-
-				Backbone.trigger(_g.events.SET_NEXT_PLAYER);
-
-
+				// get next player
+				// go back to choose game type with next player
 				trace(_currGame.get('_points'));
+				_.each(_g.sPlayers.models, function(player, i){ player.set('_score', _currGame.get('_points')[i])}, this);
+				Backbone.trigger(_g.events.SET_NEXT_PLAYER);			
 
 				var page = _g.pageStack.pop();
 				page.subview.model = _g.sPlayers.models[_currPlayer]

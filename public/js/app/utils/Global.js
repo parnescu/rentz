@@ -52,6 +52,11 @@ define([
 			game.isValid();
 		}
 
+		obj = {
+			MIN_PLAYERS: min
+			,MAX_PLAYERS: max
+		}
+
 		var _types = {
 			RED_PRIEST: new GameType({
 				type: 'redPriest',
@@ -123,31 +128,27 @@ define([
 			,GO_BACK: { title: "Back", type:"goBack"}
 			,EDIT: { title: "Edit", type:"edit"}
 			,SAVE_ROUND: { title: "Save", type:"saveRound"}
+			,INITIAL_SCREEN: { title: "Rentz", type:"initialScreen"}
 		},
-		_filters = {
-			finishedRounds: function(round){
-				return round.get('available') === false;
-			}
+		_err = {
+			ROUND_DATA_NOT_GIVEN: "There are still points not given"
+			,ONE_INSTANCE_ONLY: "Only one instance of the game should be inited" 
+			,MIN_PLAYERS_NEEDED: "There must be at least "+obj.MIN_PLAYERS+" players available to play"
+			,PLAYERS_NEEDED: "The allowed number of players is between "+obj.MIN_PLAYERS+" and "+obj.MAX_PLAYERS
 		};
 
-		obj = {
-			MIN_PLAYERS: min
-			,MAX_PLAYERS: max
-			,events: _events
-			,util: _utils
-			,gameType: _types
-			,viewType: _views
-			,filter: _filters
-
-			,mainCtrl: null			// reference to MainController
-			,gameCtrl: null			// reference to GameController
-			
-			,players: null 			// all players collection
-			,games: null 			// all the saved games collection
-
-			,sPlayers: null 		// selected players for the game
-			,pageStack: []			// used for back button
-		}
+		obj.events =  _events
+		obj.util = _utils
+		obj.gameType = _types
+		obj.viewType = _views
+		obj.errors =_err
+		obj.mainCtrl = null			// reference to MainController
+		obj.gameCtrl = null			// reference to GameController
+		obj.players = null 			// all players collection
+		obj.games = null 			// all the saved games collection
+		obj.sPlayers = null 		// selected players for the game
+		obj.pageStack = []			// used for back button
+		
 		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
 		obj.__defineGetter__('currentPlayers', function(){ return current;});
 

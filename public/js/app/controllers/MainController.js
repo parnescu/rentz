@@ -98,13 +98,13 @@ define([
 				},
 				_addPlayersChooseScreen = function(){
 					if(_g.players.length < _g.MIN_PLAYERS){
-						throw new Error("There must be at least "+_g.MIN_PLAYERS+" players available to play");
+						throw new Error(_g.errors.MIN_PLAYERS_NEEDED);
 					}
 
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.PLAYERS_SELECT_SCREEN,
 						header:{
-							back: _g.viewType.BACK,
+							back: _g.viewType.GO_BACK,
 							next: _g.viewType.PLAYERS_SORT_SCREEN
 						},
 						view: new List({
@@ -132,7 +132,7 @@ define([
 							,view: new List({ collection: _g.sPlayers, sortable:true})
 						});
 					}else{
-						throw new Error('The allowed number of players is between '+_g.MIN_PLAYERS+' and '+_g.MAX_PLAYERS);
+						throw new Error(_g.errors.PLAYERS_NEEDED);
 					}
 				},
 				_addGameDetailsScreen = function(game){
@@ -212,6 +212,18 @@ define([
 						})
 					});
 					round = null;
+				},
+				_showInitialScreen = function(){
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.INITIAL_SCREEN,
+						menu: [
+							_g.viewType.GAMES_SCREEN,
+							_g.viewType.PLAYERS_LIST_SCREEN
+						],
+						header: {
+							title: "Rentz"
+						}
+					});
 				},
 			// end - base screen actions
 
@@ -307,6 +319,7 @@ define([
 						_currView.remove();
 						_currView = null;
 					}
+					_showInitialScreen();
 				};
 
 				if (_currView){
@@ -345,13 +358,11 @@ define([
 					_g.pageStack.push(_currView);
 				}
 
-				//_end();
 				_currView = null;
 				_currView = new Page(data).render();
 				stage.appendChild(_currView.el);
-				//_start(_currView);
 			},
-			_start = function(view){				
+			_start = function(view){
 				if (wasInited) return;
 				if (view){
 					//_end(view);
