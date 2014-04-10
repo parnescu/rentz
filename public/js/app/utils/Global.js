@@ -103,6 +103,7 @@ define([
 
 			,START_NEW_GAME: "initNewGame"
 			,CHOOSE_GAME_TYPE: "typeSelected"
+			,SIGNAL_ROUND_INIT: "buildRound"
 			,UPDATE_ROUND: "updateRound"
 			,GAME_ENDED: "gameDone"
 		},

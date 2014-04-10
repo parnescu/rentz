@@ -10,6 +10,10 @@ define([
 		events: {
 			'click a': "handleClick"
 		},
+		attributes:{
+			"data-role": "header"
+			,"position": "fixed"
+		},
 		initialize: function(data){
 			this.data = data;
 			this.data.title = this.data.title || ""

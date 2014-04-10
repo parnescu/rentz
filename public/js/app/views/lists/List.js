@@ -49,7 +49,7 @@ define([
 					cursor: 'move',
 					update: this.handleSorting
 				}
-				this.$el.sortable(sortConfig)
+				this.$el.sortable(sortConfig);
 			}
 			return this;
 		},

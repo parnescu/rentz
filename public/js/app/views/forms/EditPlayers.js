@@ -1,8 +1,9 @@
 define([
 	'backbone',
+	'app/utils/Global',
 	'app/models/Player',
 	'text!/templates/EditPlayers.html'
-], function(B, Player, template){
+], function(B, _g, Player, template){
 	"use strict";
 	return Backbone.View.extend({
 		tagName: 'form',

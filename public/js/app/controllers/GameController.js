@@ -31,20 +31,7 @@ define([
 			_handleChooseRound = function(round){
 				trace('GAME_CTRL:: choose round "' +round.get('gameType').get('type')+'" for player '+round.get('playerId'))
 				_currRound = round;
-				
-				Backbone.trigger(_g.events.BUILD_PAGE, {
-					type: _g.viewType.ROUND_DATA_SCREEN,
-					header:{
-						back: _g.viewType.GO_BACK,
-						next: _g.viewType.SAVE_ROUND,
-						title: "Game: "+round.get('gameType').get('type')
-					},
-					view: new ScoreList({
-						players: _g.sPlayers
-						,collection: _currRound.get('scores')
-						,gameType: _currRound.get('gameType')
-					})
-				});
+				Backbone.trigger(_g.events.SIGNAL_ROUND_INIT)
 			},
 			_handleStartNewGame = function(){
 				trace('GAME_CTRL:: start new game')
@@ -101,10 +88,17 @@ define([
 					_currGame.isValid();
 				}
 
-				_g.sPlayers.models[_currPlayer].set('_score', _currGame.get('_points')[_currPlayer])
+				//_g.sPlayers.models[_currPlayer].set('_score', _currGame.get('_points')[_currPlayer])
+
+				// update models scores
+				_.each(_g.sPlayers.models, function(player, i){
+					player.set('_score', _currGame.get('_points')[i])
+				}, this)
+
 				Backbone.trigger(_g.events.SET_NEXT_PLAYER);
 
 
+				trace(_currGame.get('_points'));
 
 				var page = _g.pageStack.pop();
 				page.subview.model = _g.sPlayers.models[_currPlayer]

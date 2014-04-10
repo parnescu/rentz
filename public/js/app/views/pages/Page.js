@@ -10,6 +10,9 @@ define([
 		events:{
 			"click a.navlist": "handleNavClick"
 		},
+		attributes:{
+			"data-role": "page"
+		},
 		initialize: function(data){
 			this.data = data
 			this.viewType = data.type ? data.type.type : null;
@@ -47,6 +50,15 @@ define([
 			if (this.data.menu){
 				this.$el.append('<footer><ul class="nav"></ul></footer>');
 				this.menu = $(this.el.lastChild.firstChild);
+
+				// jqm items
+				var f = this.$el.find('footer')[0];
+				f.dataset.role = "footer";
+				f.dataset.position = "fixed";
+				this.menu[0].dataset.role = "navbar"
+				this.menu[0].dataset.iconpos = "top"
+				// - end jqm
+
 				_.each(this.data.menu,function(item, index){
 					this.menu.append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>");
 					if (this.data.type && this.data.type.type === item.type){
@@ -54,6 +66,8 @@ define([
 					}
 				}, this);
 			}
+
+			this.$el.trigger('create');
 			return this;
 		},
 		handleNavClick: function(e){

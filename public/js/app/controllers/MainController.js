@@ -7,8 +7,9 @@ define([
 	,'app/views/forms/EditPlayers'
 	,'app/views/lists/GameTypeList'
 	,'app/views/lists/GameDetailList'
+	,'app/views/lists/ScoringList'
 	,'app/controllers/GameController'
-], function(B, _g, List, Page, GameOver, EditPlayers, GameTypeList, GameDetailList, GameController){
+], function(B, _g, List, Page, GameOver, EditPlayers, GameTypeList, GameDetailList, ScoreList, GameController){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
@@ -190,6 +191,28 @@ define([
 						})
 					});
 				},
+				_showRoundPage = function(){
+					var round = GameController.currentRound(),
+						isRentz = round.get('gameType').get('type') === _g.gameType.RENTZ.get('type'),
+						isRedPriest = round.get('gameType').get('type') === _g.gameType.RED_PRIEST.get('type');
+
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.ROUND_DATA_SCREEN,
+						header:{
+							back: _g.viewType.GO_BACK,
+							next: _g.viewType.SAVE_ROUND,
+							title: "Game: "+round.get('gameType').get('type')
+						},
+						view: new ScoreList({
+							players: _g.sPlayers
+							,collection: round.get('scores')
+							,gameType: round.get('gameType')
+							,type: isRentz || isRedPriest ? 'icon' : 'normal'
+							,sortable:  isRentz ? true : false
+						})
+					});
+					round = null;
+				},
 			// end - base screen actions
 
 			_handleGameEnd = function(){
@@ -345,6 +368,7 @@ define([
 					Backbone.on(_g.events.BUILD_PAGE, _handleBuildPage);
 					Backbone.on(_g.events.FORM_SUBMIT, _handleFormSubmit);
 					Backbone.on(_g.events.GAME_ENDED, _handleGameEnd);
+					Backbone.on(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
 				}else{
 					throw new Error('Specify a view to init on');
 				}
@@ -358,6 +382,7 @@ define([
 				Backbone.off(_g.events.BUILD_PAGE, _handleBuildPage);
 				Backbone.off(_g.events.FORM_SUBMIT, _handleFormSubmit);
 				Backbone.off(_g.events.GAME_ENDED, _handleGameEnd);
+				Backbone.off(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
 				if (_currView){
 					_currView.remove();
 					_currView = null;

@@ -15,6 +15,7 @@ define([
 		render: function(){
 			if (this.model && this.collection){
 				var _type, _enabled;
+				trace(this.model.toJSON())
 				this.$el.html(this.template(this.model));
 				this.list = $(this.el.lastChild);
 				this.collection.each(function(item, i){

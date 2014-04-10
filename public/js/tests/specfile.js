@@ -1,6 +1,6 @@
 "use strict";
 describe("Rentz TDD specs", function(){
-	var model, collection, stage = $('#stage'),
+	var model, collection, stage = $('#rentz'),
 		bogusPlayers = [
 			{ name:"Gigi", surname:"Kent", nick:'shigy'}
 			,{ name:"Lebby", surname:"Coarse", nick:'mutaflex'}
@@ -278,6 +278,7 @@ describe("Rentz TDD specs", function(){
 					,gameType: gameType
 					,type: 'icon'
 				}).render();
+				stage.append(view.el)
 
 				expect(view.$el.find('a').length).toBe(_g.currentPlayers);
 				expect(Number(view.total.firstChild.value)).toEqual(1);
@@ -962,6 +963,7 @@ describe("Rentz TDD specs", function(){
 					})
 				}).render();
 				stage.append(view.el);
+
 
 				expect(view.el.tagName).toBe('ARTICLE');
 				expect(view.$el.find('header p').text()).toBe(_g.sPlayers.models[0].fullname()+" with "+view.model.get('_points')[0]+" points");
