@@ -47,19 +47,22 @@ define([
 			this._mergeData();
 			if (this.model.isValid()){
 				Backbone.trigger(_g.events.FORM_SUBMIT, this.model);
+			}else{
+				this.el.checkValidity();
+				throw new Error(_g.errors.PLAYER_DATA_FAIL);
 			}
 		},
 
 		handleReset:function(e){
 			e.preventDefault();
-			this.$el.find('input').removeClass('invalid')
-			this.el.reset()
+			this.$el.find('input').removeClass('invalid');
+			this.el.reset();
 			if(this.model){
 				this._mergeData();	
 			}
 		},
 		handleAvatar: function(e){
-			e.preventDefault()
+			e.preventDefault();
 			Backbone.trigger(_g.events.AVATAR_CHOOSE, this);
 		}
 	})

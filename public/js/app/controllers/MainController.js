@@ -90,6 +90,7 @@ define([
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.PLAYER_EDIT_SCREEN,
 						header:{
+							next: _g.viewType.SAVE,
 							back: _g.viewType.GO_BACK,
 							title: model ? model.fullname() : "New Player"
 						}
@@ -314,6 +315,10 @@ define([
 					case _g.viewType.GAMES_SCREEN.type:
 						_resetCurrent();
 						_showGamesPage();
+						break;
+					case _g.viewType.SAVE.type:
+						trace("MAIN_CTRL:: click submit button");
+						_currView.subview.submit.click()
 						break;
 					default:
 						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);

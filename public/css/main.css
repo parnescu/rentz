@@ -56,7 +56,11 @@ ul.scoreList li { clear:both; float:none;}
 #playerEditForm .element input { border-top-left-radius: 0; width:100%; margin-top:-.5em;}
 
 #playerEditForm .element .avatar { width:10em; height:10em; position:relative; left:50%; margin-left:-5em; background:#ccc; border-radius:.5em;}
+#playerEditForm .submit { display:none;}
 
+#playerEditForm input.invalid { background:rgba(255,0,0,.5); font-weight: bold; color:#fff; }
+#playerEditForm input.invalid:focus { background:white; color:#000; font-weight:normal;}
+#playerEditForm input.invalid::-webkit-input-placeholder { color:#fff;}
 
 /* game types */
 ul.redPriest li { clear:none; float:left;}

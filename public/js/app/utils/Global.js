@@ -161,6 +161,7 @@ define([
 			,ROUND_DATA_SCREEN: { title: 'Input round outcome', type:"completeRound"}
 			,GO_BACK: { title: "Back", type:"goBack"}
 			,EDIT: { title: "Edit", type:"edit"}
+			,SAVE: { title: "Add", type: "save"}
 			,SAVE_ROUND: { title: "Save", type:"saveRound"}
 			,INITIAL_SCREEN: { title: "Rentz", type:"initialScreen"}
 		},
@@ -171,6 +172,7 @@ define([
 			,PLAYERS_NEEDED: "The allowed number of players is between "+obj.MIN_PLAYERS+" and "+obj.MAX_PLAYERS
 			,NO_CAMERA: "No camera available!"
 			,EDIT_NONE: "No items to edit!"
+			,PLAYER_DATA_FAIL: "No proper information was given about the player!"
 		};
 
 		obj.events =  _events
