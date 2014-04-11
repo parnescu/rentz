@@ -69,15 +69,13 @@ define([
 				$(avatar).hide();
 
 				navigator.getMedia = ( navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.getUserMedia );
-				trace(navigator.getMedia)
 				navigator.getMedia({
 						video: true,
 						audio: false
 					},
 					function(_stream) {
 						stream = _stream;
-						//video.src = window.webkitURL.createObjectURL(_stream)
-
+						
 						if (navigator.mozGetUserMedia) {
 							video.mozSrcObject = stream;
 						} else {
@@ -85,9 +83,9 @@ define([
 							video.src = vendorURL.createObjectURL(stream);
 						}
 					}
-					// ,function(err) {
-					// 	trace("Unable to get video stream!");
-					// }
+					,function(err) {
+						trace("Unable to get video stream!");
+					}
 				);
 
 				$(button).click(function(e){
@@ -98,7 +96,7 @@ define([
 					canvas.height = video.videoHeight;
 					var ctx = canvas.getContext('2d');
 					ctx.drawImage(video,0,0,canvas.width,canvas.height);
-
+					
 					avatar.children[0].src = canvas.toDataURL();
 
 					$(button).hide();
@@ -127,6 +125,7 @@ define([
 					
 					state = 0;
 					stream.stop();
+					
 					$(back).hide();
 					$(next).hide();
 					$(avatar).show();

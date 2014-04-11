@@ -9,7 +9,8 @@ define([
 	,'app/views/lists/GameDetailList'
 	,'app/views/lists/ScoringList'
 	,'app/controllers/GameController'
-], function(B, _g, List, Page, GameOver, EditPlayers, GameTypeList, GameDetailList, ScoreList, GameController){
+	,'app/controllers/CameraController'
+], function(B, _g, List, Page, GameOver, EditPlayers, GameTypeList, GameDetailList, ScoreList, GameController, CameraController){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
@@ -242,6 +243,7 @@ define([
 			},
 			_handleAvatarReplacement = function(){
 				_g.util.camera();
+				
 			},
 			_handleGameEnd = function(){
 				trace("MAIN_CTRL:: add game to collection + show final results")
@@ -427,7 +429,6 @@ define([
 				}
 				wasInited = false;
 			}
-
 			return {
 				init: _start,
 				remove: _end,

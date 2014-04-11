@@ -45,12 +45,13 @@ define([
 			if (!this.model){
 				this.model = new Player();
 			};
+			this.el.checkValidity();
 			this._mergeData();
+
 			if (this.model.isValid()){
 				Backbone.trigger(_g.events.FORM_SUBMIT, this.model);
 			}else{
-				this.el.checkValidity();
-				throw new Error(_g.errors.PLAYER_DATA_FAIL);
+				//throw new Error(_g.errors.PLAYER_DATA_FAIL);
 			}
 		},
 
