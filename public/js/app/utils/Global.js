@@ -4,7 +4,7 @@ define([
 	'app/models/Game',
 ],function(GameType, Player, Game){
 	"use strict";
-	var max = 6, min = 3, c, obj, current;
+	var max = 6, min = 3, c, obj, current, cam;
 	if (!window.__g){
 		var _utils = {}
 		_utils.months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
@@ -50,6 +50,38 @@ define([
 			model.set("_index",i);
 			game.set('_index',i);
 			game.isValid();
+		}
+		_utils.camera = function(){
+			if (!cam){
+				
+				var k = document.createElement('video');
+				k.autoplay = "autoplay";
+				$('#rentz').append(k);
+				var c = document.createElement('canvas');
+				$('#rentz').append(c);
+
+				navigator.webkitGetUserMedia({
+						video: true,
+						audi: false
+					},
+					function(stream) {
+						trace('mortii mataii')
+						k.src = window.webkitURL.createObjectURL(stream)
+					},
+					function(err) {
+						trace("Unable to get video stream!")
+					}
+				);
+				$(k).click(function(){
+					var p = c.getContext('2d');
+					p.drawImage(k,0,0,128,128)
+					trace(c);
+					trace(p);
+					// $('#rentz').append('<img alt="screenshot">');
+					// $('#rentz')[0].lastChild.src = p.toDataURL();
+				});
+			}
+			return cam;
 		}
 
 		obj = {
@@ -100,6 +132,8 @@ define([
 			LIST_CLICK: "listItemClicked"
 			,LIST_CHANGE_VALUE: "valueChanged"
 			,LIST_MODIFY_VALUE: "valueChangedByUser"
+			,LIST_ITEM_DELETED: "listItemDeleted"
+			,AVATAR_CHOOSE: "getAvatar"
 			,HEAD_CLICK_BACK: "headerClickBack"
 			,HEAD_CLICK_CONTINUE: "headerClickNext"
 			,NAV_CLICKED: "footerClick"
@@ -135,6 +169,8 @@ define([
 			,ONE_INSTANCE_ONLY: "Only one instance of the game should be inited" 
 			,MIN_PLAYERS_NEEDED: "There must be at least "+obj.MIN_PLAYERS+" players available to play"
 			,PLAYERS_NEEDED: "The allowed number of players is between "+obj.MIN_PLAYERS+" and "+obj.MAX_PLAYERS
+			,NO_CAMERA: "No camera available!"
+			,EDIT_NONE: "No items to edit!"
 		};
 
 		obj.events =  _events

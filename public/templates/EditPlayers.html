@@ -3,7 +3,7 @@
 		<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>" class="avatar">
 			<img src="<%= typeof(picture) != 'undefined' ? picture : ""  %>" alt="avatar">
 		</a>
-		<span class="itemNotify">won: <%= typeof(won) != 'undefined' ? won : "0"  %></span>
+		<span class="itemNotify"><%= typeof(won) != 'undefined' ? won : "0"  %> won</span>
 	</div>
 	<div class="element">
 		<label for="nick">Nickname</label>

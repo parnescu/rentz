@@ -59,6 +59,7 @@ define([
 				this.menu[0].dataset.iconpos = "top"
 				// - end jqm
 
+				this.menu.addClass("items_"+this.data.menu.length)
 				_.each(this.data.menu,function(item, index){
 					this.menu.append("<li><a href='#"+item.type+"' data-id='"+item.type+"' title='"+item.title+"' class='navlist'>"+item.title+"</a></li>");
 					if (this.data.type && this.data.type.type === item.type){

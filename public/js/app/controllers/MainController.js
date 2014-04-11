@@ -226,7 +226,29 @@ define([
 					});
 				},
 			// end - base screen actions
+			_handleItemDeletion = function(view){
+				if (view.model){
+					var c = view.model.collection;
+					view.model.collection.remove(view.model)
+					view.remove();
+					view = null;
+				
+					if (c.length === 0){
+						_resetEditMode();
+					}
+					c = null;
+				}
+			},
+			_handleAvatarReplacement = function(){
+				trace(' ===> replace avatar from taken picture');
+				_g.util.camera();
+				return;
+				if (_g.util.camera()){
 
+				}else{
+					throw new Error(_g.errors.NO_CAMERA);
+				}
+			},
 			_handleGameEnd = function(){
 				trace("MAIN_CTRL:: add game to collection + show final results")
 				_g.games.add(game);
@@ -254,6 +276,9 @@ define([
 				if (_currView.head.data.back.type === _g.viewType.GO_BACK.type){
 					_goBack();
 				}else{
+					if (_currView.subview && _currView.subview.collection.length < 1){
+						throw new Error(_g.errors.EDIT_NONE);
+					}
 					// edit button enabled
 					var button = _currView.head.back[0],
 						pressed = button.dataset.pressed;
@@ -380,6 +405,8 @@ define([
 					Backbone.on(_g.events.FORM_SUBMIT, _handleFormSubmit);
 					Backbone.on(_g.events.GAME_ENDED, _handleGameEnd);
 					Backbone.on(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
+					Backbone.on(_g.events.LIST_ITEM_DELETED, _handleItemDeletion);
+					Backbone.on(_g.events.AVATAR_CHOOSE, _handleAvatarReplacement);
 				}else{
 					throw new Error('Specify a view to init on');
 				}
@@ -394,6 +421,8 @@ define([
 				Backbone.off(_g.events.FORM_SUBMIT, _handleFormSubmit);
 				Backbone.off(_g.events.GAME_ENDED, _handleGameEnd);
 				Backbone.off(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
+				Backbone.off(_g.events.LIST_ITEM_DELETED, _handleItemDeletion);
+				Backbone.off(_g.events.AVATAR_CHOOSE, _handleAvatarReplacement);
 				if (_currView){
 					_currView.remove();
 					_currView = null;

@@ -52,8 +52,7 @@ define([
 
 			switch(type){
 				case "delete":
-					this.model.collection.remove(this.model);
-					this.remove();
+					Backbone.trigger(_g.events.LIST_ITEM_DELETED, this);
 					break;
 				case "select":
 					val = !this.model.get('_'+type);			

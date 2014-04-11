@@ -54,11 +54,13 @@ define([
 			e.preventDefault();
 			this.$el.find('input').removeClass('invalid')
 			this.el.reset()
-			this._mergeData();
+			if(this.model){
+				this._mergeData();	
+			}
 		},
 		handleAvatar: function(e){
 			e.preventDefault()
-			trace('-- avatar replace')
+			Backbone.trigger(_g.events.AVATAR_CHOOSE, this);
 		}
 	})
 })

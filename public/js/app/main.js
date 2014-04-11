@@ -16,12 +16,12 @@ define([
 			}
 			
 			if (!element){
-				trace("APP:: no element given - build html node")
+				trace("APP:: no element given - build html node");
 				element = document.createElement('div');
 				element.id = "rentz";
 				document.body.appendChild(element);
 			}else{
-				element.id = "rentz"
+				element.id = "rentz";
 			}
 
 			var stage = $('#rentz'),
@@ -34,16 +34,13 @@ define([
 						title: "Rentz"
 					}
 				}).render();
+
 			stage.append(view.el)
 			MainController.init(view);
 			view.$el.addClass('ui-page-active');
 
-			window.addEventListener('error', function(e){ alert(e.error.message); e.preventDefault();});
 
-
-
-
-
+			window.addEventListener('error', function(e){ alert(e.error.message); e.preventDefault(); });
 
 
 
@@ -83,14 +80,15 @@ define([
 			m = null;
 
 			view = MainController.view();	
-			view.menu.find('a:eq(0)').click();
-			view = MainController.view();
-			view.head.$el.find('a:eq(1)').click();
-			view = MainController.view();
-			view.subview.$el.find('a.action').click()
 			view.head.next.click();
-			view = MainController.view();
-			view.head.next.click();
+			//view.menu.find('a:eq(0)').click();
+			// view = MainController.view();
+			// view.head.$el.find('a:eq(1)').click();
+			// view = MainController.view();
+			// view.subview.$el.find('a.action').click()
+			// view.head.next.click();
+			// view = MainController.view();
+			// view.head.next.click();
 			// - end T.B.D
 
 
@@ -104,7 +102,7 @@ define([
 
 
 
-			stage = null;
+			view = stage = null;
 		}
 		function _end(){
 			_.each(_g.pageStack, function(view){ view.remove(); view = null; });
