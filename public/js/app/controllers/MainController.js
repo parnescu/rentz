@@ -241,14 +241,7 @@ define([
 				}
 			},
 			_handleAvatarReplacement = function(){
-				trace(' ===> replace avatar from taken picture');
 				_g.util.camera();
-				return;
-				if (_g.util.camera()){
-
-				}else{
-					throw new Error(_g.errors.NO_CAMERA);
-				}
 			},
 			_handleGameEnd = function(){
 				trace("MAIN_CTRL:: add game to collection + show final results")

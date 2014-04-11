@@ -11,7 +11,8 @@ define([
 		events: {
 			"click .submit": 'handleSubmit',
 			"click .cancel": 'handleReset',
-			'click .avatar': 'handleAvatar'
+			'click .avatar': 'handleAvatar',
+			'click .snapButton': 'handleTakePicture'
 		},
 		attributes:{
 			name: "editForm",
@@ -64,6 +65,9 @@ define([
 		handleAvatar: function(e){
 			e.preventDefault();
 			Backbone.trigger(_g.events.AVATAR_CHOOSE, this);
+		},
+		handleTakePicture: function(e){
+			e.preventDefault();
 		}
 	})
 })

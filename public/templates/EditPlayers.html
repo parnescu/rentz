@@ -1,8 +1,17 @@
 <fieldset>
 	<div class="element">
-		<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>" class="avatar">
-			<img src="<%= typeof(picture) != 'undefined' ? picture : ""  %>" alt="avatar">
-		</a>
+		<div class="avatarPicture">
+			<a href="#takePicture" title="Snap picture" class="newAvatar hidden">
+				<video class="screen" autoplay/>
+			</a>
+			<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>" class="avatar">
+				<img src="<%= typeof(picture) != 'undefined' ? picture : ""  %>" alt="avatar">
+			</a>
+			<a href="#cancelPicture" title="Cancel picture" class="cancelAvatar hidden">cancel</a>
+			<a href="#savePicture" title="Save picture" class="saveAvatar hidden">
+				<canvas class="canvas"/>
+			</a>
+		</div>
 		<span class="itemNotify"><%= typeof(won) != 'undefined' ? won : "0"  %> won</span>
 	</div>
 	<div class="element">

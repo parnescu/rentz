@@ -24,12 +24,16 @@ require.config({
 });
 require([
 	'js/app/main.js'
+	,'jquery'
 	,"jqueryui"
-],function(app, jqm){
+],function(app, jqm, tf){
 	if($ && $.mobile){
 		$.mobile.linkBindingEnabled = false;
 		$.mobile.hashListeningEnabled = false;	
 	}
 	
-	app.init();
+	require(["jqueryui-touch-punch/jquery.ui.touch-punch.js"], function(){
+		app.init();	
+	})
+	
 });

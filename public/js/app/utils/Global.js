@@ -53,32 +53,83 @@ define([
 		}
 		_utils.camera = function(){
 			if (!cam){
-				
-				var k = document.createElement('video');
-				k.autoplay = "autoplay";
-				$('#rentz').append(k);
-				var c = document.createElement('canvas');
-				$('#rentz').append(c);
 
-				navigator.webkitGetUserMedia({
+				var video = document.querySelector('video.screen'),
+					back = document.querySelector('.cancelAvatar'),
+					button = document.querySelector('.newAvatar'),
+					next = document.querySelector('.saveAvatar'),
+
+					avatar = document.querySelector('a.avatar'),
+					canvas = document.querySelector('.canvas'),
+					stream = null,
+					state = 1;
+
+				$(button).show();
+				$(back).show();
+				$(avatar).hide();
+
+				navigator.getMedia = ( navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.getUserMedia );
+				trace(navigator.getMedia)
+				navigator.getMedia({
 						video: true,
-						audi: false
+						audio: false
 					},
-					function(stream) {
-						trace('mortii mataii')
-						k.src = window.webkitURL.createObjectURL(stream)
-					},
-					function(err) {
-						trace("Unable to get video stream!")
+					function(_stream) {
+						stream = _stream;
+						//video.src = window.webkitURL.createObjectURL(_stream)
+
+						if (navigator.mozGetUserMedia) {
+							video.mozSrcObject = stream;
+						} else {
+							var vendorURL = window.URL || window.webkitURL;
+							video.src = vendorURL.createObjectURL(stream);
+						}
 					}
+					// ,function(err) {
+					// 	trace("Unable to get video stream!");
+					// }
 				);
-				$(k).click(function(){
-					var p = c.getContext('2d');
-					p.drawImage(k,0,0,128,128)
-					trace(c);
-					trace(p);
-					// $('#rentz').append('<img alt="screenshot">');
-					// $('#rentz')[0].lastChild.src = p.toDataURL();
+
+				$(button).click(function(e){
+					e.preventDefault();
+					state = 2;
+
+					canvas.width = video.videoWidth;
+					canvas.height = video.videoHeight;
+					var ctx = canvas.getContext('2d');
+					ctx.drawImage(video,0,0,canvas.width,canvas.height);
+
+					avatar.children[0].src = canvas.toDataURL();
+
+					$(button).hide();
+					$(next).show();
+				});
+				$(back).click(function(e){
+					e.preventDefault();
+					if (state === 2){
+						canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height)
+						canvas.width = canvas.height = 0;
+						state = 1;
+
+						$(button).show();
+						$(next).hide();
+					}else{
+						state = 0;
+						stream.stop();
+
+						$(button).hide();
+						$(back).hide();
+						$(avatar).show();
+					}
+				});
+				$(next).click(function(e){
+					e.preventDefault();
+					
+					state = 0;
+					stream.stop();
+					$(back).hide();
+					$(next).hide();
+					$(avatar).show();
 				});
 			}
 			return cam;

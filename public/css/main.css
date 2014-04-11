@@ -2,8 +2,8 @@ body, html, h1, h2, h3, h4, h5, h6, p, div, ul, li { margin:0; padding:0;}
 body, html { width:100%; height:100%; font-family: "Segoe UI", "Trebuchet MS", Arial, _sans;}
 ul, li { list-style-type: none; position:relative; overflow: hidden;}
 a { display: block; text-decoration:none; overflow: hidden;}
-video { position: absolute; z-index:2; width:128px; height:128px;}
 img { width:100%; height: auto;}
+
 
 form { padding:.75em; background:white;}
 form fieldset { border:none; margin:0; padding:0;}
@@ -29,6 +29,7 @@ ul.gameTypes li,
 ul.scoreList li,
 ul.nav li  { float:left; background:rgba(0,0,0,.3);}
 
+.hidden { display:none;}
 .avatar { width:4em; height:4em; float:left; margin-right:.2em;}
 .itemNotify { background:blue; border-radius:.4em; padding:.4em; color:white; display: none}
 .selected { background:red;}
@@ -55,7 +56,11 @@ ul.scoreList li { clear:both; float:none;}
 #playerEditForm .element label { display:inline-block; background:#ccc; color:#666; border-bottom-left-radius:0; padding-bottom:.4em;}
 #playerEditForm .element input { border-top-left-radius: 0; width:100%; margin-top:-.5em;}
 
-#playerEditForm .element .avatar { width:10em; height:10em; position:relative; left:50%; margin-left:-5em; background:#ccc; border-radius:.5em;}
+
+/*#playerEditForm .element .avatar,
+#playerEditForm .element .snapButton { width:10em; height:10em; position:relative; left:50%; margin-left:-5em; background:#ccc; border-radius:.5em;}
+#playerEditForm .element .snapButton { background:#000; }*/
+
 #playerEditForm .submit { display:none;}
 
 #playerEditForm input.invalid { background:rgba(255,0,0,.5); font-weight: bold; color:#fff; }
