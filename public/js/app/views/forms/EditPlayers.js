@@ -33,12 +33,18 @@ define([
 			return this;
 		},
 		_mergeData: function(){
-			var that = this;
+			var that = this, avt;
 			this.$el.find('input').each(function(i,item){
 				item.value = item.value.replace(/\s/ig,"")
 				that.model.set(item.name, item.value)
 				item.className = item.checkValidity() ? 'valid' : 'invalid'
-			});	
+			});
+
+			avt = $('.avatar img').attr('src')
+			if (avt != ""){
+				this.model.set("picture", avt);
+			}
+			that = null;
 		},
 		handleSubmit:function(e){
 			e.preventDefault();

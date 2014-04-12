@@ -1,14 +1,14 @@
 <fieldset>
 	<div class="element">
 		<div class="avatarPicture">
-			<a href="#takePicture" title="Snap picture" class="newAvatar hidden">
+			<a href="#takePicture" title="Snap picture" class="newAvatar hidden img">
 				<video class="screen" autoplay/>
 			</a>
-			<a href="#getAvatar" title="<%= typeof(name) != 'undefined' ? name : ""  %> <%= typeof(surname) != 'undefined' ? surname : ""  %>" class="avatar">
+			<a href="#getAvatar" title="Click to change avatar" class="avatar">
 				<img src="<%= typeof(picture) != 'undefined' ? picture : ""  %>" alt="avatar">
 			</a>
 			<a href="#cancelPicture" title="Cancel picture" class="cancelAvatar hidden">cancel</a>
-			<a href="#savePicture" title="Save picture" class="saveAvatar hidden">
+			<a href="#savePicture" title="Save picture" class="saveAvatar hidden img">
 				<canvas class="canvas"/>
 			</a>
 		</div>

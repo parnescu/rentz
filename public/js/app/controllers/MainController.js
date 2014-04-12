@@ -44,10 +44,9 @@ define([
 					var _type = _currView.viewType;
 					_resetCurrent();
 
-					//_end();
 					_currView = _g.pageStack.pop();
+					CameraController.stopCamera();
 
-					
 					if (_currView){
 						_start(_currView);
 						if (_currView.viewType === _g.viewType.PLAYERS_SELECT_SCREEN.type ||
@@ -242,8 +241,7 @@ define([
 				}
 			},
 			_handleAvatarReplacement = function(){
-				_g.util.camera();
-				
+				CameraController.getCamera();
 			},
 			_handleGameEnd = function(){
 				trace("MAIN_CTRL:: add game to collection + show final results")
@@ -397,6 +395,9 @@ define([
 					if (!stage){
 						stage = document.querySelector('#rentz');
 					}
+
+					CameraController.init(this);
+					
 					Backbone.on(_g.events.HEAD_CLICK_BACK, _handleBackButton);
 					Backbone.on(_g.events.HEAD_CLICK_CONTINUE, _handleContinueButton);
 					Backbone.on(_g.events.NAV_CLICKED, _handleNavClicked);

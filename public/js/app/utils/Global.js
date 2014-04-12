@@ -55,14 +55,14 @@ define([
 			if (!cam){
 
 				var video = document.querySelector('video.screen'),
-					back = document.querySelector('.cancelAvatar'),
-					button = document.querySelector('.newAvatar'),
-					next = document.querySelector('.saveAvatar'),
+						back = document.querySelector('.cancelAvatar'),
+						button = document.querySelector('.newAvatar'),
+						next = document.querySelector('.saveAvatar'),
 
-					avatar = document.querySelector('a.avatar'),
-					canvas = document.querySelector('.canvas'),
-					stream = null,
-					state = 1;
+						avatar = document.querySelector('a.avatar'),
+						canvas = document.querySelector('.canvas'),
+						stream = null,
+						state = 1;
 
 				$(button).show();
 				$(back).show();
@@ -122,7 +122,8 @@ define([
 				});
 				$(next).click(function(e){
 					e.preventDefault();
-					
+					// save it to the model
+
 					state = 0;
 					stream.stop();
 					
@@ -223,13 +224,21 @@ define([
 			,NO_CAMERA: "No camera available!"
 			,EDIT_NONE: "No items to edit!"
 			,PLAYER_DATA_FAIL: "No proper information was given about the player!"
-		};
+			,CAMERA_CONTROLLER_FAIL: "Main controller is missing from initialization"
+			,CAMERA_STREAM_FAIL: "Unable to get video stream, your browser might not support it!"
+		},
+		_camType = {
+			WEB: "online"
+			,MOBILE: "mobile"
+			,NONE: "nocam"
+		}
 
 		obj.events =  _events
 		obj.util = _utils
 		obj.gameType = _types
 		obj.viewType = _views
 		obj.errors =_err
+		obj.cameraType = _camType
 		obj.mainCtrl = null			// reference to MainController
 		obj.gameCtrl = null			// reference to GameController
 		obj.players = null 			// all players collection

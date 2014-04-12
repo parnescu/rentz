@@ -40,7 +40,7 @@ define([
 			view.$el.addClass('ui-page-active');
 
 
-			window.addEventListener('error', function(e){ alert(e.error.message); e.preventDefault(); });
+			//window.addEventListener('error', function(e){ alert(e.error.message); e.preventDefault(); });
 
 
 

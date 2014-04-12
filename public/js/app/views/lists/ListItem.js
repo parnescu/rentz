@@ -35,7 +35,7 @@ define([
 			return this;
 		},
 		handleChange: function(model){
-			if (model.changed.name || model.changed.surname || model.changed.nick){
+			if (model.changed.name || model.changed.surname || model.changed.nick || model.changed.picture){
 				this.render();
 			}
 			
