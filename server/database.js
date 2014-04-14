@@ -70,13 +70,29 @@ module.exports = function(config){
 	// END - SCHEMAS
 
 	// MONGO 
-		var _setItem = function(data){
+		var _removeItem = function(id, type){
+			type = type || 'player';
+			
+			var model = _getModelType(type),
+				def = q.defer();
+
+			if(model){
+				model.findOneAndRemove({_id: id}, function(e, docs){
+					if (e){ def.reject(e.err);
+					}else{ def.resolve();}
+				});
+			}else{
+				def.reject("NO SUCH TYPE AVAILABLE: "+type);
+			}
+
+			return def.promise;
+		},
+		_setItem = function(data){
 			var model = _getModelType(data._type),
 				def = q.defer();
 
 			if (model){
 				delete data._type;
-
 				if(data._id){
 					var id = data._id;
 					delete data._id
@@ -95,53 +111,8 @@ module.exports = function(config){
 						}else{ def.resolve(docs);}
 					});
 				}
-
-				// model = new model(data);
-				// trace(model);
-
-				// model.find({_id: data._id}, {_v:0}, function(){
-				// 	trace('found something')
-				// 	trace(arguments)
-				// })
-				
-				
-				// model.save(data, function(e, docs){
-				// 		if(e){ 
-				// 			trace('------- COULD NOT SAVE')
-				// 			trace(e);
-				// 			def.reject(e.err);
-				// 		}else{
-				// 			def.resolve(docs);
-				// 		}
-				// 		trace('boom');
-				// 	});
-
-				// if (data._id){
-				// 	// update
-				// 	// model.findOneAndUpdate({ _id: data._id}, model, function(e, docs){
-				// 	// 	if(e){
-				// 	// 		def.reject(e.err);
-				// 	// 	}else{
-				// 	// 		if (docs){
-				// 	// 			def.resolve(docs)
-				// 	// 		}else{
-				// 	// 			def.reject("No items available");
-				// 	// 		}
-				// 	// 	}
-				// 	// });
-
-				// }else{
-				// 	// save new
-				// 	model.save(function(e, docs){
-				// 		if(e){ 
-				// 			trace('------- COULD NOT SAVE')
-				// 			trace(e);
-				// 			def.reject(e.err);
-				// 		}else{
-				// 			def.resolve(docs);
-				// 		}
-				// 	});
-				// }
+			}else{
+				def.reject("NO SUCH TYPE AVAILABLE: "+data._type);
 			}
 
 			return def.promise;
@@ -151,15 +122,17 @@ module.exports = function(config){
 				def = q.defer();
 			if (model){
 				delete data.type;
-				
 				model.find({},{__v:0},function(e,docs){
 					if (e){ def.reject(e);
 					}else{ def.resolve(docs);}
 				});
+			}else{
+				def.reject("NO SUCH TYPE AVAILABLE: "+data._type);
 			}
 			return def.promise;
 		},
 	// END - MONGO
+
 
 
 	// HANDLERS
@@ -184,7 +157,7 @@ module.exports = function(config){
 				}
 			);
 		},
-		_gerPlayers = function(req, res){
+		_getPlayers = function(req, res){
 			var data = req.body;
 			data._type = 'player';
 
@@ -195,15 +168,29 @@ module.exports = function(config){
 				},
 				function(e){
 					trace("DB:: ---> save failed: "+JSON.stringify(e));
-					//res.json({success: false, reason: e});
-					
+					res.send(500, { reason: e});
 				}
 			);
+		},
+		_removePlayer = function(req,res){
+			trace("DB:: remove player with id: "+req.params.id);
+
+			_removeItem(req.params.id).then(
+				function(players){
+					res.json(true);
+				},
+				function(e){
+					trace("DB:: ---> removal failed: "+JSON.stringify(e));
+					res.send(500, { reason: e});
+				}
+			);
+
+			res.json(false);
 		}
 	// END - HANDLERS
 	return {
-		getPlayers: _gerPlayers
+		getPlayers: _getPlayers
 		,savePlayer: _savePlayer
-		,deletePlayer: f
+		,deletePlayer: _removePlayer
 	}
 }

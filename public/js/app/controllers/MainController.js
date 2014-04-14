@@ -234,6 +234,7 @@ define([
 				if (view.model){
 					var c = view.model.collection;
 					view.model.collection.remove(view.model)
+					view.model.destroy()
 					view.remove();
 					view = null;
 				
