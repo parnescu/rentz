@@ -62,9 +62,8 @@ ul.gameTypes a[data-active=false] { background:rgba(177,0,0,.3); pointer-events:
 
 #playerEditForm .submit { float:left;}
 #playerEditForm .submit,
-#playerEditForm .cancel { border:.2em solid #999; width:49%; padding:.8em; box-sizing: border-box; border-radius: .5em; background: linear-gradient(to bottom, #666, #ccc); color:#fff; font-weight: bold;}
-#playerEditForm .cancel { float:right; }
-#playerEditForm .cancel:active { background: linear-gradient(to top, #666, #ccc); color:#fff;}
+#playerEditForm .cancel { width:49%; }
+#playerEditForm .cancel { float:right;}
 
 
 .page ul li.description { clear:both; float: none;}
@@ -75,7 +74,8 @@ ul.gameTypes a[data-active=false] { background:rgba(177,0,0,.3); pointer-events:
 .avatar { width:4em; /*height:4em; */float:left; margin-right:.2em;}
 .itemNotify { background:blue; border-radius:.4em; padding:.4em; color:white; display: none}
 .selected { background:red;}
-
+.btn { border:.2em solid #999; padding:.8em; box-sizing: border-box; border-radius: .5em; background: linear-gradient(to bottom, #666, #ccc); color:#fff; font-weight: bold; }
+.btn:active { background: linear-gradient(to top, #666, #ccc); color:#fff; margin-top:.5em;}
 
 
 /* game types */
