@@ -10,6 +10,8 @@
     "express": "3.4.8",
     "jade": "*",
     "node-dev": "*",
-    "bower": "*"
+    "bower": "*",
+    "mongoose": "~3.8.8",
+    "q": "~1.0.1"
   }
 }

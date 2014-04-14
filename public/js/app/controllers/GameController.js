@@ -78,7 +78,6 @@ define([
 				// check to see if data was actually inputed
 				// all scores values are 0 -> needs input
 				var sum = _currRound.get('scores').toJSON().reduce(function(sum, item){ sum+= item.value; return sum;},0);
-				trace(sum + " " + _currRound.get('scores').models[0].get('maxItems'));
 				if (sum === 0 || sum < _currRound.get('scores').models[0].get('maxItems')){
 					throw new Error(_g.errors.ROUND_DATA_NOT_GIVEN);
 				}

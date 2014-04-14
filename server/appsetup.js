@@ -1,6 +1,7 @@
 module.exports = function(app, config){
 	var path = require('path');
-		routes = require('./routes.js')();
+		routes = require("./routes.js")(),
+		db = require("./database.js")(config);
 
 	app.configure(function(){
 		app.set('view engine', 'jade');
@@ -16,4 +17,11 @@ module.exports = function(app, config){
 
 	app.get('/', routes.index);
 	app.get('/tests', routes.testing);
+
+	// api setup
+	trace("APP:: init API");
+	app.get('/api/players', db.getPlayers);
+	app.post('/api/players',db.savePlayer);
+	app.put('/api/players/:id',db.savePlayer);
+	app.delete('/api/players/:id',db.deletePlayer);
 }

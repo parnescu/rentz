@@ -1,4 +1,5 @@
 express = require('express');
+trace = function(e){console.log(e)};
 var config = require('./config.js'),
 	app = express();
 

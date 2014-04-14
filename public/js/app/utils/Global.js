@@ -224,8 +224,10 @@ define([
 			,NO_CAMERA: "No camera available!"
 			,EDIT_NONE: "No items to edit!"
 			,PLAYER_DATA_FAIL: "No proper information was given about the player!"
+			,PLAYER_SAVE_FAIL: "Could not save your player, try again later!"
 			,CAMERA_CONTROLLER_FAIL: "Main controller is missing from initialization"
 			,CAMERA_STREAM_FAIL: "Unable to get video stream, your browser might not support it!"
+
 		},
 		_camType = {
 			WEB: "online"
@@ -245,11 +247,12 @@ define([
 		obj.games = null 			// all the saved games collection
 		obj.sPlayers = null 		// selected players for the game
 		obj.pageStack = []			// used for back button
+		obj.devmode = false 		// --- dev switch
 		
 		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
 		obj.__defineGetter__('currentPlayers', function(){ return current;});
 
-		c = Backbone.Collection.extend({ model: Player});
+		c = Backbone.Collection.extend({ model: Player, url: "/api/players"});
 		obj.players = new c();
 		obj.sPlayers = new c();
 		c = null;

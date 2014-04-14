@@ -26,7 +26,8 @@ define([
 					next = document.querySelector('.saveAvatar'),
 
 					avatar = document.querySelector('a.avatar'),
-					canvas = document.querySelector('.canvas');
+					canvas = document.querySelector('.canvas'),
+					prevAvatar;
 
 				$(button).show();
 				$(back).show();
@@ -50,6 +51,7 @@ define([
 						var ctx = canvas.getContext('2d');
 						ctx.drawImage(video,0,0,canvas.width,canvas.height);
 						
+						prevAvatar = avatar.children[0].src;
 						avatar.children[0].src = canvas.toDataURL();
 
 						$(button).hide();
@@ -61,12 +63,13 @@ define([
 						canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height)
 						canvas.width = canvas.height = 0;
 						state = 1;
+						avatar.children[0].src = prevAvatar
 
 						$(button).show();
 						$(next).hide();
 					}else{
-						state = 0;
-						stream.stop();
+						prevAvatar = null;
+						_stop()
 
 						$(button).hide();
 						$(back).hide();
@@ -77,7 +80,6 @@ define([
 					e.preventDefault();
 					// save it to the model
 					_stop();
-					trace(ctrl.view().subview);
 					
 					$(back).hide();
 					$(next).hide();

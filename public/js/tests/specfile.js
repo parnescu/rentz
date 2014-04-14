@@ -18,6 +18,8 @@ describe("Rentz TDD specs", function(){
 		bogusRounds = [[20,22,7],[0,2,4],[0,4,0],[0,0,1],[0,1,3],[3,1,4],[2,3,3],[2,3,1],[10,32,7],[3,2,1],[1,3,4],[3,2,1],[3,0,5],[0,1,0],[0,0,1],[3,1,4],[1,5,2],[4,0,4],[2,1,1],[1,41,7],[1,0,7]];
 		window.view = null;
 
+	
+
 	describe('Views', function(){
 		describe('List element view', function(){
 			it ('element must be correctly defined and have default value', function(){
@@ -1109,6 +1111,7 @@ describe("Rentz TDD specs", function(){
 	});
 	
 	describe("Full games", function(){
+
 		describe("3 player game", function(){
 			var view, round, scores, i, m, game;
 			it("from main, go and add three players", function(){			
@@ -1299,7 +1302,7 @@ describe("Rentz TDD specs", function(){
 				scores.models[1].set('value', bogusRounds[i][1]);
 				scores.models[2].set('value', bogusRounds[i][2]);
 				view.remove();
-				view = null;
+				view = null;				
 
 				view = MainController.view();
 				view.head.next.click();	
@@ -1307,6 +1310,7 @@ describe("Rentz TDD specs", function(){
 				view = null;
 
 				game = game.get('_points');
+
 				expect(game[0]).toBe(-50);
 				expect(game[1]).toBe(-1080);
 				expect(game[2]).toBe(-710);

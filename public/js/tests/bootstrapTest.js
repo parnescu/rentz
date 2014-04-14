@@ -99,6 +99,8 @@
 			window.GameController = GameController;
 			// boot
 			window._g = _g;
+			window._g.devmode = true;
+			
 			window.onload();
 		});
 	});

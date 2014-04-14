@@ -41,13 +41,12 @@ define([
 					_g.pageStack = [];
 				},
 				_goBack = function(){
-					var _type = _currView.viewType;
 					_resetCurrent();
-
 					_currView = _g.pageStack.pop();
 					CameraController.stopCamera();
 
 					if (_currView){
+						var _type = _currView.viewType;
 						_start(_currView);
 						if (_currView.viewType === _g.viewType.PLAYERS_SELECT_SCREEN.type ||
 							_type === _g.viewType.GAME_OUTCOME_SCREEN.type){
@@ -55,6 +54,7 @@ define([
 								_currView.menu.find('a').removeClass('selected');	
 							}
 						}
+						_type = null;
 					}
 				},
 				_startNewGame = function(){
@@ -155,6 +155,9 @@ define([
 				_showPlayersPage = function(){
 					_resetViews();
 					_resetCurrent();
+
+					_g.players.fetch();
+
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.PLAYERS_LIST_SCREEN,
 						menu: [
@@ -259,10 +262,25 @@ define([
 			_handleFormSubmit = function(model){
 				trace('MAIN_CTRL:: form was submitted from '+_currView.viewType);
 				if (_currView.viewType === _g.viewType.PLAYER_EDIT_SCREEN.type){
-					// handle players model add
-					_g.players.add(model);
+					if (_g.devmode === true){
+						_g.players.add(model);
+						_goBack();
+					}else{
+						model.save(null,{
+							wait:true,
+							success: function(newModel, modelData){
+								trace('MAIN_CTRL:: - player saved with id: '+modelData._id);	
+								_g.players.add(newModel);
+								_goBack();
+							},
+							error: function(e){
+								_g.players.add(e);
+								throw new Error(_g.errors.PLAYER_SAVE_FAIL);
+							}
+						});	
+					}
+					
 				}
-				_goBack();
 			},
 			_handleBackButton = function(){
 				trace('MAIN_CTRL:: back button was clicked -> '+_currView.viewType);
