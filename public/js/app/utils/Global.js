@@ -212,7 +212,7 @@ define([
 			,ROUND_DATA_SCREEN: { title: 'Input round outcome', type:"completeRound"}
 			,GO_BACK: { title: "Back", type:"goBack"}
 			,EDIT: { title: "Edit", type:"edit"}
-			,SAVE: { title: "Add", type: "save"}
+			,SAVE: { title: "Save", type: "save"}
 			,SAVE_ROUND: { title: "Save", type:"saveRound"}
 			,INITIAL_SCREEN: { title: "Rentz", type:"initialScreen"}
 		},

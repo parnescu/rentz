@@ -43,6 +43,8 @@ ul.withSelect li a.clicker { display: none;}
 ul.withSelect li a[data-type=select] { top:0; position:absolute; background: rgba(0,30,123,.3); width:100%; height:100%;}
 
 ul.scoreList li { clear:both; float:none;}
+ul.gameTypes a[data-active=false] { background:rgba(177,0,0,.3); pointer-events:none;}
+
 
 .editable .list li a[data-type=delete] { width:3em;}
 .page ul li.description { clear:both; float: none;}
@@ -54,7 +56,7 @@ ul.scoreList li { clear:both; float:none;}
 #playerEditForm .element label { box-sizing: border-box; font-size:1em; border-radius:.4em; border:.2em solid #ccc; padding:.3em;}
 
 #playerEditForm .element label { display:inline-block; background:#ccc; color:#666; border-bottom-left-radius:0; padding-bottom:.4em;}
-#playerEditForm .element input { border-top-left-radius: 0; width:100%; margin-top:-.5em;}
+#playerEditForm .element input { border-top-left-radius: 0; width:100%; margin-top:-.5em; padding:.6em 1em}
 #playerEditForm .avatarPicture { display: block; overflow:hidden; position:relative; margin:0 auto; width:10em; height:10em; background:black; border-radius:.5em;}
 #playerEditForm .avatarPicture a.img { width:10em; height:10em;}
 #playerEditForm .avatarPicture video { height:100%;}
