@@ -1,20 +1,23 @@
 define([
 	'backbone'
 	,'app/utils/Global'
+	,'app/models/Player'
 	,'app/views/lists/List'
 	,'app/views/pages/Page'
 	,'app/views/pages/GameOver'
 	,'app/views/forms/EditPlayers'
+	,'app/views/forms/Login'
 	,'app/views/lists/GameTypeList'
 	,'app/views/lists/GameDetailList'
 	,'app/views/lists/ScoringList'
 	,'app/controllers/GameController'
 	,'app/controllers/CameraController'
-], function(B, _g, List, Page, GameOver, EditPlayers, GameTypeList, GameDetailList, ScoreList, GameController, CameraController){
+	,'app/controllers/Router'
+], function(B, _g, Player, List, Page, GameOver, EditPlayers, Login, GameTypeList, GameDetailList, ScoreList, GameController, CameraController, Router){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
-			var _currView,stage, game, wasInited = false,
+			var _currView,stage, game, wasInited = false, _route, allow = true,
 			// base screen actions
 				_resetCurrent = function(){
 					if(_currView){
@@ -56,6 +59,7 @@ define([
 						}
 						_type = null;
 					}
+					allow = true;
 				},
 				_startNewGame = function(){
 					if (!GameController.currentGame()){
@@ -84,7 +88,9 @@ define([
 
 					model = null;
 				},				
-				_addPlayerScreen = function(model){
+				_addPlayerScreen = function(model, isUser){
+					isUser = isUser || false;
+
 					_resetEditMode();
 					trace("MAIN_CTRL:: -> "+(model ? "edit" : "new ")+" player screen");
 					Backbone.trigger(_g.events.BUILD_PAGE, {
@@ -94,7 +100,7 @@ define([
 							back: _g.viewType.GO_BACK,
 							title: model ? model.fullname() : "New Player"
 						}
-						,view: new EditPlayers({ model: model})
+						,view: new EditPlayers({ model: model, userMode: isUser})
 					});
 				},
 				_addPlayersChooseScreen = function(){
@@ -156,14 +162,9 @@ define([
 					_resetViews();
 					_resetCurrent();
 
-					_g.players.fetch();
-
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.PLAYERS_LIST_SCREEN,
-						menu: [
-							_g.viewType.GAMES_SCREEN,
-							_g.viewType.PLAYERS_LIST_SCREEN
-						],
+						menu: _g.defaultMenu,
 						header: {
 							title: "Players",
 							next: _g.viewType.PLAYER_EDIT_SCREEN,
@@ -180,10 +181,7 @@ define([
 					_resetCurrent();
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.GAMES_SCREEN,
-						menu: [
-							_g.viewType.GAMES_SCREEN,
-							_g.viewType.PLAYERS_LIST_SCREEN
-						],
+						menu: _g.defaultMenu,
 						header: {
 							title: "Games",
 							next: _g.viewType.PLAYERS_SELECT_SCREEN,
@@ -217,7 +215,7 @@ define([
 					});
 					round = null;
 				},
-				_showInitialScreen = function(){
+				_showInitialPage = function(){
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.INITIAL_SCREEN,
 						menu: [
@@ -227,6 +225,18 @@ define([
 						header: {
 							title: "Rentz"
 						}
+					});
+				},
+				_showAccountPage = function(){
+					Backbone.trigger(_g.events.BUILD_PAGE, {
+						type: _g.viewType.ACCOUNT_SCREEN,
+						menu: _g.defaultMenu,
+						header: {
+							back: _g.currentUser ? _g.viewType.ACCOUNT_REMOVE : undefined
+							,title: "User Account"
+							,next: _g.currentUser ? undefined : _g.viewType.ACCOUNT_ADD
+						},
+						view: _g.currentUser ? new EditPlayers({ model:_g.currentUser, userMode: true}) : new Login()
 					});
 				},
 			// end - base screen actions
@@ -262,25 +272,80 @@ define([
 			},
 			_handleFormSubmit = function(model){
 				trace('MAIN_CTRL:: form was submitted from '+_currView.viewType);
-				if (_currView.viewType === _g.viewType.PLAYER_EDIT_SCREEN.type){
-					if (_g.devmode === true){
-						_g.players.add(model);
-						_goBack();
-					}else{
-						model.save(null,{
-							wait:true,
-							success: function(newModel, modelData){
-								trace('MAIN_CTRL:: - player saved with id: '+modelData._id);	
-								_g.players.add(newModel);
-								_goBack();
-							},
-							error: function(e){
-								_g.players.add(e);
-								throw new Error(_g.errors.PLAYER_SAVE_FAIL);
-							}
-						});	
-					}
-					
+				switch(_currView.viewType){
+					case _g.viewType.PLAYER_EDIT_SCREEN.type:
+						if (_g.devmode === true){
+							_g.players.add(model);
+							_goBack();
+						}else{
+							model.save(null,{
+								wait:true,
+								success: function(newModel, modelData){
+									trace('MAIN_CTRL:: - player saved with id: '+modelData._id);	
+									_g.players.add(newModel);
+									_goBack();
+								},
+								error: function(e){
+									_g.players.add(e);
+									throw new Error(_g.errors.PLAYER_SAVE_FAIL);
+								}
+							});	
+						}
+						break;
+					case _g.viewType.ACCOUNT_SCREEN.type:
+						model.save();
+						throw new Error("Details saved");
+						break;
+					default:
+						break;
+				}
+			},
+			_handleUserLogin = function(view){
+				// login
+				// get players and games
+				// set _g.currentUser
+
+				if (allow){
+					trace("MAIN_CTRL:: send login to server");
+					allow = false;
+					$.ajax({
+						url: '/api/user',
+						method: 'GET',
+						dataType: 'json',
+						data: { nick: view.userName.val(), pass: view.userPass.val()},
+						success: function(data){
+							allow = true;
+							trace('---> yaaaay');
+							trace(_currView)
+							_g.currentUser = new Player(data);
+							_currView.remove();
+							_showAccountPage(_g.currentUser, true)
+						},
+						error: function(){
+							allow = true;
+							throw new Error(_g.errors.USER_NOT_LOGGED);
+						}
+					})
+				}
+			},
+			_handleUserSubmit = function(model){
+				if(allow){
+					trace('MAIN_CTRL:: register was submitted');
+					allow = false;
+					model.save(null,{
+						wait: true,
+						success: function(newModel, modelData){
+							allow = true;
+							_goBack();
+							trace('MAIN_CTRL::  register...done');
+						},
+						error: function(e){
+							allow = true;
+							throw new Error(_g.errors.PLAYER_SAVE_FAIL);
+						}
+					})
+				}else{
+					trace('MAIN_CTRL:: --- wait for server to callback');
 				}
 			},
 			_handleBackButton = function(){
@@ -330,7 +395,10 @@ define([
 						break;
 					case _g.viewType.SAVE.type:
 						trace("MAIN_CTRL:: click submit button");
-						_currView.subview.submit.click()
+						_currView.subview.submit.click();
+						break;
+					case _g.viewType.ACCOUNT_ADD.type:
+						_addPlayerScreen(null, true);
 						break;
 					default:
 						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
@@ -383,6 +451,9 @@ define([
 						case _g.viewType.GAME_OUTCOME_SCREEN.type:
 							_addGameDetailsScreen();
 							break;
+						case _g.viewType.ACCOUNT_SCREEN.type:
+							_showAccountPage();
+							break;
 						default:
 							trace('------ SCREEN TYPE NOT HANDLED YET: '+type);
 							break;
@@ -392,6 +463,8 @@ define([
 			_handleBuildPage = function(data, clear){
 				trace('MAIN_CTRL:: build new page ' + data.type.type);
 
+				//_route.navigate(data.type.type);
+				//return;
 				if (clear){
 					trace(' ---> remove all pages from stack');
 					_resetViews();
@@ -416,13 +489,19 @@ define([
 					}
 
 					CameraController.init(this);
-					
+
+					//_route = new Router();
+					//Backbone.history.start({pushState: true})
+
 					Backbone.on(_g.events.HEAD_CLICK_BACK, _handleBackButton);
 					Backbone.on(_g.events.HEAD_CLICK_CONTINUE, _handleContinueButton);
 					Backbone.on(_g.events.NAV_CLICKED, _handleNavClicked);
 					Backbone.on(_g.events.LIST_CLICK, _handleListClicked);
 					Backbone.on(_g.events.BUILD_PAGE, _handleBuildPage);
 					Backbone.on(_g.events.FORM_SUBMIT, _handleFormSubmit);
+					Backbone.on(_g.events.USER_SUBMIT, _handleUserSubmit);
+					Backbone.on(_g.events.USER_LOGIN, _handleUserLogin);
+
 					Backbone.on(_g.events.GAME_ENDED, _handleGameEnd);
 					Backbone.on(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
 					Backbone.on(_g.events.LIST_ITEM_DELETED, _handleItemDeletion);
@@ -433,16 +512,19 @@ define([
 			},
 			_end = function(){
 				trace('MAIN_CTRL:: reset');
-				Backbone.off(_g.events.HEAD_CLICK_BACK, _handleBackButton);
-				Backbone.off(_g.events.HEAD_CLICK_CONTINUE, _handleContinueButton);
-				Backbone.off(_g.events.NAV_CLICKED, _handleNavClicked);
-				Backbone.off(_g.events.LIST_CLICK, _handleListClicked);
-				Backbone.off(_g.events.BUILD_PAGE, _handleBuildPage);
-				Backbone.off(_g.events.FORM_SUBMIT, _handleFormSubmit);
-				Backbone.off(_g.events.GAME_ENDED, _handleGameEnd);
-				Backbone.off(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
-				Backbone.off(_g.events.LIST_ITEM_DELETED, _handleItemDeletion);
-				Backbone.off(_g.events.AVATAR_CHOOSE, _handleAvatarReplacement);
+				Backbone.off(_g.events.HEAD_CLICK_BACK);
+				Backbone.off(_g.events.HEAD_CLICK_CONTINUE);
+				Backbone.off(_g.events.NAV_CLICKED);
+				Backbone.off(_g.events.LIST_CLICK);
+				Backbone.off(_g.events.BUILD_PAGE);
+				Backbone.off(_g.events.FORM_SUBMIT);
+				Backbone.off(_g.events.USER_LOGIN);
+				Backbone.off(_g.events.USER_SUBMIT);
+
+				Backbone.off(_g.events.GAME_ENDED);
+				Backbone.off(_g.events.SIGNAL_ROUND_INIT);
+				Backbone.off(_g.events.LIST_ITEM_DELETED);
+				Backbone.off(_g.events.AVATAR_CHOOSE);
 				if (_currView){
 					_currView.remove();
 					_currView = null;

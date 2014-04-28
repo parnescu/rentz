@@ -8,6 +8,7 @@ define([
 	return Backbone.View.extend({
 		tagName: 'form',
 		model: null,
+		userMode: false,
 		events: {
 			"click .submit": 'handleSubmit',
 			"click .cancel": 'handleReset',
@@ -21,12 +22,13 @@ define([
 			action: "#"
 		},
 		template: _.template(template),
-		initialize: function(){
-
+		initialize: function(data){
+			this.userMode = data ? data.userMode || false : false;
 		},
 		render: function(){
 			var data = this.model ? this.model.toJSON() : {};
-			this.$el.html(this.template(data));		
+			data.userMode = this.userMode;
+			this.$el.html(this.template(data));
 
 			this.submit = this.$el.find('.actions .submit');
 			this.cancel = this.$el.find('.actions .cancel');
@@ -55,7 +57,11 @@ define([
 			this._mergeData();
 
 			if (this.model.isValid()){
-				Backbone.trigger(_g.events.FORM_SUBMIT, this.model);
+				var evt = this.userMode ? _g.events.USER_SUBMIT : _g.events.FORM_SUBMIT
+				if(this.model === _g.currentUser){
+					evt = _g.events.FORM_SUBMIT;
+				}
+				Backbone.trigger(evt, this.model);
 			}else{
 				//throw new Error(_g.errors.PLAYER_DATA_FAIL);
 			}

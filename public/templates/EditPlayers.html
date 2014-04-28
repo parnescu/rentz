@@ -18,6 +18,12 @@
 		<label for="nick">Nickname</label>
 		<input type="text" required name="nick" id="nick" value="<%= typeof(nick) != 'undefined' ? nick : "" %>" placeholder="What friends call you"/>
 	</div>
+	<% if (typeof(userMode) != 'undefined' && userMode === true) {%>
+		<div class="element">
+			<label for="password">Password</label>
+			<input type="password" required name="password" id="password" value="<%= typeof(password) != 'undefined' ? password : "" %>" placeholder="Your password?"/>
+		</div>	
+	<% } %>
 	<hr>
 	<div class="element">
 		<label for="name">Name</label>

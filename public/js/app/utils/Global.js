@@ -190,6 +190,8 @@ define([
 			,NAV_CLICKED: "footerClick"
 			,BUILD_PAGE: "buildNewPage"
 			,FORM_SUBMIT: "submitNewData"
+			,USER_SUBMIT: "submitUserData"
+			,USER_LOGIN: "sendLoginData"
 
 			,START_NEW_GAME: "initNewGame"
 			,CHOOSE_GAME_TYPE: "typeSelected"
@@ -215,6 +217,9 @@ define([
 			,SAVE: { title: "Save", type: "save"}
 			,SAVE_ROUND: { title: "Save", type:"saveRound"}
 			,INITIAL_SCREEN: { title: "Rentz", type:"initialScreen"}
+			,ACCOUNT_SCREEN: { title: "Account", type:"accountScreen"}
+			,ACCOUNT_ADD: { title: "Register", type:"addUser"}
+			,ACCOUNT_REMOVE: { title: "Logout", type: "removeUser"}
 		},
 		_err = {
 			ROUND_DATA_NOT_GIVEN: "There are still points not given"
@@ -227,7 +232,7 @@ define([
 			,PLAYER_SAVE_FAIL: "Could not save your player, try again later!"
 			,CAMERA_CONTROLLER_FAIL: "Main controller is missing from initialization"
 			,CAMERA_STREAM_FAIL: "Unable to get video stream, your browser might not support it!"
-
+			,USER_NOT_LOGGED: "Unable to log in using these credentials!"
 		},
 		_camType = {
 			WEB: "online"
@@ -248,7 +253,9 @@ define([
 		obj.sPlayers = null 		// selected players for the game
 		obj.pageStack = []			// used for back button
 		obj.devmode = false 		// --- dev switch
+		obj.currentUser = null 		// the user that is currently logged in
 		
+		obj.defaultMenu = [ _views.GAMES_SCREEN, _views.PLAYERS_LIST_SCREEN, _views.ACCOUNT_SCREEN]
 		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
 		obj.__defineGetter__('currentPlayers', function(){ return current;});
 

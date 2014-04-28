@@ -53,6 +53,7 @@
 			,'/js/app/views/pages/Page.js'
 			,'/js/app/views/pages/GameOver.js'
 			,'/js/app/views/forms/EditPlayers.js'
+			,'/js/app/views/forms/Login.js'
 			,'/js/app/controllers/MainController.js'
 			,'/js/app/controllers/GameController.js'
 		];
@@ -75,6 +76,7 @@
 			Page,
 			GameOver,
 			EditPlayers,
+			Login,
 			MainController,
 			GameController
 		){
@@ -94,6 +96,7 @@
 			window.Page = Page;
 			window.GameOver = GameOver;
 			window.EditPlayers = EditPlayers;
+			window.Login = Login;
 			//controllers
 			window.MainController = MainController;
 			window.GameController = GameController;

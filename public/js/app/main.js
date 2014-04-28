@@ -24,14 +24,14 @@ define([
 				element.id = "rentz";
 			}
 
+			// get data from server
+			_g.players.fetch();
+
 			var stage = $('#rentz'),
 				view = new Page({
-					menu: [
-						_g.viewType.GAMES_SCREEN,
-						_g.viewType.PLAYERS_LIST_SCREEN
-					],
+					menu: _g.defaultMenu,
 					header: {
-						title: "Rentz"
+						title: "xtests"
 					}
 				}).render();
 

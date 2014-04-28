@@ -1,6 +1,6 @@
 "use strict";
 describe("Rentz TDD specs", function(){
-	var model, collection, stage = $('#rentz'),
+	var model, collection, stage = $('#rentz'), val,
 		bogusPlayers = [
 			{ name:"Gigi", surname:"Kent", nick:'shigy'}
 			,{ name:"Lebby", surname:"Coarse", nick:'mutaflex'}
@@ -529,7 +529,7 @@ describe("Rentz TDD specs", function(){
 		});
 		
 		describe('Header view', function(){
-			var val, backC, fwC;
+			var backC, fwC;
 			beforeEach(function(done){
 				setTimeout(function(){
 					backC = function(){ val = "back was clicked";}
@@ -577,7 +577,7 @@ describe("Rentz TDD specs", function(){
 		});
 
 		describe('Page view', function(){
-			var val, clsr;
+			var clsr;
 			beforeEach(function(done){
 				setTimeout(function(){
 					clsr = function(e){ val = e;}
@@ -979,6 +979,43 @@ describe("Rentz TDD specs", function(){
 				_g.sPlayers.reset();
 			})
 		});
+
+		describe("User login screen", function(){
+			beforeEach(function(){
+				view = new Login().render();
+				stage.append(view.el);
+			});
+
+			it("not having a logged user prompts for login form", function(){
+				val = 0;
+				Backbone.on(_g.events.USER_LOGIN, function(){ val++});
+
+				expect(view.form).toBeDefined();
+				expect(view.$el.find('input').length).toEqual(2);
+				expect(view.submit).toBeDefined();
+				expect(view.submit.attr('disabled')).toBeTruthy();
+				expect(view.userName).toBeDefined();
+				expect(view.userPass).toBeDefined();
+				view.userPass.triggerHandler('focus')
+				view.userName.triggerHandler('focus')
+
+				view.userName.val("user");
+				view.userPass.val("password");
+
+				view.submit.removeAttr('disabled');
+				view.submit.click();
+				expect(val).toBeGreaterThan(0);
+
+				val = null;
+			});
+
+			afterEach(function(){
+				if (view){
+					view.remove()
+					view = null;
+				}
+			})
+		})
 	});
 
 	describe("Controllers", function(){
@@ -1111,7 +1148,6 @@ describe("Rentz TDD specs", function(){
 	});
 	
 	describe("Full games", function(){
-
 		describe("3 player game", function(){
 			var view, round, scores, i, m, game;
 			it("from main, go and add three players", function(){			
