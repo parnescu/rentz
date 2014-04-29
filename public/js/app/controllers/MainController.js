@@ -18,7 +18,7 @@ define([
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
-			var _currView,stage, game, wasInited = false, _route, allow = true,
+			var _currView,stage, game, wasInited = false, _route, allow = true, isView,
 			// base screen actions
 				_resetCurrent = function(){
 					if(_currView){
@@ -328,7 +328,8 @@ define([
 				// login
 				// get players and games
 				// set _g.currentUser
-				var usr, pass, isView = (view instanceof Backbone.View);
+				var usr, pass;
+				isView = (view instanceof Backbone.View);
 
 				if (isView){
 					usr = view.userName.val()
@@ -346,25 +347,7 @@ define([
 						method: 'GET',
 						dataType: 'json',
 						data: { nick: usr, pass: pass},
-						success: function(data){
-							_g.currentUser = new Player(data);
-							_g.players.fetch();
-
-							allow = true;
-							trace("MAIN_CTRL:: ..logged in!");
-							
-							Memory.saveUser({
-								nick: data.nick,
-								pass: data.password,
-								id: data._id
-							})
-
-							if (isView){
-								_currView.remove();
-								_showAccountPage(_g.currentUser, true)
-							}
-							
-						},
+						success: _handleUserLoginSuccess,
 						error: function(e){
 							allow = true;
 							Memory.removeUser();
@@ -373,6 +356,23 @@ define([
 							}
 						}
 					})
+				}
+			},
+			_handleUserLoginSuccess = function(data){
+				_g.currentUser = new Player(data);
+				_g.players.fetch();
+				allow = true;
+
+				trace("MAIN_CTRL:: ..logged in!");
+				Memory.saveUser({
+					nick: data.nick,
+					pass: data.password,
+					id: data._id
+				});
+
+				if (isView){
+					_currView.remove();
+					_showAccountPage(_g.currentUser, true)
 				}
 			},
 			_handleUserSubmit = function(model){
@@ -530,6 +530,14 @@ define([
 				_currView = null;
 				_currView = new Page(data).render();
 				stage.appendChild(_currView.el);
+
+				
+				// fix for larger page details
+				if (_currView.subview.$el.height()+(window.outerHeight-window.innerHeight) > window.innerHeight){
+					stage.classList.add('withScroll');
+				}else{
+					stage.classList.remove('withScroll');
+				}
 			},
 			_start = function(view){
 				if (wasInited) return;

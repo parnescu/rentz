@@ -42,28 +42,30 @@ ul.gameTypes a[data-active=false] { background:rgba(177,0,0,.3); pointer-events:
 
 
 
-#playerEditForm .element { clear:both; float:none; display:block; overflow: hidden; padding:.5em 0; box-sizing:"border-box";}
-#playerEditForm .element input,
-#playerEditForm .element label { box-sizing: border-box; font-size:1em; border-radius:.4em; border:.2em solid #ccc; padding:.3em;}
-#playerEditForm .element label { display:inline-block; background:#ccc; color:#666; border-bottom-left-radius:0; border-bottom-right-radius:0; padding-bottom:.4em;}
-#playerEditForm .element input { border-top-left-radius: 0; width:100%; margin-top:-.1em; padding:.6em 1em}
-#playerEditForm .element input.invalid { background:rgba(255,0,0,.5); font-weight: bold; color:#fff; }
-#playerEditForm .element input.invalid:focus { background:white; color:#000; font-weight:normal;}
-#playerEditForm .element input.invalid::-webkit-input-placeholder { color:#fff;}
+form .element { clear:both; float:none; display:block; overflow: hidden; padding:.5em 0; box-sizing:"border-box";}
+form .element input,
+form .element label { box-sizing: border-box; font-size:1em; border-radius:.4em; border:.2em solid #ccc; padding:.3em;}
+form .element label { display:inline-block; background:#ccc; color:#666; border-bottom-left-radius:0; border-bottom-right-radius:0; padding-bottom:.4em;}
+form .element input { border-top-left-radius: 0; width:100%; margin-top:-.1em; padding:.6em 1em}
+form .element input.invalid { background:rgba(255,0,0,.5); font-weight: bold; color:#fff; }
+form .element input.invalid:focus { background:white; color:#000; font-weight:normal;}
+form .element input.invalid::-webkit-input-placeholder { color:#fff;}
 
-#playerEditForm .avatarPicture { display: block; overflow:hidden; position:relative; margin:0 auto; width:10em; height:10em; background:black; border-radius:.5em;}
-#playerEditForm .avatarPicture a.img { width:10em; height:10em;}
-#playerEditForm .avatarPicture video { height:100%;}
-#playerEditForm .avatarPicture video,
-#playerEditForm .avatarPicture canvas { width:100%;}
-#playerEditForm .avatarPicture .cancelAvatar { font-size:.8em; text-align:center; border-radius:.5em; color: #eee;box-sizing: border-box; position:absolute; top:0; left:0; background:rgba(0,0,0,.5); padding:.5em; width:100%; float:left;}
-#playerEditForm .avatarPicture .saveAvatar:before { content: "save avatar"; position: absolute; background: rgba(132,245,0,.5); padding: .5em; width: 100%; border-radius: .5em; left: 0; bottom:0; color: white; text-align: center; box-sizing: border-box;}
-#playerEditForm .avatarPicture a.avatar { width:100%; height:100%;}
+form .avatarPicture { display: block; overflow:hidden; position:relative; margin:0 auto; width:10em; height:10em; background:black; border-radius:.5em;}
+form .avatarPicture a.img { width:10em; height:10em;}
+form .avatarPicture video { height:100%;}
+form .avatarPicture video,
+form .avatarPicture canvas { width:100%;}
+form .avatarPicture .cancelAvatar { font-size:.8em; text-align:center; border-radius:.5em; color: #eee;box-sizing: border-box; position:absolute; top:0; left:0; background:rgba(0,0,0,.5); padding:.5em; width:100%; float:left;}
+form .avatarPicture .saveAvatar:before { content: "save avatar"; position: absolute; background: rgba(132,245,0,.5); padding: .5em; width: 100%; border-radius: .5em; left: 0; bottom:0; color: white; text-align: center; box-sizing: border-box;}
+form .avatarPicture a.avatar { width:100%; height:100%;}
 
-#playerEditForm .submit { float:left;}
-#playerEditForm .submit,
-#playerEditForm .cancel { width:49%; }
-#playerEditForm .cancel { float:right;}
+form .submit { float:left;}
+form .submit,
+form .cancel { width:49%; }
+form .cancel { float:right;}
+
+form[name=userLoginForm] .submit { width:100%;}
 
 
 .page ul li.description { clear:both; float: none;}
@@ -77,6 +79,7 @@ ul.gameTypes a[data-active=false] { background:rgba(177,0,0,.3); pointer-events:
 .btn { border:.2em solid #999; padding:.8em; box-sizing: border-box; border-radius: .5em; background: linear-gradient(to bottom, #666, #ccc); color:#fff; font-weight: bold; }
 .btn:active { background: linear-gradient(to top, #666, #ccc); color:#fff; margin-top:.5em;}
 
+#rentz.withScroll section.content { margin-bottom:7em; }
 
 /* game types */
 ul.redPriest li { clear:none; float:left;}
