@@ -118,13 +118,8 @@ module.exports = function(config){
 							def.resolve(docs);
 							
 							model.findOneAndUpdate({_id: docs._id}, { userId: docs.userId}, function(e, docs){
-								if (e){
-									trace(" -> coudn't save userid")
-									trace(e)
-								}else{
-									trace(" --> yaay")
-									trace(docs)
-								}
+								if (e){ trace(e); trace(" -> coudn't save userid");
+								}else{ trace(" --> USER_ID POPULATED");}
 							})
 						}
 					});

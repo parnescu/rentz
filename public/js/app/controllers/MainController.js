@@ -253,6 +253,9 @@ define([
 					_g.currentUser = null;
 
 					_resetViews();
+					_currView.remove();
+					_currView = null;
+					
 					_showAccountPage();
 				},
 			// end - base screen actions
@@ -400,7 +403,7 @@ define([
 				}else{
 					switch(_currView.viewType){
 						case _g.viewType.ACCOUNT_SCREEN.type:
-							_logout("yes")
+							_logout()
 							break;
 						default:
 							if (_currView.subview && _currView.subview.collection.length < 1){
