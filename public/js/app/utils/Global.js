@@ -118,6 +118,7 @@ define([
 			,SIGNAL_ROUND_INIT: "buildRound"
 			,UPDATE_ROUND: "updateRound"
 			,GAME_ENDED: "gameDone"
+			,SHOW_ERROR: "showErrMsg"
 		},
 		_views = {
 			PLAYERS_LIST_SCREEN: { title: "Players", type:"playersScreen"}		
@@ -142,18 +143,18 @@ define([
 			,ACCOUNT_REMOVE: { title: "Logout", type: "removeUser"}
 		},
 		_err = {
-			ROUND_DATA_NOT_GIVEN: "There are still points not given"
-			,ONE_INSTANCE_ONLY: "Only one instance of the game should be inited" 
-			,MIN_PLAYERS_NEEDED: "There must be at least "+obj.MIN_PLAYERS+" players available to play"
-			,PLAYERS_NEEDED: "The allowed number of players is between "+obj.MIN_PLAYERS+" and "+obj.MAX_PLAYERS
-			,NO_CAMERA: "No camera available!"
-			,EDIT_NONE: "No items to edit!"
-			,PLAYER_DATA_FAIL: "No proper information was given about the player!"
-			,PLAYER_SAVE_FAIL: "Could not save your player, try again later!"
-			,CAMERA_CONTROLLER_FAIL: "Main controller is missing from initialization"
-			,CAMERA_STREAM_FAIL: "Unable to get video stream, your browser might not support it!"
-			,USER_NOT_LOGGED: "Unable to log in using these credentials!"
-			,USER_CREATE_DENY: "You can't add players if you don't have a profile defined!"
+			ROUND_DATA_NOT_GIVEN: { reason: "There are still points not given"}
+			,ONE_INSTANCE_ONLY: { reason: "Only one instance of the game should be inited" }
+			,MIN_PLAYERS_NEEDED: { reason: "There must be at least "+obj.MIN_PLAYERS+" players available to play"}
+			,PLAYERS_NEEDED: { reason: "The allowed number of players is between "+obj.MIN_PLAYERS+" and "+obj.MAX_PLAYERS}
+			,NO_CAMERA: { reason: "No camera available!"}
+			,EDIT_NONE: { reason: "No items to edit!"}
+			,PLAYER_DATA_FAIL: { reason: "No proper information was given about the player!"}
+			,PLAYER_SAVE_FAIL: { reason: "Could not save your player, try again later!"}
+			,CAMERA_CONTROLLER_FAIL: { reason: "Main controller is missing from initialization"}
+			,CAMERA_STREAM_FAIL: { reason: "Unable to get video stream, your browser might not support it!"}
+			,USER_NOT_LOGGED: { reason: "Unable to log in using these credentials!" }
+			,USER_CREATE_DENY: { reason: "You can't add players if you don't have a profile defined!" }
 		},
 		_camType = {
 			WEB: "online"

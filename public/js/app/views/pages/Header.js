@@ -28,10 +28,10 @@ define([
 			return this;
 		},
 		handleClick: function(e){
+			e.preventDefault();
 			var evt = $(e.target).hasClass('next') ? _g.events.HEAD_CLICK_CONTINUE : _g.events.HEAD_CLICK_BACK;
 				data = $(e.target).hasClass('next') ? this.data.next : this.data.back;
-			Backbone.trigger(evt, data);
-			e.preventDefault();
+			Backbone.trigger(evt, data);			
 		},
 		setButtonState: function(type, state, label){
 			var but = this.$el.find('a.'+type+'');

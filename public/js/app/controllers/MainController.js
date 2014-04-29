@@ -8,18 +8,31 @@ define([
 	,'app/views/pages/GameOver'
 	,'app/views/forms/EditPlayers'
 	,'app/views/forms/Login'
+	,'app/views/forms/Alert'
 	,'app/views/lists/GameTypeList'
 	,'app/views/lists/GameDetailList'
 	,'app/views/lists/ScoringList'
 	,'app/controllers/GameController'
 	,'app/controllers/CameraController'
 	,'app/controllers/Router'
-], function(B, _g, Memory, Player, List, Page, GameOver, EditPlayers, Login, GameTypeList, GameDetailList, ScoreList, GameController, CameraController, Router){
+], function(B, _g, Memory, Player, List, Page, GameOver, EditPlayers, Login, Alert, GameTypeList, GameDetailList, ScoreList, GameController, CameraController, Router){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
-			var _currView,stage, game, wasInited = false, _route, allow = true, isView,
+			var _currView,stage, game, wasInited = false, _route, allow = true, isView, notification,
 			// base screen actions
+				_showError = function(errData){
+					if (typeof(errData) === 'string'){
+						errData = {
+							code: -1,
+							reason: errData
+						}
+					}
+
+					errData.code = errData.code || -1;
+					notification = new Alert().render(errData);
+					stage.appendChild(notification.el);
+				},
 				_resetCurrent = function(){
 					if(_currView){
 						_currView.remove();
@@ -93,7 +106,7 @@ define([
 					isUser = isUser || false;
 
 					if (!_g.currentUser && !isUser){
-						throw new Error(_g.errors.USER_CREATE_DENY)
+						Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.USER_CREATE_DENY)
 						return;
 					}
 
@@ -111,7 +124,8 @@ define([
 				},
 				_addPlayersChooseScreen = function(){
 					if(_g.players.length < _g.MIN_PLAYERS){
-						throw new Error(_g.errors.MIN_PLAYERS_NEEDED);
+						Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.MIN_PLAYERS_NEEDED);
+						return;
 					}
 
 					Backbone.trigger(_g.events.BUILD_PAGE, {
@@ -145,7 +159,8 @@ define([
 							,view: new List({ collection: _g.sPlayers, sortable:true})
 						});
 					}else{
-						throw new Error(_g.errors.PLAYERS_NEEDED);
+						Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.PLAYERS_NEEDED);
+						return;
 					}
 				},
 				_addGameDetailsScreen = function(game){
@@ -311,14 +326,14 @@ define([
 								},
 								error: function(e){
 									_g.players.add(e);
-									throw new Error(_g.errors.PLAYER_SAVE_FAIL);
+									Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.PLAYER_SAVE_FAIL);
 								}
 							});	
 						}
 						break;
 					case _g.viewType.ACCOUNT_SCREEN.type:
 						model.save();
-						throw new Error("Details saved");
+						Backbone.trigger(_g.events.SHOW_ERROR, "Details saved");
 						break;
 					default:
 						break;
@@ -352,7 +367,7 @@ define([
 							allow = true;
 							Memory.removeUser();
 							if (isView){
-								throw new Error(_g.errors.USER_NOT_LOGGED);
+								Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.USER_NOT_LOGGED);
 							}
 						}
 					})
@@ -388,7 +403,7 @@ define([
 						},
 						error: function(e){
 							allow = true;
-							throw new Error(_g.errors.PLAYER_SAVE_FAIL);
+							Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.PLAYER_SAVE_FAIL);
 						}
 					})
 				}else{
@@ -407,7 +422,8 @@ define([
 							break;
 						default:
 							if (_currView.subview && _currView.subview.collection.length < 1){
-								throw new Error(_g.errors.EDIT_NONE);
+								Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.EDIT_NONE);
+								return;
 							}
 							// edit button enabled
 							var button = _currView.head.back[0],
@@ -517,8 +533,6 @@ define([
 			_handleBuildPage = function(data, clear){
 				trace('MAIN_CTRL:: build new page ' + data.type.type);
 
-				//_route.navigate(data.type.type);
-				//return;
 				if (clear){
 					trace(' ---> remove all pages from stack');
 					_resetViews();
@@ -530,14 +544,6 @@ define([
 				_currView = null;
 				_currView = new Page(data).render();
 				stage.appendChild(_currView.el);
-
-				
-				// fix for larger page details
-				if (_currView.subview.$el.height()+(window.outerHeight-window.innerHeight) > window.innerHeight){
-					stage.classList.add('withScroll');
-				}else{
-					stage.classList.remove('withScroll');
-				}
 			},
 			_start = function(view){
 				if (wasInited) return;
@@ -568,8 +574,9 @@ define([
 					Backbone.on(_g.events.SIGNAL_ROUND_INIT, _showRoundPage);
 					Backbone.on(_g.events.LIST_ITEM_DELETED, _handleItemDeletion);
 					Backbone.on(_g.events.AVATAR_CHOOSE, _handleAvatarReplacement);
+					Backbone.on(_g.events.SHOW_ERROR, _showError);
 				}else{
-					throw new Error('Specify a view to init on');
+					Backbone.trigger(_g.events.SHOW_ERROR, 'Specify a view to init on');
 				}
 			},
 			_end = function(){
@@ -587,6 +594,8 @@ define([
 				Backbone.off(_g.events.SIGNAL_ROUND_INIT);
 				Backbone.off(_g.events.LIST_ITEM_DELETED);
 				Backbone.off(_g.events.AVATAR_CHOOSE);
+				Backbone.off(_g.events.SHOW_ERROR);
+
 				if (_currView){
 					_currView.remove();
 					_currView = null;

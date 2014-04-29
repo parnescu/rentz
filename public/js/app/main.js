@@ -7,7 +7,7 @@ define([
 	,'app/controllers/GameController'
 ], function(_g, Memory, Page, MainController, GameController){
 	"use strict";
-	var f = function(){
+	var notification, f = function(){
 		function _start(element){
 			trace("APP:: init called");
 
@@ -49,8 +49,18 @@ define([
 			}
 
 
-			window.addEventListener('error', function(e){ alert(e.error.message); e.preventDefault(); });
-			view = stage = null;
+			// window.addEventListener('error', function(e){ 
+			// 	// e.preventDefault();
+			// 	// var err = e.error ? e.error.message : e.message;
+			// 	// trace(err + " " + typeof(err));
+			// 	// notification = new Alert().render({ 
+			// 	// 	code: -1,
+			// 	// 	reason: typeof(err) === 'string' ? err : err.reason
+			// 	// });
+			// 	//alert(e.error.message); 
+			// 	stage.append(notification.el);
+			// });
+			view = null;
 		}
 
 		function _end(){

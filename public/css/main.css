@@ -71,6 +71,8 @@ form[name=userLoginForm] .submit { width:100%;}
 .page ul li.description { clear:both; float: none;}
 .page { position:absolute; left:0; top:0; background:white; width:100%; height:100%; z-index:1;}
 
+.accountScreen section.content { margin-bottom:20%;}
+
 .ui-sortable-placeholder { background:rgba(0,0,0,.5); visibility: visible !important;}
 .hidden { display:none;}
 .avatar { width:4em; /*height:4em; */float:left; margin-right:.2em;}
@@ -78,8 +80,17 @@ form[name=userLoginForm] .submit { width:100%;}
 .selected { background:red;}
 .btn { border:.2em solid #999; padding:.8em; box-sizing: border-box; border-radius: .5em; background: linear-gradient(to bottom, #666, #ccc); color:#fff; font-weight: bold; }
 .btn:active { background: linear-gradient(to top, #666, #ccc); color:#fff; margin-top:.5em;}
+.btn:disabled { background: linear-gradient(to top, #333, #666); color:#bbb; margin-top:.5em;}
 
-#rentz.withScroll section.content { margin-bottom:7em; }
+
+.notify { position:absolute; top:0; left:0; width:100%; height:100%; z-index: 10;}
+.notify:after { content:""; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); pointer-events:none;}
+.notify .alertBody { border-radius: .5em;position: relative;z-index: 2;width: 20em;height: 8em;display: block;overflow: hidden;background: white;left: 50%;top: 50%;margin:-4em 0 0 -10em;}
+.notify .description { font-size:.9em; box-sizing:border-box; padding:.6em; color:#888;}
+.notify .code { font-size:.5em; color:#ccc; right:1em; bottom: 1em; position: absolute;}
+.notify button { position:absolute; left:.5em; bottom:.5em; padding:.4em 1em;}
+.notify h1 { font-size: 1.2em; padding: .3em 0 .3em .5em; background: #ccc; color: #fff; text-shadow: 0.1em 0.1em .2em #666;}
+
 
 /* game types */
 ul.redPriest li { clear:none; float:left;}
