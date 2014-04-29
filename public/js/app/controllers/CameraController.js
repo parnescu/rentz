@@ -14,7 +14,7 @@ define([
 				}
 			},
 			_initERROR = function(){
-				throw new Error(_g.errors.CAMERA_STREAM_FAIL);
+				Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.CAMERA_STREAM_FAIL);
 			},
 			_afterInit = function(_stream){
 				trace('CAM_CTRL:: stream initialized');
@@ -95,14 +95,14 @@ define([
 
 					}
 				}else{
-					throw new Error(_g.errors.NO_CAMERA)
+					Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.NO_CAMERA)
 				}
 			},
 			_start = function(mainController){
 				if (mainController){
 					ctrl = mainController;
 				}else{
-					throw new Error(_g.errors.CAMERA_CONTROLLER_FAIL);
+					Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.CAMERA_CONTROLLER_FAIL);
 				}
 
 				cam = navigator.camera;

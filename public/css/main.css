@@ -92,6 +92,18 @@ form[name=userLoginForm] .submit { width:100%;}
 .notify h1 { font-size: 1.2em; padding: .3em 0 .3em .5em; background: #ccc; color: #fff; text-shadow: 0.1em 0.1em .2em #666;}
 
 
+.lxogger {
+	z-index: 10;
+	position: absolute;
+	background: rgba(0,0,0,.8);
+	color: white;
+	height: 100%;
+	width:50%;
+	pointer-events: none;
+	overflow: hidden;
+	font-size:.8em;
+}
+
 /* game types */
 ul.redPriest li { clear:none; float:left;}
 ul.redPriest li img { max-width:15em;}

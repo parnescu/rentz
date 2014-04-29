@@ -32,6 +32,13 @@ define([
 
 			this.submit = this.$el.find('.actions .submit');
 			this.cancel = this.$el.find('.actions .cancel');
+
+			this.imgProcessor = this.$el.find('input[type=file]')
+			this.imgProcessor.on('change', function(e){
+				trace('---- MERGE BHA');
+				trace(e)
+				trace(e.target.data);
+			})
 			return this;
 		},
 		_mergeData: function(){

@@ -1,4 +1,9 @@
-trace = function(r){console.log(r);}
+trace = function(r){ 
+	console.log(r);
+	if(window.___xcg){
+		window.___xcg.innerHTML += "<br/>"+(typeof(r) === 'string' ? r : JSON.stringify(r));
+	}
+}
 define([
 	'app/utils/Global'
 	,'app/utils/Memory'
@@ -9,6 +14,13 @@ define([
 	"use strict";
 	var notification, f = function(){
 		function _start(element){
+			// define in app console
+			window.___xcg = document.createElement('p');
+			window.___xcg.className = "logger";
+			document.body.appendChild(window.___xcg);
+			// ---- end console
+
+
 			trace("APP:: init called");
 
 			if (document.querySelector('#rentz')){
@@ -48,18 +60,11 @@ define([
 				Backbone.trigger(_g.events.USER_LOGIN, Memory.getUser());
 			}
 
-
-			// window.addEventListener('error', function(e){ 
-			// 	// e.preventDefault();
-			// 	// var err = e.error ? e.error.message : e.message;
-			// 	// trace(err + " " + typeof(err));
-			// 	// notification = new Alert().render({ 
-			// 	// 	code: -1,
-			// 	// 	reason: typeof(err) === 'string' ? err : err.reason
-			// 	// });
-			// 	//alert(e.error.message); 
-			// 	stage.append(notification.el);
-			// });
+			window.addEventListener('error', function(e){ 
+				e.preventDefault();
+				trace("MAIN:: --- page error kicked in");
+				Backbone.trigger(_g.events.SHOW_ERROR, { code: -2, reason: e.error ? e.error.message : e.message});
+			});
 			view = null;
 		}
 

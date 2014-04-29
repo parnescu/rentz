@@ -176,7 +176,12 @@ define([
 		obj.pageStack = []			// used for back button
 		obj.devmode = false 		// --- dev switch
 		obj.currentUser = null 		// the user that is currently logged in
-		
+
+
+		obj.isMobile = (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))
+		obj.isMobile = _.isNull(obj.isMobile) ? false : true;
+
+		trace("GLOBAL:: is mobile " +obj.isMobile);
 		obj.defaultMenu = [ _views.GAMES_SCREEN, _views.PLAYERS_LIST_SCREEN, _views.ACCOUNT_SCREEN]
 		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
 		obj.__defineGetter__('currentPlayers', function(){ return current;});
