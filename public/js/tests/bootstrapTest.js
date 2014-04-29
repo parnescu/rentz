@@ -56,6 +56,7 @@
 			,'/js/app/views/forms/Login.js'
 			,'/js/app/controllers/MainController.js'
 			,'/js/app/controllers/GameController.js'
+			,'/js/app/utils/Memory.js'
 		];
 
 	specs = specs.concat(dependencies);
@@ -78,7 +79,8 @@
 			EditPlayers,
 			Login,
 			MainController,
-			GameController
+			GameController,
+			Memory
 		){
 			// models
 			window.Player = Player;
@@ -100,6 +102,8 @@
 			//controllers
 			window.MainController = MainController;
 			window.GameController = GameController;
+			window.Memory = Memory;
+			
 			// boot
 			window._g = _g;
 			window._g.devmode = true;

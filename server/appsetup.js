@@ -17,6 +17,7 @@ module.exports = function(app, config){
 	// api setup
 	trace("APP:: init API");
 	app.get('/api/players', db.getPlayers);
+	app.get('/api/players/:id', db.getPlayers);
 	app.post('/api/players',db.savePlayer);
 	app.put('/api/players/:id',db.savePlayer);
 	app.delete('/api/players/:id',db.deletePlayer);

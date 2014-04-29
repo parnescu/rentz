@@ -6,134 +6,53 @@ define([
 	"use strict";
 	var max = 6, min = 3, c, obj, current, cam;
 	if (!window.__g){
-		var _utils = {}
-		_utils.months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
-		_utils.plural = function(nr, str){
-			if (str == "") return "";
-			return str + (Number(nr) === 1 ? "" : "s")
-		}
-		_utils.merge = function(data, obj){
-			for (var ii in obj){
-				data[ii] = obj[ii];
+		/* utils */
+			var _utils = {}
+			_utils.months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+			_utils.plural = function(nr, str){
+				if (str == "") return "";
+				return str + (Number(nr) === 1 ? "" : "s")
 			}
-		}
-		_utils.format = function(date, style){
-			var str = "";
-			style = style || "dd MM yyyy";
-			switch(style){
-				case "dd MM yyyy":
-					str += date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear();
-					break;
-			}
-			return str;
-		}
-		_utils.progressive = function(nr){
-			var sum = 1;
-			for (var i=2;i<=nr;i++) { sum += i; }
-			return sum;
-		}
-		_utils.playerRoundByType = function(player, type, collection){
-			var i,model;
-			for (var i=0;i<collection.models.length;i++){
-				model = collection.models[i];
-				if (model.get('playerId') === player && model.get('gameType').get('type')  === type){
-					return model;
+			_utils.merge = function(data, obj){
+				for (var ii in obj){
+					data[ii] = obj[ii];
 				}
 			}
-		}
-		_utils.updateRound = function(game, model){
-			// used for TDD tests
-			var i = Number(game.get('_index'));
-			i++;
-
-			model.isValid();
-			model.set("_index",i);
-			game.set('_index',i);
-			game.isValid();
-		}
-		_utils.camera = function(){
-			if (!cam){
-
-				var video = document.querySelector('video.screen'),
-						back = document.querySelector('.cancelAvatar'),
-						button = document.querySelector('.newAvatar'),
-						next = document.querySelector('.saveAvatar'),
-
-						avatar = document.querySelector('a.avatar'),
-						canvas = document.querySelector('.canvas'),
-						stream = null,
-						state = 1;
-
-				$(button).show();
-				$(back).show();
-				$(avatar).hide();
-
-				navigator.getMedia = ( navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia || navigator.getUserMedia );
-				navigator.getMedia({
-						video: true,
-						audio: false
-					},
-					function(_stream) {
-						stream = _stream;
-						
-						if (navigator.mozGetUserMedia) {
-							video.mozSrcObject = stream;
-						} else {
-							var vendorURL = window.URL || window.webkitURL;
-							video.src = vendorURL.createObjectURL(stream);
-						}
-					}
-					,function(err) {
-						trace("Unable to get video stream!");
-					}
-				);
-
-				$(button).click(function(e){
-					e.preventDefault();
-					state = 2;
-
-					canvas.width = video.videoWidth;
-					canvas.height = video.videoHeight;
-					var ctx = canvas.getContext('2d');
-					ctx.drawImage(video,0,0,canvas.width,canvas.height);
-					
-					avatar.children[0].src = canvas.toDataURL();
-
-					$(button).hide();
-					$(next).show();
-				});
-				$(back).click(function(e){
-					e.preventDefault();
-					if (state === 2){
-						canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height)
-						canvas.width = canvas.height = 0;
-						state = 1;
-
-						$(button).show();
-						$(next).hide();
-					}else{
-						state = 0;
-						stream.stop();
-
-						$(button).hide();
-						$(back).hide();
-						$(avatar).show();
-					}
-				});
-				$(next).click(function(e){
-					e.preventDefault();
-					// save it to the model
-
-					state = 0;
-					stream.stop();
-					
-					$(back).hide();
-					$(next).hide();
-					$(avatar).show();
-				});
+			_utils.format = function(date, style){
+				var str = "";
+				style = style || "dd MM yyyy";
+				switch(style){
+					case "dd MM yyyy":
+						str += date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear();
+						break;
+				}
+				return str;
 			}
-			return cam;
-		}
+			_utils.progressive = function(nr){
+				var sum = 1;
+				for (var i=2;i<=nr;i++) { sum += i; }
+				return sum;
+			}
+			_utils.playerRoundByType = function(player, type, collection){
+				var i,model;
+				for (var i=0;i<collection.models.length;i++){
+					model = collection.models[i];
+					if (model.get('playerId') === player && model.get('gameType').get('type')  === type){
+						return model;
+					}
+				}
+			}
+			_utils.updateRound = function(game, model){
+				// used for TDD tests
+				var i = Number(game.get('_index'));
+				i++;
+
+				model.isValid();
+				model.set("_index",i);
+				game.set('_index',i);
+				game.isValid();
+			}
+		/* end - utils */
 
 		obj = {
 			MIN_PLAYERS: min
@@ -192,6 +111,7 @@ define([
 			,FORM_SUBMIT: "submitNewData"
 			,USER_SUBMIT: "submitUserData"
 			,USER_LOGIN: "sendLoginData"
+			,USER_GET_PLAYERS: "getPlayersData"
 
 			,START_NEW_GAME: "initNewGame"
 			,CHOOSE_GAME_TYPE: "typeSelected"
@@ -217,7 +137,7 @@ define([
 			,SAVE: { title: "Save", type: "save"}
 			,SAVE_ROUND: { title: "Save", type:"saveRound"}
 			,INITIAL_SCREEN: { title: "Rentz", type:"initialScreen"}
-			,ACCOUNT_SCREEN: { title: "Account", type:"accountScreen"}
+			,ACCOUNT_SCREEN: { title: "Profile", type:"accountScreen"}
 			,ACCOUNT_ADD: { title: "Register", type:"addUser"}
 			,ACCOUNT_REMOVE: { title: "Logout", type: "removeUser"}
 		},
@@ -233,6 +153,7 @@ define([
 			,CAMERA_CONTROLLER_FAIL: "Main controller is missing from initialization"
 			,CAMERA_STREAM_FAIL: "Unable to get video stream, your browser might not support it!"
 			,USER_NOT_LOGGED: "Unable to log in using these credentials!"
+			,USER_CREATE_DENY: "You can't add players if you don't have a profile defined!"
 		},
 		_camType = {
 			WEB: "online"
@@ -259,7 +180,7 @@ define([
 		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
 		obj.__defineGetter__('currentPlayers', function(){ return current;});
 
-		c = Backbone.Collection.extend({ model: Player, url: "/api/players"});
+		c = Backbone.Collection.extend({ model: Player, url: function(){ return "/api/players/"+(obj.currentUser ? obj.currentUser.id : "");}});
 		obj.players = new c();
 		obj.sPlayers = new c();
 		c = null;

@@ -1,6 +1,7 @@
 define([
 	'backbone'
 	,'app/utils/Global'
+	,'app/utils/Memory'
 	,'app/models/Player'
 	,'app/views/lists/List'
 	,'app/views/pages/Page'
@@ -13,7 +14,7 @@ define([
 	,'app/controllers/GameController'
 	,'app/controllers/CameraController'
 	,'app/controllers/Router'
-], function(B, _g, Player, List, Page, GameOver, EditPlayers, Login, GameTypeList, GameDetailList, ScoreList, GameController, CameraController, Router){
+], function(B, _g, Memory, Player, List, Page, GameOver, EditPlayers, Login, GameTypeList, GameDetailList, ScoreList, GameController, CameraController, Router){
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
@@ -90,6 +91,11 @@ define([
 				},				
 				_addPlayerScreen = function(model, isUser){
 					isUser = isUser || false;
+
+					if (!_g.currentUser && !isUser){
+						throw new Error(_g.errors.USER_CREATE_DENY)
+						return;
+					}
 
 					_resetEditMode();
 					trace("MAIN_CTRL:: -> "+(model ? "edit" : "new ")+" player screen");
@@ -234,24 +240,38 @@ define([
 						header: {
 							back: _g.currentUser ? _g.viewType.ACCOUNT_REMOVE : undefined
 							,title: "User Account"
-							,next: _g.currentUser ? undefined : _g.viewType.ACCOUNT_ADD
+							,next: _g.currentUser ? _g.viewType.SAVE : _g.viewType.ACCOUNT_ADD
 						},
 						view: _g.currentUser ? new EditPlayers({ model:_g.currentUser, userMode: true}) : new Login()
 					});
 				},
+				_logout = function(){
+					trace("MAIN_CTRL:: logout user '"+_g.currentUser.get('nick')+"'");
+
+					_g.players.reset();
+					_g.games.reset();
+					_g.currentUser = null;
+
+					_resetViews();
+					_showAccountPage();
+				},
 			// end - base screen actions
 			_handleItemDeletion = function(view){
 				if (view.model){
-					var c = view.model.collection;
-					view.model.collection.remove(view.model)
-					view.model.destroy()
-					view.remove();
-					view = null;
-				
-					if (c.length === 0){
-						_resetEditMode();
+					// if deleted player is yourself, log-out
+					if (view.model.id === _g.currentUser.id){ _logout();}
+
+					var c;
+					if (c = view.model.collection){
+						view.model.collection.remove(view.model)	
+						view.remove();
+						view = null;
+						if (c.length === 0){
+							_resetEditMode();
+						}
+						c = null;
 					}
-					c = null;
+					view.model.destroy();
 				}
 			},
 			_handleAvatarReplacement = function(){
@@ -278,6 +298,7 @@ define([
 							_g.players.add(model);
 							_goBack();
 						}else{
+							
 							model.save(null,{
 								wait:true,
 								success: function(newModel, modelData){
@@ -304,26 +325,49 @@ define([
 				// login
 				// get players and games
 				// set _g.currentUser
+				var usr, pass, isView = (view instanceof Backbone.View);
 
-				if (allow){
+				if (isView){
+					usr = view.userName.val()
+					pass = view.userPass.val()
+				}else{
+					usr = view.nick || null;
+					pass = view.pass || null;
+				}
+
+				if (allow && usr && pass){
 					trace("MAIN_CTRL:: send login to server");
 					allow = false;
 					$.ajax({
 						url: '/api/user',
 						method: 'GET',
 						dataType: 'json',
-						data: { nick: view.userName.val(), pass: view.userPass.val()},
+						data: { nick: usr, pass: pass},
 						success: function(data){
-							allow = true;
-							trace('---> yaaaay');
-							trace(_currView)
 							_g.currentUser = new Player(data);
-							_currView.remove();
-							_showAccountPage(_g.currentUser, true)
-						},
-						error: function(){
+							_g.players.fetch();
+
 							allow = true;
-							throw new Error(_g.errors.USER_NOT_LOGGED);
+							trace("MAIN_CTRL:: ..logged in!");
+							
+							Memory.saveUser({
+								nick: data.nick,
+								pass: data.password,
+								id: data._id
+							})
+
+							if (isView){
+								_currView.remove();
+								_showAccountPage(_g.currentUser, true)
+							}
+							
+						},
+						error: function(e){
+							allow = true;
+							Memory.removeUser();
+							if (isView){
+								throw new Error(_g.errors.USER_NOT_LOGGED);
+							}
 						}
 					})
 				}
@@ -354,20 +398,27 @@ define([
 				if (_currView.head.data.back.type === _g.viewType.GO_BACK.type){
 					_goBack();
 				}else{
-					if (_currView.subview && _currView.subview.collection.length < 1){
-						throw new Error(_g.errors.EDIT_NONE);
+					switch(_currView.viewType){
+						case _g.viewType.ACCOUNT_SCREEN.type:
+							_logout("yes")
+							break;
+						default:
+							if (_currView.subview && _currView.subview.collection.length < 1){
+								throw new Error(_g.errors.EDIT_NONE);
+							}
+							// edit button enabled
+							var button = _currView.head.back[0],
+								pressed = button.dataset.pressed;
+							pressed = pressed === undefined ? "on" : pressed === 'off' ? "on" : "off";
+							_currView.head.setButtonState('back', pressed);
+
+							if (pressed == 'on'){ _currView.content.addClass("editable");
+							}else{ _currView.content.removeClass("editable");}
+							trace(" -> "+pressed);
+
+							pressed = null;
+							break;
 					}
-					// edit button enabled
-					var button = _currView.head.back[0],
-						pressed = button.dataset.pressed;
-					pressed = pressed === undefined ? "on" : pressed === 'off' ? "on" : "off";
-					_currView.head.setButtonState('back', pressed);
-
-					if (pressed == 'on'){ _currView.content.addClass("editable");
-					}else{ _currView.content.removeClass("editable");}
-					trace(" -> "+pressed);
-
-					pressed = null;
 				}
 			},
 			_handleContinueButton = function(data){

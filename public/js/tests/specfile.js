@@ -14,6 +14,11 @@ describe("Rentz TDD specs", function(){
 		bogusPlayersMore = [
 			{ name:"Gigi", surname:"Castelano", nick:'tzatzemoi'}
 		],
+		bogusSavedPlayer = {
+			nick: "bobo",
+			pass: "momo",
+			id: "-1"
+		},
 		bogusRoundsIndex = [6,5,1,0,1,3,2,4,6,4,2,4,5,0,0,3,3,2,1,6,5],
 		bogusRounds = [[20,22,7],[0,2,4],[0,4,0],[0,0,1],[0,1,3],[3,1,4],[2,3,3],[2,3,1],[10,32,7],[3,2,1],[1,3,4],[3,2,1],[3,0,5],[0,1,0],[0,0,1],[3,1,4],[1,5,2],[4,0,4],[2,1,1],[1,41,7],[1,0,7]];
 		window.view = null;
@@ -1145,6 +1150,46 @@ describe("Rentz TDD specs", function(){
 				}
 			});
 		});
+
+		describe("Local memory", function(){
+			it("must be defined and be able to get, save and delete a user", function(){
+				Memory.removeUser();
+				Memory.init();
+
+				expect(Memory.getUser).toBeDefined();
+				expect(Memory.saveUser).toBeDefined();
+				expect(Memory.removeUser).toBeDefined();
+
+				expect(Memory.getUser().nick).toBeNull();
+				expect(Memory.getUser().pass).toBeNull();
+			})
+
+			it("saving 'bogusSavedPlayer' will be carried on forward", function(){
+				Memory.saveUser(bogusSavedPlayer);
+
+				expect(Memory.getUser().nick).toBe(bogusSavedPlayer.nick);
+				expect(Memory.getUser().pass).toBe(bogusSavedPlayer.pass);
+				expect(Memory.getUser().id).toEqual(bogusSavedPlayer.id);
+			})
+			it("prevent saving incomplete users", function(){
+				Memory.saveUser({ bla: 'bka'});
+				expect(Memory.getUser().nick).toBe(bogusSavedPlayer.nick);
+				expect(Memory.getUser().pass).toBe(bogusSavedPlayer.pass);
+				expect(Memory.getUser().id).toEqual(bogusSavedPlayer.id);
+
+				Memory.saveUser({ nick: '', pass: '', id:''});
+				expect(Memory.getUser().nick).toBe(bogusSavedPlayer.nick);
+				expect(Memory.getUser().pass).toBe(bogusSavedPlayer.pass);
+				expect(Memory.getUser().id).toEqual(bogusSavedPlayer.id);
+
+				Memory.saveUser({ nick: 'gigi', pass: 'kent', id:'21'});
+				expect(Memory.getUser().nick).toBe('gigi');
+				expect(Memory.getUser().pass).toBe('kent');
+				expect(Memory.getUser().id).toEqual('21');
+
+				Memory.removeUser();
+			})
+		})
 	});
 	
 	describe("Full games", function(){

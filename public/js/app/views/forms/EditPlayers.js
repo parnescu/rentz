@@ -58,9 +58,12 @@ define([
 
 			if (this.model.isValid()){
 				var evt = this.userMode ? _g.events.USER_SUBMIT : _g.events.FORM_SUBMIT
-				if(this.model === _g.currentUser){
-					evt = _g.events.FORM_SUBMIT;
-				}
+				// if you're editing the logged user... change event to save details
+				if(this.model === _g.currentUser){evt = _g.events.FORM_SUBMIT;}
+
+				// if you're creating a new player for user, add user's id
+				if (_g.currentUser){ this.model.set('userId', _g.currentUser.id);}
+
 				Backbone.trigger(evt, this.model);
 			}else{
 				//throw new Error(_g.errors.PLAYER_DATA_FAIL);
