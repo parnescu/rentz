@@ -19,8 +19,13 @@ define([
 	"use strict";
 	if (!window.__mc){
 		var f = function(){
-			var _currView,stage, game, wasInited = false, _route, allow = true, isView, notification,
+			var _currView,stage, game, wasInited = false, _route, allow = true, isView,
 			// base screen actions
+				_triggerDevError = function(e){
+					if (_g.devmode){
+						throw new Error(e);
+					}
+				},
 				_showError = function(errData){
 					if (typeof(errData) === 'string'){
 						errData = {
@@ -30,8 +35,12 @@ define([
 					}
 
 					errData.code = errData.code || -1;
-					notification = new Alert().render(errData);
-					stage.appendChild(notification.el);
+					if (_g.notification){
+						_g.notification.remove();
+						_g.notification = null;
+					}
+					_g.notification = new Alert().render(errData);
+					stage.appendChild(_g.notification.el);
 				},
 				_resetCurrent = function(){
 					if(_currView){
@@ -105,7 +114,7 @@ define([
 				_addPlayerScreen = function(model, isUser){
 					isUser = isUser || false;
 
-					if (!_g.currentUser && !isUser){
+					if (!_g.devmode && !_g.currentUser && !isUser){
 						Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.USER_CREATE_DENY)
 						return;
 					}
@@ -159,6 +168,7 @@ define([
 							,view: new List({ collection: _g.sPlayers, sortable:true})
 						});
 					}else{
+						_triggerDevError(_g.errors.PLAYERS_NEEDED)
 						Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.PLAYERS_NEEDED);
 						return;
 					}
@@ -277,11 +287,12 @@ define([
 			_handleItemDeletion = function(view){
 				if (view.model){
 					// if deleted player is yourself, log-out
-					if (view.model.id === _g.currentUser.id){ _logout();}
+					if (_g.currentUser && view.model.id === _g.currentUser.id){ _logout();}
 
 					var c;
 					if (c = view.model.collection){
 						view.model.collection.remove(view.model)	
+						view.model.destroy();
 						view.remove();
 						view = null;
 						if (c.length === 0){
@@ -289,7 +300,10 @@ define([
 						}
 						c = null;
 					}
-					view.model.destroy();
+					
+					if(view && view.model){
+						view.model.destroy();
+					}
 				}
 			},
 			_handleAvatarReplacement = function(){
@@ -576,6 +590,7 @@ define([
 					Backbone.on(_g.events.AVATAR_CHOOSE, _handleAvatarReplacement);
 					Backbone.on(_g.events.SHOW_ERROR, _showError);
 				}else{
+					_triggerDevError('Specify a view to init on');
 					Backbone.trigger(_g.events.SHOW_ERROR, 'Specify a view to init on');
 				}
 			},
@@ -599,6 +614,11 @@ define([
 				if (_currView){
 					_currView.remove();
 					_currView = null;
+				}
+
+				if(_g.notification){
+					_g.notification.remove();
+					_g.notification = null;
 				}
 				wasInited = false;
 			}

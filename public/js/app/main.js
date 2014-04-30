@@ -21,8 +21,8 @@ define([
 			// ---- end console
 
 
-			trace("APP:: init called");
 
+			trace("APP:: init called");
 			if (document.querySelector('#rentz')){
 				throw new Error('Only one instance of the game should be inited');
 				return;
@@ -47,7 +47,6 @@ define([
 
 			stage.append(view.el)
 
-
 			Memory.init();
 			MainController.init(view);
 			view.$el.addClass('ui-page-active');
@@ -67,7 +66,6 @@ define([
 			});
 			view = null;
 		}
-
 		function _end(){
 			_.each(_g.pageStack, function(view){ view.remove(); view = null; });
 
@@ -77,7 +75,6 @@ define([
 
 			trace("APP:: destroy");
 		}
-
 		return {
 			init: _start
 			,destroy: _end

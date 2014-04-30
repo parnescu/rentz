@@ -475,7 +475,7 @@ describe("Rentz TDD specs", function(){
 
 				expect(view.el.tagName.toLowerCase()).toBe('form')
 				expect(view.el.children.length).toBeGreaterThan(0);
-				expect(view.$el.find('input').length).toBe(3);
+				expect(view.$el.find('input').length).toBeGreaterThan(2);
 				expect(view.model).toBeNull();
 				expect(view.submit).toBeDefined();
 				expect(view.cancel).toBeDefined();
@@ -802,6 +802,7 @@ describe("Rentz TDD specs", function(){
 			it("add new player from selection screen", function(){
 				view.menu.find('a:eq(0)').click();
 
+
 				var m = MainController.view();
 				m.$el.find('input[name=nick]').val('cireshescu');
 				m.$el.find('input[name=name]').val('Vasile');
@@ -859,6 +860,7 @@ describe("Rentz TDD specs", function(){
 			});
 
 			afterEach(function(){
+				//return;
 				_g.players.reset();
 				if (view){
 					view.remove();
@@ -1026,6 +1028,7 @@ describe("Rentz TDD specs", function(){
 	describe("Controllers", function(){
 		describe("Main Screen Controller", function(){
 			beforeEach(function(){
+				MainController.remove();
 				_g.players.reset();
 				_g.players.add(bogusPlayers);
 

@@ -73,7 +73,7 @@ define([
 
 				Backbone.trigger(evt, this.model);
 			}else{
-				//throw new Error(_g.errors.PLAYER_DATA_FAIL);
+				Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.PLAYER_DATA_FAIL);
 			}
 		},
 

@@ -36,7 +36,7 @@ define([
 			_handleStartNewGame = function(){
 				trace('GAME_CTRL:: start new game')
 			 	if (_g.sPlayers.length > _g.MAX_PLAYERS || _g.sPlayers.length < _g.MIN_PLAYERS){
-			 		throw new Error('The allowed number of players is between '+_g.MIN_PLAYERS+' and '+_g.MAX_PLAYERS);
+			 		Backbone.trigger(_g.events.SHOW_ERROR, 'The allowed number of players is between '+_g.MIN_PLAYERS+' and '+_g.MAX_PLAYERS);
 			 		return;
 			 	};
 			 	_g.currentPlayers = _g.sPlayers.length;
@@ -79,7 +79,7 @@ define([
 				// all scores values are 0 -> needs input
 				var sum = _currRound.get('scores').toJSON().reduce(function(sum, item){ sum+= item.value; return sum;},0);
 				if (sum === 0 || sum < _currRound.get('scores').models[0].get('maxItems')){
-					throw new Error(_g.errors.ROUND_DATA_NOT_GIVEN);
+					Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.ROUND_DATA_NOT_GIVEN);
 				}
 				sum = null;
 				trace("GAME_CTRL:: round data ")
@@ -96,11 +96,7 @@ define([
 					_currGame.set('_index', i);
 					_currGame.isValid();
 				}
-
-
-
-
-				
+	
 				// update models scores
 				// get next player
 				// go back to choose game type with next player
