@@ -80,6 +80,7 @@ define([
 				var sum = _currRound.get('scores').toJSON().reduce(function(sum, item){ sum+= item.value; return sum;},0);
 				if (sum === 0 || sum < _currRound.get('scores').models[0].get('maxItems')){
 					Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.ROUND_DATA_NOT_GIVEN);
+					return;
 				}
 				sum = null;
 				trace("GAME_CTRL:: round data ")

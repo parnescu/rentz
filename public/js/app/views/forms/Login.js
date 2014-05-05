@@ -14,7 +14,7 @@ define([
 		render: function(){
 			var data = this.model ? this.model.toJSON() : {}
 			this.$el.html(this.template(data));
-			this.$el.find('input').on('change', this.handleInputChange);
+			this.$el.find('input').on('keyup', this.handleInputChange);
 
 			this.form = this.$el.find('form')[0];
 			this.submit = this.$el.find('button.submit');

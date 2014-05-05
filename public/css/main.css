@@ -14,6 +14,8 @@ header a.next { right:0;}
 header a.back { left:0;}
 header h1 { position:static; top:0; left:0; width:100%; text-align: center; z-index:0; font-size:1.4em;}
 
+article, 
+section.content ul.list { padding:1em;}
 
 footer { position: fixed; bottom:-.3em; left:0; width:100%;}
 footer .nav { width:100%;}
@@ -28,6 +30,7 @@ ul.gameTypes li,
 ul.scoreList li,
 ul.nav li  { float:left; background:rgba(0,0,0,.3);}
 
+ul.list li { box-sizing:border-box; -webkit-box-sizing: border-box;}
 ul.list li a[data-type=delete] { float:right; width:0em; height:3em; background:red; z-index:1; position: relative;}
 ul.list li a.clicker { position:absolute; background: rgba(0,0,223,.3); width:100%; height:100%;}
 ul.list li .wrapper { overflow: hidden; display: block;}
@@ -67,8 +70,10 @@ form .cancel { float:right;}
 
 form[name=userLoginForm] .submit { width:100%;}
 
+.page ul li.description { clear:both; float: none; margin-top:.5em; width:30%; left:35%; border-radius:.3em; background:rgb(46, 158, 233); color:#fff; font-size:.7em;}
+.page ul li.description > * { width: 50%;}
+.page ul li.description input { text-align: right; font-size:1.5em; background:none; border:none; color:#fff; padding-right:.4em;}
 
-.page ul li.description { clear:both; float: none;}
 .page { position:absolute; left:0; top:0; background:white; width:100%; height:100%; z-index:1;}
 
 .accountScreen section.content { margin-bottom:20%;}
@@ -81,7 +86,6 @@ form[name=userLoginForm] .submit { width:100%;}
 .btn { border:.2em solid #999; padding:.8em; box-sizing: border-box; border-radius: .5em; background: linear-gradient(to bottom, #666, #ccc); color:#fff; font-weight: bold; }
 .btn:active { background: linear-gradient(to top, #666, #ccc); color:#fff; margin-top:.5em;}
 .btn:disabled { background: linear-gradient(to top, #333, #666); color:#bbb; margin-top:.5em;}
-
 
 .notify { position:absolute; top:0; left:0; width:100%; height:100%; z-index: 10;}
 .notify:after { content:""; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,.7); pointer-events:none;}
@@ -105,9 +109,16 @@ form[name=userLoginForm] .submit { width:100%;}
 }
 
 /* game types */
-ul.redPriest li { clear:none; float:left;}
-ul.redPriest li img { max-width:15em;}
+ul.redPriest li { clear:none; float:left; position: relative; margin:0 1em 1em 0;}
+ul.redPriest li:nth-child(3n) { margin-right:0; clear:right;}
+ul.redPriest li input.points { color:#fff; background:none; border:none; position: absolute; z-index: 1; font-size:.7em; right: .4em; top: .4em; background: red; border-radius: .5em; padding: .25em; text-align: center; width: 40%; font-weight: bold; -webkit-user-select: none;}
+ul.redPriest li a { border-radius:.5em; }
+ul.redPriest li img { max-width:10em;}
+ul.redPriest li h3 { position: absolute; z-index: 2; bottom: .2em; text-align: center; width: 100%; background: rgba(0,0,0,.5); color: #fff; padding: .2em 0; font-size: 0.9em;}
 
+ul.gameTypes li { width:33.33%;}
+ul.gameTypes li a { width:100%;}
+ul.gameTypes li:last-of-type { width:100%; clear:both; float:none;}
 
 /* anims */
 a[data-type=delete] { -webkit-transition: all .5s; -moz-transition: all .5s; transition: all .5s;}

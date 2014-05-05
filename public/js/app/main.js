@@ -39,6 +39,7 @@ define([
 
 			var stage = $('#rentz'),
 				view = new Page({
+					type: _g.viewType.INITIAL_SCREEN,
 					menu: _g.defaultMenu,
 					header: {
 						title: "xtests"
@@ -66,6 +67,7 @@ define([
 			});
 			view = null;
 		}
+
 		function _end(){
 			_.each(_g.pageStack, function(view){ view.remove(); view = null; });
 

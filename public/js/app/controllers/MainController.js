@@ -244,15 +244,12 @@ define([
 							,sortable:  isRentz ? true : false
 						})
 					});
-					round = null;
+					round = isRentz = isRedPriest = null;
 				},
 				_showInitialPage = function(){
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.INITIAL_SCREEN,
-						menu: [
-							_g.viewType.GAMES_SCREEN,
-							_g.viewType.PLAYERS_LIST_SCREEN
-						],
+						menu: _g.defaultMenu,
 						header: {
 							title: "Rentz"
 						}
@@ -513,12 +510,10 @@ define([
 						_currView.remove();
 						_currView = null;
 					}
-					_showInitialScreen();
+					_showInitialPage();
 				};
 
 				if (_currView){
-					var title, view;
-
 					trace('MAIN_CTRL:: navigation item was clicked -> '+type);
 					switch(type){
 						case _g.viewType.PLAYERS_LIST_SCREEN.type:

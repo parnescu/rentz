@@ -136,6 +136,7 @@ define([
 
 		obj.isMobile = (navigator.userAgent.match(/iPhone/i)) || (navigator.userAgent.match(/iPod/i))
 		obj.isMobile = _.isNull(obj.isMobile) ? false : true;
+		obj.isPhonegap = window.cordova ? true : false;
 
 		trace("GLOBAL:: is mobile " +obj.isMobile);
 		obj.defaultMenu = [ _views.GAMES_SCREEN, _views.PLAYERS_LIST_SCREEN, _views.ACCOUNT_SCREEN]
