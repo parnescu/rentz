@@ -306,9 +306,42 @@ define([
 			_handleAvatarReplacement = function(){
 				CameraController.getCamera();
 			},
-			_handleGameEnd = function(){
-				trace("MAIN_CTRL:: add game to collection + show final results")
-				_g.games.add(game);
+			_handleGameEnd = function(currentGame){
+				trace("MAIN_CTRL:: add game to collection + show final results");
+
+				// set gameType for each round to be string instead of model
+				// save it to the server
+				// after saving ... add it to the "pack".
+
+				var _type;
+				_.each(currentGame.get('rounds').models, function(round){
+					_type = round.get('gameType').get('type')
+					round.set('gameType', _type);
+				});
+				_type = null;
+
+				currentGame.save(null, {
+					wait: true,
+					success: function(gameModel, gameData){
+						trace("MAIN_CTRL:: --- saved to db ---");
+						_g.games.add(GameController.parseGame(gameModel));
+					},
+					error: function(e){
+						_g.games.add(GameController.parseGame(currentGame));
+				 		trace("MAIN_CTR:: -> failed to save to db");
+				 		Backbone.trigger(_g.events.SHOW_ERROR, _g.errors.PLAYER_SAVE_FAIL);
+					}
+				});
+
+				// increase the win count for the champ
+				if (_g.devmode === false){
+					var win = currentGame.get('_winner');
+					win = _g.players.get(win.id);
+					win.set('won', win.get('won') + 1);
+					win.save();
+
+					win = null;
+				}
 
 				Backbone.trigger(_g.events.BUILD_PAGE, {
 					type: _g.viewType.GAME_ENDED_SCREEN,
@@ -387,6 +420,7 @@ define([
 			_handleUserLoginSuccess = function(data){
 				_g.currentUser = new Player(data);
 				_g.players.fetch();
+				_g.games.fetch();
 				allow = true;
 
 				trace("MAIN_CTRL:: ..logged in!");
@@ -511,6 +545,7 @@ define([
 						_currView = null;
 					}
 					_showInitialPage();
+					return;
 				};
 
 				if (_currView){

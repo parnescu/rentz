@@ -45,6 +45,13 @@ define(function(){
 			game.set('_index',i);
 			game.isValid();
 		}
+		_utils.getTypeByName = function(type, stash){
+			for (var ii in stash){
+				if (stash[ii].get('type') === type){
+					return stash[ii];
+				}
+			}
+		}
 		window.__mrjn = _utils;
 	}
 	

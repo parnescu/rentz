@@ -148,7 +148,7 @@ define([
 		obj.sPlayers = new c();
 		c = null;
 
-		c = Backbone.Collection.extend({ model: Game});
+		c = Backbone.Collection.extend({ model: Game, url: function(){ return "/api/games/"+(obj.currentUser ? obj.currentUser.id : "");}});
 		obj.games = new c();
 		c = null;
 

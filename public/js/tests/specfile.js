@@ -430,6 +430,8 @@ describe("Rentz TDD specs", function(){
 					,sortable: true
 					,type: 'icon'
 				}).render();		
+				stage.append(view.el)
+
 				var _target = view.elements[2];
 
 				expect(Number(view.total.firstChild.value)).toBe(21);
@@ -1379,22 +1381,23 @@ describe("Rentz TDD specs", function(){
 				i++;
 				view = MainController.view();
 				view.subview.list.find('li:eq('+bogusRoundsIndex[i]+') a').click();
-				
+
 				round = GameController.currentRound();
 				scores = round.get('scores');
 				scores.models[0].set('value', bogusRounds[i][0]);
 				scores.models[1].set('value', bogusRounds[i][1]);
 				scores.models[2].set('value', bogusRounds[i][2]);
 				view.remove();
-				view = null;				
+				view = null;
 
+				game.set('userId', '536746d35f4b21e01225275c');
+				
 				view = MainController.view();
 				view.head.next.click();	
 				view.remove();
 				view = null;
 
 				game = game.get('_points');
-
 				expect(game[0]).toBe(-50);
 				expect(game[1]).toBe(-1080);
 				expect(game[2]).toBe(-710);

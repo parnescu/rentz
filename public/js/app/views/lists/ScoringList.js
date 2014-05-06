@@ -43,9 +43,11 @@ define([
 
 			this.$el.addClass(this.data.gameType.get('type'))
 
-			if(this._gameType.get('type') === "rentz"){
-				this.handleSorting()
-			}
+			var type = this._gameType.get('type');
+			if(type === _g.gameType.RENTZ.get('type')){ this.handleSorting()}
+			if(type === _g.gameType.RENTZ.get('type') || type === _g.gameType.RED_PRIEST.get('type')){ this.$el.addClass('special');}
+			
+			type = null;
 			return this;
 		},
 		renderOne: function(model, index){		

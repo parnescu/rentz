@@ -34,14 +34,14 @@ module.exports = function(config){
 			maxItems: Number
 		}),
 		gameround = mongo.Schema({
-			playerId: ObjectId,
+			playerId: String,
 			available: { type: Boolean, default: true},
-			gameType: [gametype],
+			gameType: String,
 			scores: [scoring],
 			_points: [Number]
 		}),
 		game = mongo.Schema({
-			playerId: ObjectId,
+			playerId: String,
 			name: { type:String, default: Date.now()},
 			rounds: [gameround],
 			players: [String],
@@ -64,7 +64,7 @@ module.exports = function(config){
 					return Scoring;
 					break;
 				case "game":
-					return Player;
+					return Game;
 					break;
 				default:
 					return;
@@ -112,15 +112,15 @@ module.exports = function(config){
 					pristine.save(function(e, docs){
 						if(e){ def.reject(e.err);
 						}else{ 
-							if (docs.userId === ""){
-								docs.userId = docs._id.toString();	
-							}
+							if (docs.userId === ""){ docs.userId = docs._id.toString();}
 							def.resolve(docs);
-							
-							model.findOneAndUpdate({_id: docs._id}, { userId: docs.userId}, function(e, docs){
-								if (e){ trace(e); trace(" -> coudn't save userid");
-								}else{ trace(" --> USER_ID POPULATED");}
-							})
+							if (data._type === "player"){
+								trace('DB:: populate user id')
+								model.findOneAndUpdate({_id: docs._id}, { userId: docs.userId}, function(e, docs){
+									if (e){ trace(e); trace(" -> coudn't save userid");
+									}else{ trace(" --> USER_ID POPULATED");}
+								});
+							}
 						}
 					});
 				}
@@ -159,6 +159,18 @@ module.exports = function(config){
 				def.reject("NO SUCH TYPE AVAILABLE: "+data._type);
 			}
 			return def.promise;
+		},
+		_incrementWonPoints = function(userId, points){
+			var model = _getModelType('player');
+			trace("DB:: update "+userId+" points to: "+points)
+			model.findOneAndUpdate({ _id: userId}, { won: points}, { _v: 0}, function(e){
+				if (e){
+					trace(" -> failed to add points");
+				}else{
+					trace(" -> winning points added");
+				}
+
+			});
 		},
 	// END - MONGO
 
@@ -220,6 +232,39 @@ module.exports = function(config){
 
 			res.json(false);
 		},
+		_getGames = function(req, res){
+			trace("DB:: show all games");
+			var addons = {};
+			if (req.params.id){
+				addons.playerId = req.params.id;
+			}
+			_getItems('game',addons).then(
+				function(games){
+					res.json(games);
+				},
+				function(e){
+					trace("DB:: ---> no games: "+JSON.stringify(e));
+					res.send(500, { reason: e});
+				}
+			);
+			addons = null;
+		},
+		_saveGame = function(req, res){
+			var data = req.body;
+			data._type = 'game';
+			trace("DB:: add new game");
+			_setItem(data).then(
+				function(player){
+					trace("DB:: -> save success");
+					res.json(player);
+				},
+				function(e){
+					trace("DB:: ---> save failed: "+e);
+					res.send(500, { reason: e});
+				}
+			);
+			//_incrementWonPoints("536746d35f4b21e01225275c", Number(data._playerWon) + 1);
+		},
 		_getUser = function(req, res){
 			var params = url.parse(req.url, true).query,
 				obj = {_type: 'player', nick: params.nick}
@@ -238,6 +283,8 @@ module.exports = function(config){
 	// END - HANDLERS
 	return {
 		getPlayers: _getPlayers
+		,getGames: _getGames
+		,saveGame: _saveGame
 		,savePlayer: _savePlayer
 		,deletePlayer: _removePlayer
 		,loginUser: _getUser

@@ -7,6 +7,7 @@ define([
 		tagName: 'table',
 		template: _.template(tmp),
 		render: function(){
+			trace(this.model);
 			var i=0, data,
 				items = this.model.get('rounds').filter(function(item){ 
 					return item.get('available') === false;

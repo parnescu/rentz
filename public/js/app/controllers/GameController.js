@@ -9,10 +9,28 @@ define([
 	if (!window.__gc){
 		var f = function(){
 			var _currGame, _currPlayer, _currRound,
+				_r = Backbone.Collection.extend({ model: Round}),
+				_s = Backbone.Collection.extend({ model: Score}),
+
+			_parseGameData = function(gameData){
+				var rounds = new _r(), _round, scores;
+
+				_.each(gameData.get('rounds'), function(round){
+					scores = new _s();
+					_.each(round.scores, function(score){scores.add(new Score(score));});
+					
+					_round = new Round(round);
+					_round.set('gameType', _g.util.getTypeByName(round.gameType, _g.gameType))
+					_round.set('scores', scores);
+					rounds.add(_round);
+				});
+				gameData.set('rounds', rounds);
+				return gameData;
+			},
 			_getGamesForPlayer = function(model){
 				// return all the rounds for playerId == model.fullname()
-				var _c = Backbone.Collection.extend({ model: Round }),
-					collection = new _c(), id = model.cid;//fullname();
+				var collection = new _r(),
+					id = _g.devmode ? model.cid : model.id
 
 				_currGame.get('rounds').each(function(round, index){
 					if (round.get('playerId') === id){
@@ -40,11 +58,12 @@ define([
 			 		return;
 			 	};
 			 	_g.currentPlayers = _g.sPlayers.length;
-			 	var type, round, scores, ii, i, players = [],
-			 		_s = Backbone.Collection.extend({ model: Score });
+			 	var type, round, scores, ii, i, players = [];
 
-			 	_.each(_g.sPlayers.models, function(item){ players.push(item.cid);});
+			 	_.each(_g.sPlayers.models, function(item){ players.push(_g.devmode ? item.cid : item.id);});
 			 	_currGame = new Game({ players: players });
+			 	_currGame.set('playerId', _g.currentUser ? _g.currentUser.id : '-1');
+			 	_currGame.set('_playerWon', _g.currentUser ? _g.currentUser.get('won') : 0);
 
 			 	// populate game with data
 				_.each(_g.sPlayers.models, function(model, index){
@@ -53,7 +72,7 @@ define([
 			 	 		type = _g.gameType[ii]
 
 			 	 		round = new Round({
-			 	 			playerId: model.cid,
+			 	 			playerId: _g.devmode ? model.cid : model.id,
 			 	 			gameType: type,
 			 	 			scores: scores
 			 	 		});
@@ -70,7 +89,7 @@ define([
 				Backbone.trigger(_g.events.SET_NEXT_PLAYER);
 
 			 	type = round = scores = ii = i = null;
-			 	players = round = _s = null;
+			 	players = round = null;
 			},
 			_handleUpdateRound = function(){
 				if (!_currRound) return;
@@ -101,7 +120,7 @@ define([
 				// update models scores
 				// get next player
 				// go back to choose game type with next player
-				trace(_currGame.get('_points'));
+				//trace(_currGame.get('_points'));
 				_.each(_g.sPlayers.models, function(player, i){ player.set('_score', _currGame.get('_points')[i])}, this);
 				Backbone.trigger(_g.events.SET_NEXT_PLAYER);			
 
@@ -141,6 +160,7 @@ define([
 				init: _subscribe,
 				remove: _unsubscribe,
 				playerRounds: _getGamesForPlayer,
+				parseGame: _parseGameData,
 				
 				currentGame: function(){ return _currGame;},
 				currentPlayer: function(){ return _currPlayer;},

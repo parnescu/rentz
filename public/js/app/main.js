@@ -15,9 +15,9 @@ define([
 	var notification, f = function(){
 		function _start(element){
 			// define in app console
-			window.___xcg = document.createElement('p');
-			window.___xcg.className = "logger";
-			document.body.appendChild(window.___xcg);
+			// window.___xcg = document.createElement('p');
+			// window.___xcg.className = "logger";
+			// document.body.appendChild(window.___xcg);
 			// ---- end console
 
 

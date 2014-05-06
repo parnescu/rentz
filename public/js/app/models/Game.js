@@ -4,6 +4,7 @@ define([
 ], function(B, GameRound){
 	var _c = Backbone.Collection.extend({ model: GameRound});
 	return Backbone.Model.extend({
+		idAttribute: "_id",
 		defaults: {
 			name: new Date().toString(),
 			rounds: new _c(),
@@ -12,10 +13,11 @@ define([
 			_winner: {},
 			_index: -1
 		},
+		url: function(){ return "/api/games/"+(this.get('_id')||""); },
 		validate: function(attr){
 			var i,j, tmp, points = [],  done = [], max = 0, maxIndex = 0;
 			for(i=0;i<attr.rounds.length;i++){
-				if (attr.rounds.models[i].get('available') === false){
+				if (attr.rounds.models && attr.rounds.models[i].get('available') === false){
 					tmp = attr.rounds.models[i].get('_points')
 					for(j=0;j<tmp.length;j++){
 						points[j] = points[j] || 0;
@@ -33,10 +35,11 @@ define([
 				id: this.get('players')[maxIndex],
 				score: max
 			});
-			this.set("_points", points);
-			this.get('rounds').add(done);
 
-			
+			this.set("_points", points);
+			if (this.get('rounds') instanceof Backbone.Model){
+				this.get('rounds').add(done);
+			}
 			i = j = tmp = points = done = max = maxIndex = null;
 		}
 	});

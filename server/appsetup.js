@@ -21,9 +21,12 @@ module.exports = function(app, config){
 	app.post('/api/players',db.savePlayer);
 	app.put('/api/players/:id',db.savePlayer);
 	app.delete('/api/players/:id',db.deletePlayer);
-
-	app.get('/api/user', db.loginUser);
 	
+	app.get('/api/games', db.getGames);
+	app.get('/api/games/:id', db.getGames);
+	app.post('/api/games',db.saveGame);
+	
+	app.get('/api/user', db.loginUser);
 
 
 	app.get('/', routes.index);

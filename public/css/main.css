@@ -1,10 +1,25 @@
+/*
+	colors:
+	- blue: rgb(46, 158, 233);
+*/
+
+* {
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+	-webkit-touch-callout: none;
+	webkit-text-size-adjust: none;
+	-webkit-user-select: none;
+	outline: none;
+}
 body, html, h1, h2, h3, h4, h5, h6, p, div, ul, li { margin:0; padding:0;}
 body, html { width:100%; height:100%; font-family: "Segoe UI", "Trebuchet MS", Arial, _sans;}
+
 ul, li { list-style-type: none; position:relative; overflow: hidden;}
-a { display: block; text-decoration:none; overflow: hidden;}
+a { display: block; text-decoration:none; overflow: hidden; }
+a:active { background:rgba(0,0,0,.3);}
 img { width:100%; height: auto;}
 form { padding:.75em; background:white;}
 form fieldset { border:none; margin:0; padding:0;}
+input:focus { }
 
 header, footer { clear:both; float:none;}
 header > *, footer > * { display:inline-block; z-index:1; position: relative;}
@@ -13,6 +28,47 @@ header a { padding: .5em 1em; position:absolute; top:.5em;}
 header a.next { right:0;}
 header a.back { left:0;}
 header h1 { position:static; top:0; left:0; width:100%; text-align: center; z-index:0; font-size:1.4em;}
+input[type=range] { 
+	width: 98% !important;
+	height: 1.7em;
+	margin-bottom: 1em;
+	border-radius: .5em;
+	background: linear-gradient(to top, #ccc, #aaa);
+	box-shadow: .0em 0em .5em white inset;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-webkit-appearance: none !important;
+}
+input[type='range']::-webkit-slider-thumb { 
+	width: 3em; height:3em; border-radius: 2em;
+	cursor: pointer;
+	background:rgb(46, 158, 233);
+	background: radial-gradient(rgb(46, 158, 233), rgb(20, 92, 191));
+	border: .5em solid #ccc;
+	-webkit-appearance: none !important; 
+}
+input[type='range']::-moz-range-thumb { width: 3em; height:3em; border-radius: 2em;
+	cursor: pointer;
+	background:rgb(46, 158, 233);
+	background: radial-gradient(rgb(46, 158, 233), rgb(20, 92, 191));
+	border: .5em solid #ccc;
+	-webkit-appearance: none !important; }
+input[type='range']::-moz-range-track { width: 98% !important;
+	height: 1.7em;
+	margin-bottom: 1em;
+	border-radius: .5em;
+	background: linear-gradient(to top, #ccc, #aaa);
+	box-shadow: .0em 0em .5em white inset;
+	box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-webkit-appearance: none !important;
+}
+
+
+
+
+
+
 
 article, 
 section.content ul.list { padding:1em;}
@@ -28,19 +84,26 @@ footer .items_3 li { width:33.3%;}
 
 ul.gameTypes li,
 ul.scoreList li,
-ul.nav li  { float:left; background:rgba(0,0,0,.3);}
+ul.nav li  { float:left; /*background:rgba(0,0,0,.3);*/}
 
-ul.list li { box-sizing:border-box; -webkit-box-sizing: border-box;}
+ul.list li { box-sizing:border-box; -webkit-box-sizing: border-box; margin-bottom:.5em; padding-bottom:.5em; border-bottom:.1em solid #ccc;}
+ul.list li:last-of-type { border:none;}
 ul.list li a[data-type=delete] { float:right; width:0em; height:3em; background:red; z-index:1; position: relative;}
-ul.list li a.clicker { position:absolute; background: rgba(0,0,223,.3); width:100%; height:100%;}
-ul.list li .wrapper { overflow: hidden; display: block;}
-ul.list input[type=range] { display: block; width: 100%;}
+ul.list li a.clicker { position:absolute; width:100%; height:100%;}
+ul.list li a.clicker:active { background:rgba(0,0,0,.2);}
+ul.list li .wrapper { overflow: hidden; display: block; }
+ul.list li input[type=number] { display: none;}
+ul.list li input.points { width: 20%; background: none; border: none; font-size: .8em; float: right; text-align: right; }
+ul.list .itemDetails { display: block; overflow: hidden;}
+ul.list .itemDetails p { font-size:.8em; color:#999; float:left; margin-right:.5em;}
+ul.list .itemDetails h2 { font-size: 1.3em; color:rgb(46, 158, 233);}
 
 ul.withSelect li a.clicker { display: none;}
 ul.withSelect li a[data-type=select] { top:0; position:absolute; background: rgba(0,30,123,.3); width:100%; height:100%;}
 .editable .list li a[data-type=delete] { width:3em;}
 
-ul.scoreList li { clear:both; float:none;}
+ul.scoreList li { clear:both; float:none; padding:1em 0em;}
+ul.scoreList li h3 { font-size:1.1em; float:left;}
 ul.gameTypes a[data-active=false] { background:rgba(177,0,0,.3); pointer-events:none;}
 
 
@@ -70,7 +133,7 @@ form .cancel { float:right;}
 
 form[name=userLoginForm] .submit { width:100%;}
 
-.page ul li.description { clear:both; float: none; margin-top:.5em; width:30%; left:35%; border-radius:.3em; background:rgb(46, 158, 233); color:#fff; font-size:.7em;}
+.page ul li.description { clear:both; float: none; margin-top:.5em; width:40%; left:30%; border-radius:.3em; background:rgb(46, 158, 233); color:#fff; font-size:.7em;}
 .page ul li.description > * { width: 50%;}
 .page ul li.description input { text-align: right; font-size:1.5em; background:none; border:none; color:#fff; padding-right:.4em;}
 
@@ -109,12 +172,14 @@ form[name=userLoginForm] .submit { width:100%;}
 }
 
 /* game types */
-ul.redPriest li { clear:none; float:left; position: relative; margin:0 1em 1em 0;}
-ul.redPriest li:nth-child(3n) { margin-right:0; clear:right;}
-ul.redPriest li input.points { color:#fff; background:none; border:none; position: absolute; z-index: 1; font-size:.7em; right: .4em; top: .4em; background: red; border-radius: .5em; padding: .25em; text-align: center; width: 40%; font-weight: bold; -webkit-user-select: none;}
-ul.redPriest li a { border-radius:.5em; }
-ul.redPriest li img { max-width:10em;}
-ul.redPriest li h3 { position: absolute; z-index: 2; bottom: .2em; text-align: center; width: 100%; background: rgba(0,0,0,.5); color: #fff; padding: .2em 0; font-size: 0.9em;}
+ul.special li { clear:none; float:left; position: relative; margin:0 1em 1em 0; background: none; border:none; padding:0; width:30%;}
+ul.special li:nth-child(3n) { margin-right:0; clear:right;}
+ul.special li input.points { color:#fff; background:none; border:none; position: absolute; z-index: 1; font-size:.7em; right: .4em; top: .4em; background: red; border-radius: .5em; padding: .25em; text-align: center; width: 40%; font-weight: bold; -webkit-user-select: none;}
+ul.special li a { border-radius:.5em; }
+ul.special li img { max-width:10em;}
+ul.special li h3 { position: absolute; z-index: 2; bottom: .2em; text-align: center; width: 100%; background: rgba(0,0,0,.5); color: #fff; padding: .2em 0; font-size: 0.9em;}
+
+
 
 ul.gameTypes li { width:33.33%;}
 ul.gameTypes li a { width:100%;}
