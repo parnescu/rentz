@@ -17,7 +17,7 @@ define([
 			data = this.model.toJSON();
 			data._items = items;
 			data._players = _g.sPlayers.toJSON();
-
+			trace(data);
 			this.$el.html(this.template(data));
 			this.$el.addClass('players_'+data._players.length);
 			data = i = items = null;

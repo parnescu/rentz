@@ -33,7 +33,6 @@ define([
 							reason: errData
 						}
 					}
-
 					errData.code = errData.code || -1;
 					if (_g.notification){
 						_g.notification.remove();
@@ -175,6 +174,12 @@ define([
 				},
 				_addGameDetailsScreen = function(game){
 					game = game || GameController.currentGame();
+					var isFinished = false;
+
+					if (_g.sPlayers.length === 0){
+						isFinished = true;
+						_.each(game.get('players'), function(id){ _g.sPlayers.add(_g.players.get(id))});
+					}
 					
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.GAME_OUTCOME_SCREEN,
@@ -188,6 +193,11 @@ define([
 						// ],
 						view: new GameDetailList({ model: game})
 					});
+
+					if(isFinished){
+						_g.sPlayers.reset();
+						isFinished = null;
+					}
 				},
 				_showPlayersPage = function(){
 					_resetViews();
@@ -279,6 +289,12 @@ define([
 					_currView = null;
 					
 					_showAccountPage();
+				},
+				_addNewGame = function(game){
+					if (game.get('rounds') instanceof Backbone.Collection === false){
+						trace("MAIN_CTRL:: parse added game data")
+						GameController.parseGame(game)
+					}
 				},
 			// end - base screen actions
 			_handleItemDeletion = function(view){
@@ -591,16 +607,16 @@ define([
 			},
 			_start = function(view){
 				if (wasInited) return;
+
 				if (view){
-					//_end(view);
-					_currView = view;
-					wasInited = true;
 					trace('\nMAIN_CTRL:: init');
-					if (!stage){
-						stage = document.querySelector('#rentz');
-					}
+					wasInited = true;
+					_currView = view;
+					if (!stage){ stage = document.querySelector('#rentz');}
 
 					CameraController.init(this);
+					_g.games.reset()
+					_g.games.on('add', _addNewGame)
 
 					//_route = new Router();
 					//Backbone.history.start({pushState: true})
@@ -641,15 +657,10 @@ define([
 				Backbone.off(_g.events.AVATAR_CHOOSE);
 				Backbone.off(_g.events.SHOW_ERROR);
 
-				if (_currView){
-					_currView.remove();
-					_currView = null;
-				}
+				if (_g.games){ _g.games.off('add');}
+				if (_currView){ _currView.remove(); _currView = null;}
+				if(_g.notification){ _g.notification.remove(); _g.notification = null;}
 
-				if(_g.notification){
-					_g.notification.remove();
-					_g.notification = null;
-				}
 				wasInited = false;
 			}
 			return {

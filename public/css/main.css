@@ -174,16 +174,18 @@ form[name=userLoginForm] .submit { width:100%;}
 /* game types */
 ul.special li { clear:none; float:left; position: relative; margin:0 1em 1em 0; background: none; border:none; padding:0; width:30%;}
 ul.special li:nth-child(3n) { margin-right:0; clear:right;}
-ul.special li input.points { color:#fff; background:none; border:none; position: absolute; z-index: 1; font-size:.7em; right: .4em; top: .4em; background: red; border-radius: .5em; padding: .25em; text-align: center; width: 40%; font-weight: bold; -webkit-user-select: none;}
+ul.special li input.points,
+table .points { color:#fff; background:none; border:none; position: absolute; z-index: 1; font-size:.7em; right: .4em; top: .4em; background: red; border-radius: .5em; padding: .25em; text-align: center; width: 40%; font-weight: bold; -webkit-user-select: none;}
 ul.special li a { border-radius:.5em; }
 ul.special li img { max-width:10em;}
-ul.special li h3 { position: absolute; z-index: 2; bottom: .2em; text-align: center; width: 100%; background: rgba(0,0,0,.5); color: #fff; padding: .2em 0; font-size: 0.9em;}
-
-
+ul.special li h3,
+table h3 { position: absolute; z-index: 2; bottom: .2em; text-align: center; width: 100%; background: rgba(0,0,0,.5); color: #fff; padding: .2em 0; font-size: 0.9em;}
 
 ul.gameTypes li { width:33.33%;}
 ul.gameTypes li a { width:100%;}
 ul.gameTypes li:last-of-type { width:100%; clear:both; float:none;}
+
+table thead td { position: relative}
 
 /* anims */
 a[data-type=delete] { -webkit-transition: all .5s; -moz-transition: all .5s; transition: all .5s;}

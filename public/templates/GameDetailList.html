@@ -2,7 +2,10 @@
 	<tr>
 		<td></td>
 		<% _.each(_players, function(player, index){ %>
-		<td><img src="<%= player.picture %>" alt="<%= player.nick %>"/><h3><%= player.nick %></h3>
+		<td>
+			<img src="<%= player.picture %>" alt="<%= player.nick %>"/>
+			<h3><%= player.nick %></h3>
+			<p class="points"><%= _points[index] %></p>
 		</td>
 		<% }); %>
 	</tr>
@@ -17,7 +20,7 @@
 	</tr>
 <% }); %>
 <% if (_items.length > 0){ %>
-<tfoot>
+<!-- <tfoot>
 	<tr>
 		<td>TOTAL:</td>
 		<% _.each(_points, function(item){ %>
@@ -25,5 +28,5 @@
 		<% }); %>
 	</tr>
 </tfoot>
-<% } %>
+<% } %> -->
 </tbody>
