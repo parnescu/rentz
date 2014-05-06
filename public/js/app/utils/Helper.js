@@ -2,6 +2,7 @@ define(function(){
 	if (!window.__mrjn){
 		var _utils = {}
 		_utils.months = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ];
+		_utils.days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 		_utils.plural = function(nr, str){
 			if (str == "") return "";
 			return str + (Number(nr) === 1 ? "" : "s")
@@ -17,6 +18,9 @@ define(function(){
 			switch(style){
 				case "dd MM yyyy":
 					str += date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear();
+					break;
+				case "extra":
+					str += _utils.days[date.getDay()]+", "+date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear()+" ["+date.getHours()+":"+date.getMinutes()+"]";
 					break;
 			}
 			return str;

@@ -21,6 +21,8 @@ define([
 		},
 		render: function(){
 			if (this.model){ this.data.values = this.model.toJSON();}
+			if (this.data.type != 'player'){this.data.values._name = _g.util.format(new Date(this.data.values.name),'extra')}
+			
 			this.$el.html(_.template(this.data.type != 'player' ? gameTemplate : playerTemplate)(this.data));
 
 			this.buttons = {}
