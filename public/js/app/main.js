@@ -14,11 +14,11 @@ define([
 	"use strict";
 	var notification, f = function(){
 		function _start(element){
-			// define in app console
-			// window.___xcg = document.createElement('p');
-			// window.___xcg.className = "logger";
-			// document.body.appendChild(window.___xcg);
-			// ---- end console
+			// ---- debug console
+				// window.___xcg = document.createElement('p');
+				// window.___xcg.id = "logger";
+				// document.body.appendChild(window.___xcg);
+			// ---- end - debug console
 
 
 

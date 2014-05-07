@@ -292,7 +292,7 @@ define([
 				},
 				_addNewGame = function(game){
 					if (game.get('rounds') instanceof Backbone.Collection === false){
-						trace("MAIN_CTRL:: parse added game data")
+						//trace("MAIN_CTRL:: parse added game data")
 						GameController.parseGame(game)
 					}
 				},

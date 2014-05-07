@@ -8,6 +8,7 @@ define(function(){
 			
 			this.init = function(){
 				if(window.localStorage){
+					trace('we have local storage')
 					var _w = localStorage.getItem('rentzUser');
 
 					if (_w){
@@ -27,7 +28,12 @@ define(function(){
 			this.saveItem = function(key, value){
 				if(window.localStorage){
 					trace("MEMORY:: saved '"+key+"'");
-					localStorage.setItem(key, JSON.stringify(value));
+					try{
+						localStorage.setItem(key, JSON.stringify(value));	
+					}catch(e){
+						trace("MEMORY:: failed to set item")
+					}
+					
 				}
 			}
 			return {

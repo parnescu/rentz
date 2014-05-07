@@ -12,12 +12,6 @@ define([
 			,MAX_PLAYERS: max
 		};
 
-		// --- logger
-		window.___xcg = document.createElement('p');
-		window.___xcg.id = "logger";
-		document.body.appendChild(window.___xcg)
-		// --- end - logger
-
 		var _types = {
 			RED_PRIEST: new GameType({
 				type: 'redPriest',
