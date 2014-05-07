@@ -20,8 +20,6 @@ define([
 				// document.body.appendChild(window.___xcg);
 			// ---- end - debug console
 
-
-
 			trace("APP:: init called");
 			if (document.querySelector('#rentz')){
 				throw new Error('Only one instance of the game should be inited');
