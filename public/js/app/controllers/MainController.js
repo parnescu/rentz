@@ -660,7 +660,7 @@ define([
 				if (_g.games){ _g.games.off('add');}
 				if (_currView){ _currView.remove(); _currView = null;}
 				if(_g.notification){ _g.notification.remove(); _g.notification = null;}
-
+				CameraController.remove();
 				wasInited = false;
 			}
 			return {

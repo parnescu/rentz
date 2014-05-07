@@ -34,11 +34,10 @@ define([
 			this.cancel = this.$el.find('.actions .cancel');
 
 			this.imgProcessor = this.$el.find('input[type=file]')
-			this.imgProcessor.on('change', function(e){
-				trace('---- MERGE BHA');
-				trace(e)
-				trace(e.target.data);
-			})
+			this.imgProcessor.on('change', function(e){ 
+				Backbone.trigger(_g.events.AVATAR_FROM_PHONECAM, e.target.files[0]);
+			});
+
 			return this;
 		},
 		_mergeData: function(){

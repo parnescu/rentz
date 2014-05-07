@@ -261,7 +261,6 @@ module.exports = function(config){
 					res.send(500, { reason: e});
 				}
 			);
-			//_incrementWonPoints("536746d35f4b21e01225275c", Number(data._playerWon) + 1);
 		},
 		_removeGame = function(req, res){
 			trace("DB:: remove game with id: "+req.params.id);

@@ -72,6 +72,7 @@ define([
 			,UPDATE_ROUND: 				"updateRound"
 			,GAME_ENDED: 				"gameDone"
 			,SHOW_ERROR: 				"showErrMsg"
+			,AVATAR_FROM_PHONECAM: 		"camSentImage"
 		},
 		_views = {
 			PLAYERS_LIST_SCREEN: 		{ title: "Players", type:"playersScreen"}		
