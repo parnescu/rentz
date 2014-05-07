@@ -11,7 +11,7 @@
 	outline: none;
 }
 body, html, h1, h2, h3, h4, h5, h6, p, div, ul, li { margin:0; padding:0;}
-body, html { width:100%; height:100%; font-family: "Segoe UI", "Trebuchet MS", Arial, _sans;}
+body, html { width:100%; height:100%; font-family: "Trebuchet MS", "Segoe UI", Arial, _sans;}
 
 ul, li { list-style-type: none; position:relative; overflow: hidden;}
 a { display: block; text-decoration:none; overflow: hidden; }
@@ -21,10 +21,9 @@ form { padding:.75em; background:white;}
 form fieldset { border:none; margin:0; padding:0;}
 input:focus { }
 
-header, footer { clear:both; float:none;}
+header, footer { clear:both; float:none; box-sizing:border-box; -moz-box-sizing:border-box; display:block; overflow:hidden;}
 header > *, footer > * { display:inline-block; z-index:1; position: relative;}
-header { padding:.5em;}
-header a { padding: .5em 1em; position:absolute; top:.5em;}
+header a { padding: .5em 1em; position:absolute; top:.5em; display: block; overflow: hidden; }
 header a.next { right:0;}
 header a.back { left:0;}
 header h1 { position:static; top:0; left:0; width:100%; text-align: center; z-index:0; font-size:1.4em;}
@@ -36,7 +35,7 @@ section.content ul.list { padding:1em;}
 footer { position: fixed; bottom:-.3em; left:0; width:100%;}
 footer .nav { width:100%;}
 footer .nav a { padding: .5em 1em; text-align: center;}
-footer .nav a:before { content:""; clear:both; width:2em; height:2em; background:blue; display: block; left: 50%; position: relative; margin-left: -1em;}
+footer .nav a:before { content:""; clear:both; width:2em; height:2em; background:blue; display: block; left: 50%; position: relative; margin:0 .5em 0 -1em;}
 footer .nav a.selected { pointer-events:none;}
 footer .items_2 li { width:50%;}
 footer .items_3 li { width:33.3%;}
@@ -84,7 +83,7 @@ form .avatarPicture a.img { width:10em; height:10em;}
 form .avatarPicture video { height:100%;}
 form .avatarPicture video,
 form .avatarPicture canvas { width:100%;}
-form .avatarPicture .cancelAvatar { font-size:.8em; text-align:center; border-radius:.5em; color: #eee;box-sizing: border-box; position:absolute; top:0; left:0; background:rgba(0,0,0,.5); padding:.5em; width:100%; float:left;}
+form .avatarPicture .cancelAvatar { z-index:1; font-size:.8em; text-align:center; border-radius:.5em; color: #eee;box-sizing: border-box; position:absolute; top:0; left:0; background:rgba(0,0,0,1); padding:.5em; width:100%; float:left;}
 form .avatarPicture .saveAvatar:before { content: "save avatar"; position: absolute; background: rgba(132,245,0,.5); padding: .5em; width: 100%; border-radius: .5em; left: 0; bottom:0; color: white; text-align: center; box-sizing: border-box;}
 form .avatarPicture a.avatar { width:100%; height:100%;}
 
@@ -138,16 +137,29 @@ ul.gameTypes li { width:33.33%;}
 ul.gameTypes li a { width:100%;}
 ul.gameTypes li:last-of-type { width:100%; clear:both; float:none;}
 
-table { box-sizing:border-box; -moz-box-sizing:border-box; margin:0 1em;}
+table { box-sizing:border-box; -moz-box-sizing:border-box; margin:0 1em; border-spacing:0;}
 table thead td { position: relative; border-bottom:1em solid transparent;}
-table tbody td { text-align: right}
-table tbody td:first-of-type { text-align: left;}
 table thead td.score { position:relative;}
 table thead td.score::after { content: attr(data-place); position: absolute; padding: .2em .4em; left:0; bottom: -1em; width: 100%; border-radius: .4em; background: rgb(46, 158, 233); font-weight: bold; font-size: 0.7em; color: #fff; z-index: 3; box-sizing: border-box; text-align: center;}
+
+table tbody td { text-align: right}
+table tbody td:first-of-type { text-align: left;}
+table tbody tr:nth-child(2n) { background:#ccc;}
+table tbody tr:nth-child(2n+1) { background:#999;}
 
 
 /* anims & item customization */
 a[data-type=delete] { -webkit-transition: all .5s; -moz-transition: all .5s; transition: all .5s;}
+header { background: linear-gradient(to bottom, rgb(46, 158, 233), rgb(21, 104, 160)); color:#fff;
+	border-bottom:.2em solid rgb(0, 67, 112);
+	text-shadow:0 1px #000;
+	padding:1em 0 .7em 0; 
+}
+header a { color:#efefef;}
+
+footer { background:rgb(0, 67, 112);}
+footer a { color:#efefef;}
+footer a.selected { background: rgb(46, 158, 233);}
 
 input[type=range] { 
 	width: 98% !important;

@@ -1,4 +1,5 @@
 module.exports = (function(){
+	trace("CONFIG:: -> environment mode: "+process.env.NODE_ENV)
 	return {
 		db: {
 			dev: {
@@ -8,12 +9,12 @@ module.exports = (function(){
 
 			}
 			,production:{
-				host: '',
-				port: '',
-				db: ''
+				host: "parnescu:adrian@dbh42.mongolab.com",
+				port: 27427,
+				db: "showcase"
 			}
 		}
-		,devMode: true
-		,port: 3000
+		,devMode: process.env.NODE_ENV == 'development' ? true : false
+		,port: process.env.PORT || 3000
 	}
 })();

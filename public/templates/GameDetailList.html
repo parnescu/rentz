@@ -13,7 +13,7 @@
 <tbody>
 <% _.each(_items, function(round,index){ %>
 	<tr>
-		<td><%= round.get('gameType').get('type') %></td>
+		<td class="icon <%= round.get('gameType').get('type') %>"><%= round.get('gameType').get('type') %></td>
 		<% _.each(_players, function(player,index){ %>
 		<td><%= round.get('_points')[index] %></td>
 		<% }); %>
