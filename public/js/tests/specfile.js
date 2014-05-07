@@ -83,7 +83,8 @@ describe("Rentz TDD specs", function(){
 					model: model
 				}).render();
 				
-				expect(view.$el.find('h2 a').text()).toBe(model.get('name'))
+				trace(model.get('name'))
+				expect(view.$el.find('h2').text()).toBe(_g.util.format(new Date(model.get('name')),'extra'));
 				expect(view.$el.find('.playerNick').length).toBe(0)
 			});
 
@@ -754,9 +755,9 @@ describe("Rentz TDD specs", function(){
 				_p = game = null;
 
 				expect(view.el.tagName).toBe('TABLE');
-				expect(view.el.children.length).toEqual(3);
+				expect(view.el.children.length).toEqual(2);
 				expect(view.el.children[1].children.length).toBe(4);
-				expect(view.el.children[2].children[0].children[0].innerHTML).toBe('TOTAL:');
+				//expect(view.el.children[2].children[0].children[0].innerHTML).toBe('TOTAL:');
 
 				
 			});

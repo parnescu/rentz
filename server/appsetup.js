@@ -25,6 +25,7 @@ module.exports = function(app, config){
 	app.get('/api/games', db.getGames);
 	app.get('/api/games/:id', db.getGames);
 	app.post('/api/games',db.saveGame);
+	app.delete('/api/games/:id',db.deleteGame);
 	
 	app.get('/api/user', db.loginUser);
 

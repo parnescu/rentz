@@ -140,8 +140,15 @@ define([
 
 		trace("GLOBAL:: is mobile " +obj.isMobile);
 		obj.defaultMenu = [ _views.GAMES_SCREEN, _views.PLAYERS_LIST_SCREEN, _views.ACCOUNT_SCREEN]
-		obj.__defineSetter__('currentPlayers', function(val){ current = val;});
-		obj.__defineGetter__('currentPlayers', function(){ return current;});
+
+		// not working in IE
+		//obj.__defineSetter__('currentPlayers', function(val){ current = val;});
+		//obj.__defineGetter__('currentPlayers', function(){ return current;});
+		
+		Object.defineProperty(obj, 'currentPlayers',{
+			get: function(){ return current;},
+			set: function(val){ current = val;}
+		});
 
 		c = Backbone.Collection.extend({ model: Player, url: function(){ return "/api/players/"+(obj.currentUser ? obj.currentUser.id : "");}});
 		obj.players = new c();

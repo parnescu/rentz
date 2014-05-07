@@ -229,8 +229,6 @@ module.exports = function(config){
 					res.send(500, { reason: e});
 				}
 			);
-
-			res.json(false);
 		},
 		_getGames = function(req, res){
 			trace("DB:: show all games");
@@ -265,6 +263,19 @@ module.exports = function(config){
 			);
 			//_incrementWonPoints("536746d35f4b21e01225275c", Number(data._playerWon) + 1);
 		},
+		_removeGame = function(req, res){
+			trace("DB:: remove game with id: "+req.params.id);
+
+			_removeItem(req.params.id, 'game').then(
+				function(games){
+					res.json(true);
+				},
+				function(e){
+					trace("DB:: ---> removal failed: "+JSON.stringify(e));
+					res.send(500, { reason: e});
+				}
+			);
+		},
 		_getUser = function(req, res){
 			var params = url.parse(req.url, true).query,
 				obj = {_type: 'player', nick: params.nick}
@@ -283,10 +294,11 @@ module.exports = function(config){
 	// END - HANDLERS
 	return {
 		getPlayers: _getPlayers
-		,getGames: _getGames
-		,saveGame: _saveGame
 		,savePlayer: _savePlayer
 		,deletePlayer: _removePlayer
+		,getGames: _getGames
+		,saveGame: _saveGame
+		,deleteGame: _removeGame
 		,loginUser: _getUser
 	}
 }

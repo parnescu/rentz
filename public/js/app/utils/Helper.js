@@ -20,10 +20,34 @@ define(function(){
 					str += date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear();
 					break;
 				case "extra":
-					str += _utils.days[date.getDay()]+", "+date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear()+" ["+date.getHours()+":"+date.getMinutes()+"]";
+					str += _utils.days[date.getDay()]+", "+date.getDate()+" "+_utils.months[date.getMonth()]+" "+date.getFullYear()+" ["+date.getHours()+":"+_utils.formatDigit(date.getMinutes())+"]";
 					break;
 			}
 			return str;
+		}
+		_utils.formatDigit = function(digit){
+			if (digit.toString().length === 1){
+				return "0"+digit;
+			}
+			return digit;
+		}
+		_utils.formatPlace = function(nr){
+			nr++;
+			switch(nr){
+				case 1:
+					nr = "winner!"
+					break;
+				case 2:
+					nr += " nd";
+					break;
+				case 3:
+					nr += " rd";
+					break;
+				default:
+					nr += " th"
+					break;
+			}
+			return nr;
 		}
 		_utils.progressive = function(nr){
 			var sum = 1;

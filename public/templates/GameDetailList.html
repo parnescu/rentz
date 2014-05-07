@@ -2,7 +2,7 @@
 	<tr>
 		<td></td>
 		<% _.each(_players, function(player, index){ %>
-		<td>
+	<td class="score" data-place="<%= player._place %>">
 			<img src="<%= player.picture %>" alt="<%= player.nick %>"/>
 			<h3><%= player.nick %></h3>
 			<p class="points"><%= _points[index] %></p>

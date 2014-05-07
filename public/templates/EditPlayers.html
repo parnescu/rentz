@@ -2,6 +2,7 @@
 	<div class="element">
 		<input type="file" accept="image/*" capture="camera" class="hidden"/>
 		<div class="avatarPicture">
+			<span class="wonGames"><%= typeof(won) != 'undefined' ? won : "0"  %> won</span>
 			<a href="#cancelPicture" title="Cancel picture" class="cancelAvatar hidden">cancel</a>
 			<a href="#takePicture" title="Snap picture" class="newAvatar hidden img">
 				<video class="screen" autoplay/>
