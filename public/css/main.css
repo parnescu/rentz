@@ -149,6 +149,7 @@ table tbody tr:nth-child(2n+1) { background:#999;}
 
 
 /* anims & item customization */
+#logger { position:relative; z-index:2; pointer-events:none;}
 a[data-type=delete] { -webkit-transition: all .5s; -moz-transition: all .5s; transition: all .5s;}
 /*header { background: linear-gradient(to bottom, rgb(46, 158, 233), rgb(21, 104, 160)); color:#fff;
 	border-bottom:.2em solid rgb(0, 67, 112);
