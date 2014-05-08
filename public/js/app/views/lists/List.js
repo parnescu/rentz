@@ -91,7 +91,8 @@ define([
 			_.each(this.$el.find('li'), function(el,index){
 			 	this.collection.add(tmp.models[Number(el.dataset.pos)], {silent:true})
 			}, this);
-
+			trace("LIST:: new order:")
+			trace(this.collection.toJSON());
 			tmp.reset()
 			tmp = _c = null;
 		},
