@@ -72,9 +72,10 @@ define([
 
 					if (_currView){
 						var _type = _currView.viewType;
-						_start(_currView);
+						//_start(_currView);
+
 						if (_currView.viewType === _g.viewType.PLAYERS_SELECT_SCREEN.type ||
-							_type === _g.viewType.GAME_OUTCOME_SCREEN.type){
+							_type === _g.viewType.START_NEW_GAME.type){
 							if (_currView.menu){
 								_currView.menu.find('a').removeClass('selected');	
 							}
@@ -138,6 +139,7 @@ define([
 
 					Backbone.trigger(_g.events.BUILD_PAGE, {
 						type: _g.viewType.PLAYERS_SELECT_SCREEN,
+						menu: [ _g.viewType.SELECT_ALL],
 						header:{
 							back: _g.viewType.GO_BACK,
 							next: _g.viewType.PLAYERS_SORT_SCREEN
@@ -147,6 +149,15 @@ define([
 							collection: _g.players
 						})
 					});
+				},
+				_togglePlayersList = function(){
+					trace("MAIN_CTRL:: toggle list");
+					var item = _currView.menu.find('a:eq(0)'), itemClass;
+					item.toggleClass('selected');
+					itemClass = item.hasClass('selected') ? 'a:not(.selected)' : 'a.selected'
+					_currView.subview.$el.find(itemClass).click();
+					
+					item = itemClass = null;
 				},
 				_addPlayersSelectScreen = function(){
 					//	1. determine which players were selected
@@ -532,13 +543,13 @@ define([
 						_addPlayerScreen(null, true);
 						break;
 					default:
-						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
+						trace('------ CONTINUE BUTTON NOT HANDLED YET: '+_currView.viewType);
 				 		trace(data);
 						break;
 				}
 			},
 			_handleListClicked = function(model){
-				trace('MAIN_CTRL:: list item was clicked -> '+_currView.viewType);
+				//trace('MAIN_CTRL:: list item was clicked -> '+_currView.viewType);
 				switch(_currView.viewType){
 					case _g.viewType.PLAYERS_LIST_SCREEN.type:
 						_addPlayerScreen(model);
@@ -548,7 +559,7 @@ define([
 						_addGameDetailsScreen(model)
 						break;
 					default:
-						trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
+						//trace('------ SCREEN TYPE NOT HANDLED YET: '+_currView.viewType);
 						break;
 				}
 			},
@@ -583,6 +594,9 @@ define([
 							break;
 						case _g.viewType.ACCOUNT_SCREEN.type:
 							_showAccountPage();
+							break;
+						case _g.viewType.SELECT_ALL.type:
+							_togglePlayersList();
 							break;
 						default:
 							trace('------ SCREEN TYPE NOT HANDLED YET: '+type);

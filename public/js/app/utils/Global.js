@@ -15,37 +15,44 @@ define([
 		var _types = {
 			RED_PRIEST: new GameType({
 				type: 'redPriest',
+				name: 'K',
 				multiplier: -150,
 				maxItems: 1
 			})
 			,DAMES: new GameType({
 				type: 'dames',
+				name: 'Q',
 				multiplier: -50,
 				maxItems: 4		
 			})
 			,WHIST: new GameType({
 				type: 'whist',
+				name: 'W',
 				multiplier: 10,
 				maxItems: 8
 			})
 			,BROKE: new GameType({
 				type: 'broke',
+				name: 'F',
 				multiplier: -10,
 				maxItems: 8
 			})
 			,RENTZ: new GameType({
 				type: 'rentz',
+				name: 'R',
 				multiplier: 50,
 				maxItems: function(){ return Helper.progressive(current)}
 				// this should be number of players 
 			})
 			,DIAMONDS: new GameType({
 				type: 'diamonds',
+				name: '◇',
 				multiplier: -10,
 				maxItems: function(){ return current*2;} 
 			})
 			,ALL: new GameType({
 				type: 'all',
+				name: 'totals',
 				multiplier: -10,
 				maxItems: function(){ return 55 - (max-current)*2;}
 				// 4*queens, 1*red priest, 8*hands, 2*nrplayers * diamonds
@@ -73,10 +80,10 @@ define([
 			,GAME_ENDED: 				"gameDone"
 			,SHOW_ERROR: 				"showErrMsg"
 			,AVATAR_FROM_PHONECAM: 		"camSentImage"
-		},
+		}, 
 		_views = {
 			PLAYERS_LIST_SCREEN: 		{ title: "Players", type:"playersScreen"}		
-			,PLAYERS_SELECT_SCREEN: 	{ title: "Choose players", type:"selectPlayers"}
+			,PLAYERS_SELECT_SCREEN: 	{ title: "New Game", type:"selectPlayers"}
 			,PLAYERS_SORT_SCREEN: 		{ title: "Continue", type:"sortPlayers"}
 			,PLAYER_EDIT_SCREEN: 		{ title: "New Player", type:"newPlayer"}
 
@@ -91,6 +98,7 @@ define([
 			,EDIT: 						{ title: "Edit", type:"edit"}
 			,SAVE: 						{ title: "Save", type: "save"}
 			,SAVE_ROUND: 				{ title: "Save", type:"saveRound"}
+			,SELECT_ALL: 				{ title: "Select all", type:"selectAll"}
 			,INITIAL_SCREEN: 			{ title: "Rentz", type:"initialScreen"}
 			,ACCOUNT_SCREEN: 			{ title: "Profile", type:"accountScreen"}
 			,ACCOUNT_ADD: 				{ title: "Register", type:"addUser"}

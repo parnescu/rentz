@@ -74,8 +74,10 @@ define([
 		handleNavClick: function(e){
 			e.preventDefault();
 			
-			this.$el.find('footer ul a').removeClass('selected');
-			$(e.target).addClass('selected');
+			if (e.target.dataset.id != _g.viewType.SELECT_ALL.type){
+				this.$el.find('footer ul a').removeClass('selected');
+				$(e.target).addClass('selected');	
+			}
 			Backbone.trigger(_g.events.NAV_CLICKED, e.target.dataset.id);
 		}
 	})

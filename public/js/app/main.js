@@ -38,10 +38,10 @@ define([
 			var stage = $('#rentz'),
 				view = new Page({
 					type: _g.viewType.INITIAL_SCREEN,
-					menu: _g.defaultMenu,
-					header: {
-						title: "xtests"
-					}
+						menu: _g.defaultMenu,
+						header: {
+							title: "Rentz"
+						}
 				}).render();
 
 			stage.append(view.el)
