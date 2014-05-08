@@ -9,16 +9,16 @@ You can find this application running live [here](http://rentz.herokuapp.com).
 
 - clone this repo
 - go to terminal and navigate to 'rentz' folder
-- inpit 'npm install && npm start'
-- open a new browser and navigate to 'localhost:3000'
-- for the tests suite go to 'localhost:3000/tests'
+- input `npm install && npm start`
+- open a new browser and navigate to `localhost:3000`
+- for the tests suite go to `localhost:3000/tests`
 
 
 ## Using the app
 
-- create a new user (go to 'Profile' and login/register your account)
-- add your players (previously created players will be saved to the database)
-- start new game
+- `create a new user` (go to 'Profile' and login/register your account)
+- `add your players` (previously created players will be saved to the database)
+- `start new game`
 
 
 ## Playing the game
@@ -26,6 +26,7 @@ You can find this application running live [here](http://rentz.herokuapp.com).
 A game can only be played if there are a minimum of three or maximum of six players.
 After starting a new game, you will be propted to select the players you want to participate, continuing prompts you to arrange the players in the order you want. After that, the game will commence.
 You are now prompted to choose the type of round you want to play, and can choose from a variety of 7 types:
+
 - `red priest`:	the player that receives the red priest card (K) is awarded -150 points;
 - `dames`:		players that receive any of the four queens (Q) are awarded -50 points for each card;
 - `whist`:		this round plays out like a normal game of whist, for each 'hand' the player gets he's awarded +10 points;
@@ -42,6 +43,7 @@ You are now prompted to choose the type of round you want to play, and can choos
 - vanillajs
 - requirejs
 - jasmine (for testing)
+- html5 camera (works wit webcams and mobile)
 
 ### Back-end:
 - nodejs with express
