@@ -57,3 +57,4 @@ You are now prompted to choose the type of round you want to play, and can choos
 	2. <s>end game/winner screen</s>
 2. build with phonegap
 3. add gruntjs task for source compilation
+4. add routing

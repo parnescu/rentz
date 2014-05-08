@@ -57,7 +57,8 @@ define([
 				trace('MAIN:: trigger automatic logging in..')
 				Backbone.trigger(_g.events.USER_LOGIN, Memory.getUser());
 			}
-
+			window.scrollTo(1,0);
+			window.addEventListener('touchmove', function(e){ e.preventDefault(); e.stopPropagation(); return false;});
 			window.addEventListener('error', function(e){ 
 				e.preventDefault();
 				trace("MAIN:: --- page error kicked in");

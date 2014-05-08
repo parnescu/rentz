@@ -308,6 +308,7 @@ define([
 					}
 				},
 			// end - base screen actions
+			
 			_handleItemDeletion = function(view){
 				if (view.model){
 					// if deleted player is yourself, log-out
