@@ -43,10 +43,16 @@ You are now prompted to choose the type of round you want to play, and can choos
 - vanillajs
 - requirejs
 - jasmine (for testing)
-- html5 camera (works wit webcams and mobile)
+- html5 camera (works with webcams and mobile)
 
 ### Back-end:
 - nodejs with express
 - mongoDB
 - heroku
 
+### To do list:
+
+1. design
+	1. game details screen
+	2. end game/winner screen
+2. build with phonegap
