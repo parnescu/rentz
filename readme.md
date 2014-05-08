@@ -1,8 +1,8 @@
 # Rentz
 
 
-This web application was made as an learning exercise for new javascript technologies using the TDD approach. It's meant to be a companion app for the card game called ['Rentz'][http://ro.wikipedia.org/wiki/Rentz].
-You can find this application running live [here][http://rentz.herokuapp.com].
+This web application was made as an learning exercise for new javascript technologies using the TDD approach. It's meant to be a companion app for the card game called ['Rentz'](http://ro.wikipedia.org/wiki/Rentz).
+You can find this application running live [here](http://rentz.herokuapp.com).
 
 
 ## Getting started
