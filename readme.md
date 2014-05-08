@@ -50,9 +50,10 @@ You are now prompted to choose the type of round you want to play, and can choos
 - mongoDB
 - heroku
 
-### To do list:
+## To do list:
 
 1. design
 	1. game details screen
-	2. end game/winner screen
+	2. <s>end game/winner screen</s>
 2. build with phonegap
+3. add gruntjs task for source compilation

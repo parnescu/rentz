@@ -52,7 +52,7 @@ define([
 			})
 			,ALL: new GameType({
 				type: 'all',
-				name: 'totals',
+				name: 'T',
 				multiplier: -10,
 				maxItems: function(){ return 55 - (max-current)*2;}
 				// 4*queens, 1*red priest, 8*hands, 2*nrplayers * diamonds

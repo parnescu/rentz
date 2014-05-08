@@ -982,6 +982,7 @@ describe("Rentz TDD specs", function(){
 				expect(view.$el.find('.playersList li').length).toBe(3);
 			});
 			afterEach(function(){
+				//return;
 				if(view){
 					view.remove();
 					view = null;
@@ -1383,6 +1384,7 @@ describe("Rentz TDD specs", function(){
 				view = MainController.view();
 				view.subview.list.find('li:eq('+bogusRoundsIndex[i]+') a').click();
 
+				
 				round = GameController.currentRound();
 				scores = round.get('scores');
 				scores.models[0].set('value', bogusRounds[i][0]);
@@ -1391,6 +1393,7 @@ describe("Rentz TDD specs", function(){
 				view.remove();
 				view = null;
 
+				stage.append(view.el);
 				game.set('userId', '536746d35f4b21e01225275c');
 				
 				view = MainController.view();
