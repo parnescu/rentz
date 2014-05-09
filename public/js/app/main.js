@@ -1,9 +1,4 @@
-trace = function(r){ 
-	console.log(r);
-	if(window.___xcg){
-		window.___xcg.innerHTML += "<br/>"+(typeof(r) === 'string' ? r : JSON.stringify(r));
-	}
-}
+trace = function(r){ console.log(r); if(window.___xcg){ window.___xcg.innerHTML += "<br/>"+(typeof(r) === 'string' ? r : JSON.stringify(r));}}
 define([
 	'app/utils/Global'
 	,'app/utils/Memory'
@@ -57,6 +52,7 @@ define([
 				trace('MAIN:: trigger automatic logging in..')
 				Backbone.trigger(_g.events.USER_LOGIN, Memory.getUser());
 			}
+
 			window.scrollTo(1,0);
 			window.addEventListener('touchmove', function(e){ e.preventDefault(); e.stopPropagation(); return false;});
 			window.addEventListener('error', function(e){ 
@@ -64,6 +60,7 @@ define([
 				trace("MAIN:: --- page error kicked in");
 				Backbone.trigger(_g.events.SHOW_ERROR, { code: -2, reason: e.error ? e.error.message : e.message});
 			});
+
 			view = null;
 		}
 

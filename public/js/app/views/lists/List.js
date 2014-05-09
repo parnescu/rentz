@@ -34,21 +34,12 @@ define([
 				Backbone.on(_g.events.LIST_CLICK, this.handleItemSelection, this);
 			}
 
-			if (this.collection){
-				this.collection.each(this.renderItem, this);
-			}
-			if(this.data.hasOwnProperty('deletable') && this.data.deletable === true){ 
-				this.$el.addClass('withDelete');
-			}
-			if(this.data.hasOwnProperty('selectable') && this.data.selectable === true){
-				this.$el.addClass('withSelect');
-			}
+			if(this.collection){ this.collection.each(this.renderItem, this);}
+			if(this.data.hasOwnProperty('deletable') && this.data.deletable === true){ this.$el.addClass('withDelete');}
+			if(this.data.hasOwnProperty('selectable') && this.data.selectable === true){ this.$el.addClass('withSelect');}
 			if(this.data.hasOwnProperty('sortable') && this.data.sortable === true){ 
 				this.$el.addClass('withSort');
-				var sortConfig = {
-					cursor: 'move',
-					update: this.handleSorting
-				}
+				var sortConfig = { cursor: 'move', update: this.handleSorting }
 				this.$el.sortable(sortConfig);
 			}
 			return this;
